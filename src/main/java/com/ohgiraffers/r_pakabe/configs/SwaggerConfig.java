@@ -25,6 +25,6 @@ public class SwaggerConfig {
         return new Info()
                 .title("R-PAKA Rest API Spec")
                 .description("Specification")
-                .version("1.0");
+                .version("0.1");
     }
 }
