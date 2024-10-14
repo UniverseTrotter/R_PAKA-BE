@@ -1,5 +1,6 @@
 package com.ohgiraffers.r_pakabe.common.error;
 
+import com.ohgiraffers.r_pakabe.common.PolyTime;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -8,11 +9,11 @@ import java.time.LocalDateTime;
 public class ApplicationException extends RuntimeException {
 
     private ErrorCode errorCode;
-    private LocalDateTime timestamp;
+    private String timestamp;
 
 
     public ApplicationException(ErrorCode errorCode){
         this.errorCode = errorCode;
-        this.timestamp = LocalDateTime.now();
+        this.timestamp = new PolyTime(LocalDateTime.now()).get();
     }
 }
