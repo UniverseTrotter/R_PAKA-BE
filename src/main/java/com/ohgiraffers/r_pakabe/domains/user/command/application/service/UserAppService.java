@@ -71,8 +71,8 @@ public class UserAppService {
     /** 나중에 */
 
     @Transactional
-    public void changeUserPW(String userId, String password) {
-        User existUser = userDomainService.findByUserId(userId);
+    public void changeUserPW(UserRequestDTO.UserUpdateDTO updateDTO) {
+        User existUser = userDomainService.findByUserCode(updateDTO.userCode());
         if (existUser == null) {
             throw new ApplicationException(ErrorCode.NO_SUCH_USER);
         }
@@ -80,7 +80,7 @@ public class UserAppService {
         User user = new User(
                 existUser.getUserCode(),
                 existUser.getUserId(),
-                password,
+                updateDTO.password(),
                 existUser.getNickname()
         );
         userDomainService.updateUser(user);

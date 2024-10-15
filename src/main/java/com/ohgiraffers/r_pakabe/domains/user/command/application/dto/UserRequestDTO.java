@@ -20,5 +20,13 @@ public class UserRequestDTO {
             String nickName
     ){}
 
+    /**
+     * 회원 정보 수정
+     * */
+    public record UserUpdateDTO(
+            Long userCode,
+            String password,
+            String nickName
+    ){}
 
 }

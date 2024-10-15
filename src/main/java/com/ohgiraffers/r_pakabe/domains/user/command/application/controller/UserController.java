@@ -36,7 +36,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "회원 정보 조회", description = "회원 정보를 가져옵니다.")
+    @Operation(summary = "회원 정보 조회", description = "회원코드로 회원 id와 닉네임을 가져옵니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공적으로 처리 되었습니다."),
             @ApiResponse(responseCode = "401", description = "해당 유저가 없습니다"),
@@ -51,19 +51,19 @@ public class UserController {
 
 
 
-    @Operation(summary = "패스워드 변경", deprecated = true)
+    @Operation(summary = "패스워드 변경"/*, deprecated = true*/)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공적으로 처리 되었습니다."),
             @ApiResponse(responseCode = "401", description = "해당 유저가 없습니다"),
             @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
     })
     @PostMapping("/password")
-    public ResponseEntity<?> changeUserPW(UserRequestDTO.RegisterDTO registerDTO) {
-        userAppService.changeUserPW(registerDTO.userId(), registerDTO.password());
+    public ResponseEntity<?> changeUserPW(UserRequestDTO.UserUpdateDTO updateDTO) {
+        userAppService.changeUserPW(updateDTO);
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "닉네임 변경", deprecated = true)
+    @Operation(summary = "닉네임 변경"/*, deprecated = true*/)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공적으로 처리 되었습니다."),
             @ApiResponse(responseCode = "400", description = "닉네임이 기존과 다르지 않습니다"),
@@ -76,7 +76,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "회원 탈퇴", deprecated = true)
+    @Operation(summary = "회원 탈퇴"/*, deprecated = true*/)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공적으로 처리 되었습니다."),
             @ApiResponse(responseCode = "401", description = "해당 유저가 없습니다"),
