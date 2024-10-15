@@ -2,7 +2,7 @@ package com.ohgiraffers.r_pakabe.domains.user.command.domain.service;
 
 import com.ohgiraffers.r_pakabe.domains.user.command.domain.model.User;
 import com.ohgiraffers.r_pakabe.domains.user.command.domain.repository.UserRepository;
-import jakarta.annotation.Nullable;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,5 +21,17 @@ public class UserDomainService {
     @Nullable
     public User findByUserId(String userId) {
         return userRepository.findByUserId(userId).orElse(null);
+    }
+
+    public void registerUser(User user) {
+        userRepository.save(user);
+    }
+
+    public void updateUser(User user) {
+        userRepository.save(user);
+    }
+
+    public void deleteUser(User user) {
+        userRepository.delete(user);
     }
 }

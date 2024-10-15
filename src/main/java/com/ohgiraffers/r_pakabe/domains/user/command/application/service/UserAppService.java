@@ -33,4 +33,95 @@ public class UserAppService {
             throw new ApplicationException(ErrorCode.INVALID_PASSWORD);
         }
     }
+
+    @Transactional
+    public void userRegister(UserRequestDTO.RegisterDTO registerDTO) {
+
+        if (userDomainService.findByUserId(registerDTO.userId()) != null) {
+            throw new ApplicationException(ErrorCode.ID_ALREADY_EXIT);
+        }
+
+        User user = User.builder()
+                .userId(registerDTO.userId())
+                .password(registerDTO.password())
+                .nickname(registerDTO.nickName())
+                .build();
+
+        userDomainService.registerUser(user);
+    }
+
+    @Transactional
+    public UserResponseDTO.UserDetailDTO findUser(Long userCode) {
+        User user = userDomainService.findByUserCode(userCode);
+        if (user == null) {
+            throw new ApplicationException(ErrorCode.NO_SUCH_USER);
+        }
+        return new UserResponseDTO.UserDetailDTO(
+                user.getUserId(),
+                user.getNickname()
+        );
+    }
+
+
+
+
+
+
+
+    /** 나중에 */
+
+    @Transactional
+    public void changeUserPW(String userId, String password) {
+        User existUser = userDomainService.findByUserId(userId);
+        if (existUser == null) {
+            throw new ApplicationException(ErrorCode.NO_SUCH_USER);
+        }
+
+        User user = new User(
+                existUser.getUserCode(),
+                existUser.getUserId(),
+                password,
+                existUser.getNickname()
+        );
+        userDomainService.updateUser(user);
+    }
+
+    @Transactional
+    public void changeUserNickName(String userId, String nickname) {
+        User existUser = userDomainService.findByUserId(userId);
+        if (existUser == null) {
+            throw new ApplicationException(ErrorCode.NO_SUCH_USER);
+        }
+        if (existUser.getNickname().equals(nickname)) {
+            throw new ApplicationException(ErrorCode.BAD_USER_DATA);
+        }
+
+        User user = new User(
+                existUser.getUserCode(),
+                existUser.getUserId(),
+                existUser.getPassword(),
+                nickname
+        );
+        userDomainService.updateUser(user);
+    }
+
+
+    @Transactional
+    public void unregisterUser(String userId) {
+        User existUser = userDomainService.findByUserId(userId);
+        if (existUser == null) {
+            throw new ApplicationException(ErrorCode.NO_SUCH_USER);
+        }
+        userDomainService.deleteUser(existUser);
+    }
+
+
+
+
+
+
+
+
+
+
 }

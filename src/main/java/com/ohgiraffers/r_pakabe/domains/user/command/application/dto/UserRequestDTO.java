@@ -11,5 +11,14 @@ public class UserRequestDTO {
             String password
     ) {}
 
+    /**
+     * 회원가입
+     * */
+    public record RegisterDTO(
+            String userId,
+            String password,
+            String nickName
+    ){}
+
 
 }

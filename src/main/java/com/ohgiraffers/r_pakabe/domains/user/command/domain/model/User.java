@@ -1,19 +1,21 @@
 package com.ohgiraffers.r_pakabe.domains.user.command.domain.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Entity
-@Table(name = "TBL_USER")
+@Table
 public class User {
 
     @Id
-    @Column(name="USER_CODE")
+    @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userCode;
 

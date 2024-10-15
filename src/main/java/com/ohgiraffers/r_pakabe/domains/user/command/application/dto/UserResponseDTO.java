@@ -8,4 +8,13 @@ public class UserResponseDTO {
     public record authDTO(
             Long userCode
     ){}
+
+    /**
+     * 회원 정보 리턴
+     * */
+    public record UserDetailDTO(
+            String userId,
+            String nickname
+    ){}
+
 }
