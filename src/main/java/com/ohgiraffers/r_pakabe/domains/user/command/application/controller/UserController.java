@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/user")
 @Tag(name = "유저 API", description = "회원가입, 유저 정보 조회, 변경 API")
 public class UserController {
 
@@ -42,7 +42,7 @@ public class UserController {
             @ApiResponse(responseCode = "401", description = "해당 유저가 없습니다"),
             @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
     })
-    @PostMapping("/user-detail")
+    @PostMapping("/detail")
     public ResponseEntity<?> userRegister(Long userCode) {
         return ResponseEntity.ok().body(userAppService.findUser(userCode));
     }
@@ -57,7 +57,7 @@ public class UserController {
             @ApiResponse(responseCode = "401", description = "해당 유저가 없습니다"),
             @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
     })
-    @PostMapping("/change-password")
+    @PostMapping("/password")
     public ResponseEntity<?> changeUserPW(UserRequestDTO.RegisterDTO registerDTO) {
         userAppService.changeUserPW(registerDTO.userId(), registerDTO.password());
         return ResponseEntity.ok().build();
@@ -70,7 +70,7 @@ public class UserController {
             @ApiResponse(responseCode = "401", description = "해당 유저가 없습니다"),
             @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
     })
-    @PostMapping("/change-nickname")
+    @PostMapping("/nickname")
     public ResponseEntity<?> changeUserNickName(UserRequestDTO.RegisterDTO registerDTO) {
         userAppService.changeUserNickName(registerDTO.userId(), registerDTO.nickName());
         return ResponseEntity.ok().build();
