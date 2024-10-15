@@ -34,4 +34,9 @@ public class UserDomainService {
     public void deleteUser(User user) {
         userRepository.delete(user);
     }
+
+    @Nullable
+    public User findByNickname(String nickname) {
+        return userRepository.findByNickname(nickname).orElse(null);
+    }
 }

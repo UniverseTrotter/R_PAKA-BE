@@ -1,5 +1,8 @@
 package com.ohgiraffers.r_pakabe.domains.user.command.application.controller;
 
+import com.ohgiraffers.r_pakabe.common.RecordNullChecker;
+import com.ohgiraffers.r_pakabe.common.error.ApplicationException;
+import com.ohgiraffers.r_pakabe.common.error.ErrorCode;
 import com.ohgiraffers.r_pakabe.domains.user.command.application.dto.UserRequestDTO;
 import com.ohgiraffers.r_pakabe.domains.user.command.application.dto.UserResponseDTO;
 import com.ohgiraffers.r_pakabe.domains.user.command.application.service.UserAppService;
@@ -32,6 +35,7 @@ public class UserController {
     })
     @PostMapping("/register")
     public ResponseEntity<?> userRegister(UserRequestDTO.RegisterDTO registerDTO) {
+        RecordNullChecker.hasNullFields(registerDTO);
         userAppService.userRegister(registerDTO);
         return ResponseEntity.ok().build();
     }
@@ -59,6 +63,9 @@ public class UserController {
     })
     @PostMapping("/password")
     public ResponseEntity<?> changeUserPW(UserRequestDTO.UserUpdateDTO updateDTO) {
+        if (updateDTO.password() == null || updateDTO.password().isEmpty()) {
+            throw new ApplicationException(ErrorCode.BAD_REQUEST_DATA);
+        }
         userAppService.changeUserPW(updateDTO);
         return ResponseEntity.ok().build();
     }
@@ -71,8 +78,11 @@ public class UserController {
             @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
     })
     @PostMapping("/nickname")
-    public ResponseEntity<?> changeUserNickName(UserRequestDTO.RegisterDTO registerDTO) {
-        userAppService.changeUserNickName(registerDTO.userId(), registerDTO.nickName());
+    public ResponseEntity<?> changeUserNickName(UserRequestDTO.UserUpdateDTO updateDTO) {
+        if (updateDTO.nickName() == null || updateDTO.nickName().isEmpty()) {
+            throw new ApplicationException(ErrorCode.BAD_REQUEST_DATA);
+        }
+        userAppService.changeUserNickName(updateDTO);
         return ResponseEntity.ok().build();
     }
 
@@ -83,8 +93,8 @@ public class UserController {
             @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
     })
     @PostMapping("/unregister")
-    public ResponseEntity<?> unregister(String userId) {
-        userAppService.unregisterUser(userId);
+    public ResponseEntity<?> unregister(Long userCode) {
+        userAppService.unregisterUser(userCode);
         return ResponseEntity.ok().build();
     }
 }

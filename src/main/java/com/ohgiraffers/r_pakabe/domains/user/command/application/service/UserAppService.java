@@ -64,18 +64,20 @@ public class UserAppService {
 
 
 
-
-
-
-
-    /** 나중에 */
-
     @Transactional
     public void changeUserPW(UserRequestDTO.UserUpdateDTO updateDTO) {
+        // db 조회 하기 전에 먼저 유효성 검사
+        if (updateDTO.password() == null || updateDTO.password().isEmpty() || updateDTO.password().equals("null")) {
+            throw new ApplicationException(ErrorCode.BAD_USER_DATA);
+        }
+
         User existUser = userDomainService.findByUserCode(updateDTO.userCode());
         if (existUser == null) {
             throw new ApplicationException(ErrorCode.NO_SUCH_USER);
         }
+
+        //Todo : pw 암호화
+
 
         User user = new User(
                 existUser.getUserCode(),
@@ -87,12 +89,22 @@ public class UserAppService {
     }
 
     @Transactional
-    public void changeUserNickName(String userId, String nickname) {
-        User existUser = userDomainService.findByUserId(userId);
+    public void changeUserNickName(UserRequestDTO.UserUpdateDTO updateDTO) {
+        // db 조회 하기 전에 먼저 유효성 검사
+        if (updateDTO.nickName() == null || updateDTO.nickName().isEmpty() || updateDTO.nickName().equals("null")) {
+            throw new ApplicationException(ErrorCode.BAD_USER_DATA);
+        }
+
+        User existUser = userDomainService.findByUserCode(updateDTO.userCode());
         if (existUser == null) {
             throw new ApplicationException(ErrorCode.NO_SUCH_USER);
         }
-        if (existUser.getNickname().equals(nickname)) {
+        if (userDomainService.findByNickname(updateDTO.nickName()) != null){
+            throw new ApplicationException(ErrorCode.BAD_USER_DATA);
+        }
+
+
+        if (existUser.getNickname().equals(updateDTO.nickName())) {
             throw new ApplicationException(ErrorCode.BAD_USER_DATA);
         }
 
@@ -100,15 +112,15 @@ public class UserAppService {
                 existUser.getUserCode(),
                 existUser.getUserId(),
                 existUser.getPassword(),
-                nickname
+                updateDTO.nickName()
         );
         userDomainService.updateUser(user);
     }
 
 
     @Transactional
-    public void unregisterUser(String userId) {
-        User existUser = userDomainService.findByUserId(userId);
+    public void unregisterUser(Long userCode) {
+        User existUser = userDomainService.findByUserCode(userCode);
         if (existUser == null) {
             throw new ApplicationException(ErrorCode.NO_SUCH_USER);
         }
