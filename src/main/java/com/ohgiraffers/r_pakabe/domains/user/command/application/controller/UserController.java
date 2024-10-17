@@ -1,11 +1,8 @@
 package com.ohgiraffers.r_pakabe.domains.user.command.application.controller;
 
 import com.ohgiraffers.r_pakabe.common.RecordNullChecker;
-import com.ohgiraffers.r_pakabe.common.error.ApplicationException;
-import com.ohgiraffers.r_pakabe.common.error.ErrorCode;
 import com.ohgiraffers.r_pakabe.common.error.NullfieldException;
 import com.ohgiraffers.r_pakabe.domains.user.command.application.dto.UserRequestDTO;
-import com.ohgiraffers.r_pakabe.domains.user.command.application.dto.UserResponseDTO;
 import com.ohgiraffers.r_pakabe.domains.user.command.application.service.UserAppService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -80,7 +77,7 @@ public class UserController {
     })
     @PostMapping("/nickname")
     public ResponseEntity<?> changeUserNickName(UserRequestDTO.UserUpdateDTO updateDTO) {
-        if (updateDTO.nickName() == null || updateDTO.nickName().isEmpty()) {
+        if (updateDTO.nickname() == null || updateDTO.nickname().isEmpty()) {
             throw new NullfieldException("닉네임이 입력되지 않았습니다.");
         }
         userAppService.changeUserNickName(updateDTO);

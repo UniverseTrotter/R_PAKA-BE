@@ -44,7 +44,7 @@ public class UserAppService {
         User user = User.builder()
                 .userId(registerDTO.userId())
                 .password(registerDTO.password())
-                .nickname(registerDTO.nickName())
+                .nickname(registerDTO.nickname())
                 .build();
 
         userDomainService.registerUser(user);
@@ -91,7 +91,7 @@ public class UserAppService {
     @Transactional
     public void changeUserNickName(UserRequestDTO.UserUpdateDTO updateDTO) {
         // db 조회 하기 전에 먼저 유효성 검사
-        if (updateDTO.nickName() == null || updateDTO.nickName().isEmpty() || updateDTO.nickName().equals("null")) {
+        if (updateDTO.nickname() == null || updateDTO.nickname().isEmpty() || updateDTO.nickname().equals("null")) {
             throw new ApplicationException(ErrorCode.BAD_USER_DATA);
         }
 
@@ -99,12 +99,12 @@ public class UserAppService {
         if (existUser == null) {
             throw new ApplicationException(ErrorCode.NO_SUCH_USER);
         }
-        if (userDomainService.findByNickname(updateDTO.nickName()) != null){
+        if (userDomainService.findByNickname(updateDTO.nickname()) != null){
             throw new ApplicationException(ErrorCode.BAD_USER_DATA);
         }
 
 
-        if (existUser.getNickname().equals(updateDTO.nickName())) {
+        if (existUser.getNickname().equals(updateDTO.nickname())) {
             throw new ApplicationException(ErrorCode.BAD_USER_DATA);
         }
 
@@ -112,7 +112,7 @@ public class UserAppService {
                 existUser.getUserCode(),
                 existUser.getUserId(),
                 existUser.getPassword(),
-                updateDTO.nickName()
+                updateDTO.nickname()
         );
         userDomainService.updateUser(user);
     }

@@ -17,7 +17,7 @@ public class UserRequestDTO {
     public record RegisterDTO(
             String userId,
             String password,
-            String nickName
+            String nickname
     ){}
 
     /**
@@ -26,7 +26,7 @@ public class UserRequestDTO {
     public record UserUpdateDTO(
             Long userCode,
             String password,
-            String nickName
+            String nickname
     ){}
 
 }
