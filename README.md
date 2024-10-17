@@ -43,3 +43,7 @@ TA: 성예린
 성예린: 배경 모델링, UI 디자인
 
 ---
+<h2>아키텍쳐 구상도</h2>
+
+![image](https://github.com/user-attachments/assets/eaf1bd8d-d8bb-49c8-8157-97fed3b33e5c)
+
