@@ -5,12 +5,18 @@ import com.ohgiraffers.r_pakabe.domains.user.command.domain.repository.UserRepos
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserDomainService {
     private final UserRepository userRepository;
 
     public UserDomainService(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
 
     @Nullable

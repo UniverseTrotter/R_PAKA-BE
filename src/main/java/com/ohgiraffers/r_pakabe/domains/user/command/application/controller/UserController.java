@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,8 +45,8 @@ public class UserController {
             @ApiResponse(responseCode = "401", description = "해당 유저가 없습니다"),
             @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
     })
-    @PostMapping("/detail")
-    public ResponseEntity<?> userRegister(Long userCode) {
+    @GetMapping("/detail")
+    public ResponseEntity<?> getUserDetail(Long userCode) {
         return ResponseEntity.ok().body(userAppService.findUser(userCode));
     }
 
