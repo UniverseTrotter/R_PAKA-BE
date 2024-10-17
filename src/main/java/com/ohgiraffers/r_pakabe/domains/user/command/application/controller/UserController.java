@@ -3,6 +3,7 @@ package com.ohgiraffers.r_pakabe.domains.user.command.application.controller;
 import com.ohgiraffers.r_pakabe.common.RecordNullChecker;
 import com.ohgiraffers.r_pakabe.common.error.ApplicationException;
 import com.ohgiraffers.r_pakabe.common.error.ErrorCode;
+import com.ohgiraffers.r_pakabe.common.error.NullfieldException;
 import com.ohgiraffers.r_pakabe.domains.user.command.application.dto.UserRequestDTO;
 import com.ohgiraffers.r_pakabe.domains.user.command.application.dto.UserResponseDTO;
 import com.ohgiraffers.r_pakabe.domains.user.command.application.service.UserAppService;
@@ -34,7 +35,7 @@ public class UserController {
             @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
     })
     @PostMapping("/register")
-    public ResponseEntity<?> userRegister(UserRequestDTO.RegisterDTO registerDTO) {
+    public ResponseEntity<?> userRegister(UserRequestDTO.RegisterDTO registerDTO) throws Exception{
         RecordNullChecker.hasNullFields(registerDTO);
         userAppService.userRegister(registerDTO);
         return ResponseEntity.ok().build();
@@ -64,7 +65,7 @@ public class UserController {
     @PostMapping("/password")
     public ResponseEntity<?> changeUserPW(UserRequestDTO.UserUpdateDTO updateDTO) {
         if (updateDTO.password() == null || updateDTO.password().isEmpty()) {
-            throw new ApplicationException(ErrorCode.BAD_REQUEST_DATA);
+            throw new NullfieldException("비밀번호가 입력되지 않았습니다.");
         }
         userAppService.changeUserPW(updateDTO);
         return ResponseEntity.ok().build();
@@ -80,7 +81,7 @@ public class UserController {
     @PostMapping("/nickname")
     public ResponseEntity<?> changeUserNickName(UserRequestDTO.UserUpdateDTO updateDTO) {
         if (updateDTO.nickName() == null || updateDTO.nickName().isEmpty()) {
-            throw new ApplicationException(ErrorCode.BAD_REQUEST_DATA);
+            throw new NullfieldException("닉네임이 입력되지 않았습니다.");
         }
         userAppService.changeUserNickName(updateDTO);
         return ResponseEntity.ok().build();

@@ -2,6 +2,7 @@ package com.ohgiraffers.r_pakabe.common.error;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
 @Getter
@@ -14,8 +15,7 @@ public enum ErrorCode {
     ID_IS_EMPTY(HttpStatus.BAD_REQUEST,"USER-003","ID가 입력되지 않았습니다."),
     PW_IS_EMPTY(HttpStatus.BAD_REQUEST,"USER-004","PW가 입력되지 않았습니다."),
     ID_ALREADY_EXIT(HttpStatus.BAD_REQUEST,"USER-005","이미 존재하는 ID 입니다."),
-    BAD_USER_DATA(HttpStatus.BAD_REQUEST,"USER-006","입력값이 올바르지 않습니다."),
-    BAD_REQUEST_DATA(HttpStatus.BAD_REQUEST,"NULL-001","입력되지않았습니다.")
+    BAD_USER_DATA(HttpStatus.BAD_REQUEST,"USER-006","입력값이 올바르지 않습니다.")
     ;
 
     private HttpStatus status;

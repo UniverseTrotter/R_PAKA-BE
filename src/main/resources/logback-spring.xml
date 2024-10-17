@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- Spring Boot에서 사용하는 기본 패턴과 컬러 설정을 사용하기 위해 Spring Boot의 로그 확장을 활성화 -->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+
+    <!-- 로그 파일이 저장될 디렉토리 설정 -->
+    <property name="LOG_PATH" value="logs"/>
+
+    <!-- 파일 롤링을 위한 File Appender 설정 -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+<!--        <file>${LOG_PATH}/app.log</file>-->
+        <append>false</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 일별로 로그 파일 생성 -->
+            <fileNamePattern>${LOG_PATH}/RpakaLog_%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- 최대 보관 기간 설정 -->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <!-- 로그 패턴 설정 -->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level ${PID} --- [%thread] %logger{36} : %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- 루트 로거 설정 -->
+    <root level="INFO">
+        <!-- 기본 콘솔 앱렌더 추가 -->
+        <appender-ref ref="CONSOLE"/>
+        <!-- 파일 앱렌더 추가 -->
+        <appender-ref ref="FILE"/>
+    </root>
+
+</configuration>

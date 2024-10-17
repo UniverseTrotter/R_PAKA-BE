@@ -15,10 +15,4 @@ public class ApplicationException extends RuntimeException {
         this.errorCode = errorCode;
         this.timestamp = new PolyTime(LocalDateTime.now()).get();
     }
-
-    public ApplicationException(ErrorCode errorCode, String message){
-        super(message);
-        this.errorCode = errorCode;
-        this.timestamp = new PolyTime(LocalDateTime.now()).get();
-    }
 }
