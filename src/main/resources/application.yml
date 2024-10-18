@@ -22,8 +22,8 @@ spring:
         highlight_sql: true
         use_sql_comments: true
 logging:
-#  pattern:
-#    dateformat: "yyyy-MM-dd HH:mm:ss:SSS"
+  pattern:
+    dateformat: "yyyy-MM-dd HH:mm:ss:SSS"
 #    file: "%d{${logging.pattern.dateformat}} %-5level ${PID} --- [%thread] %logger{36} : %msg%n"
 #  file:
 #    path: ./logs
