@@ -24,13 +24,6 @@ spring:
 logging:
   pattern:
     dateformat: "yyyy-MM-dd HH:mm:ss:SSS"
-#    file: "%d{${logging.pattern.dateformat}} %-5level ${PID} --- [%thread] %logger{36} : %msg%n"
-#  file:
-#    path: ./logs
-#  logback:
-#    rollingpolicy:
-#      file-name-pattern: ./logs/app.%d{yyyy-MM-dd}.log  # 일별로 로그 파일 생성
-#      max-history: 30
   level:
     root: info
     com.ohgiraffers.r_pakabe.RPakaBeApplication: debug

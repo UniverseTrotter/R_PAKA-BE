@@ -1,5 +1,7 @@
 package com.ohgiraffers.r_pakabe.domains.user.command.domain.service;
 
+import com.ohgiraffers.r_pakabe.common.error.ApplicationException;
+import com.ohgiraffers.r_pakabe.common.error.ErrorCode;
 import com.ohgiraffers.r_pakabe.domains.user.command.domain.model.User;
 import com.ohgiraffers.r_pakabe.domains.user.command.domain.repository.UserRepository;
 import org.springframework.lang.Nullable;
@@ -19,9 +21,20 @@ public class UserDomainService {
         return userRepository.findAll();
     }
 
-    @Nullable
+
     public User findByUserCode(Long code){
-        return userRepository.findById(code).orElse(null);
+        User user = userRepository.findById(code).orElse(null);
+        if (user == null) {
+            throw new ApplicationException(ErrorCode.USER_NOT_EXIST);
+        }
+        return user;
+    }
+
+    public void checkUserExistsByCode(Long code) throws ApplicationException {
+        User user = userRepository.findById(code).orElse(null);
+        if (user == null) {
+            throw new ApplicationException(ErrorCode.USER_NOT_EXIST);
+        }
     }
 
     @Nullable

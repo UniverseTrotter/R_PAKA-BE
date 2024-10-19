@@ -24,7 +24,7 @@ public class UserAppService {
         User user = userDomainService.findByUserId(loginDTO.userId());
 
         if (user == null) {
-            throw new ApplicationException(ErrorCode.NO_SUCH_USER);
+            throw new ApplicationException(ErrorCode.NO_SUCH_ID);
         }
 
         if (user.getPassword().equals(loginDTO.password())) {
@@ -53,9 +53,6 @@ public class UserAppService {
     @Transactional
     public UserResponseDTO.UserDetailDTO findUser(Long userCode) {
         User user = userDomainService.findByUserCode(userCode);
-        if (user == null) {
-            throw new ApplicationException(ErrorCode.NO_SUCH_USER);
-        }
         return new UserResponseDTO.UserDetailDTO(
                 user.getUserId(),
                 user.getNickname()
@@ -72,9 +69,6 @@ public class UserAppService {
         }
 
         User existUser = userDomainService.findByUserCode(updateDTO.userCode());
-        if (existUser == null) {
-            throw new ApplicationException(ErrorCode.NO_SUCH_USER);
-        }
 
         //Todo : pw 암호화
 
@@ -96,9 +90,6 @@ public class UserAppService {
         }
 
         User existUser = userDomainService.findByUserCode(updateDTO.userCode());
-        if (existUser == null) {
-            throw new ApplicationException(ErrorCode.NO_SUCH_USER);
-        }
         if (userDomainService.findByNickname(updateDTO.nickname()) != null){
             throw new ApplicationException(ErrorCode.BAD_USER_DATA);
         }
@@ -121,12 +112,8 @@ public class UserAppService {
     @Transactional
     public void unregisterUser(Long userCode) {
         User existUser = userDomainService.findByUserCode(userCode);
-        if (existUser == null) {
-            throw new ApplicationException(ErrorCode.NO_SUCH_USER);
-        }
         userDomainService.deleteUser(existUser);
     }
-
 
 
 

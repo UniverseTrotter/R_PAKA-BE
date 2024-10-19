@@ -1,5 +1,6 @@
 package com.ohgiraffers.r_pakabe.domains.avatars.command.domain.model;
 
+import com.ohgiraffers.r_pakabe.domains.avatars.command.application.dto.UserAvatarDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,6 +40,15 @@ public class Avatar {
         this.userAvatarBody = userAvatarBody;
         this.userAvatarSkin = userAvatarSkin;
         this.userAvatarHand = userAvatarHand;
+    }
+
+    public Avatar(UserAvatarDTO avatarDTO) {
+        this.userCode = avatarDTO.userCode();
+        this.userAvatarGender = avatarDTO.userAvatarGender();
+        this.userAvatarHair = avatarDTO.userAvatarHair();
+        this.userAvatarBody = avatarDTO.userAvatarBody();
+        this.userAvatarSkin = avatarDTO.userAvatarSkin();
+        this.userAvatarHand = avatarDTO.userAvatarHand();
     }
 
 
