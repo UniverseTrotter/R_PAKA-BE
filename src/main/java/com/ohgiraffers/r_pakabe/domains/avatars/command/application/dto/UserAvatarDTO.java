@@ -1,7 +1,7 @@
 package com.ohgiraffers.r_pakabe.domains.avatars.command.application.dto;
 
 import com.ohgiraffers.r_pakabe.domains.avatars.command.domain.model.Avatar;
-import lombok.AllArgsConstructor;
+
 
 public record UserAvatarDTO(
         Long userCode,
@@ -11,8 +11,8 @@ public record UserAvatarDTO(
         int userAvatarSkin,
         int userAvatarHand
 ){
-    public UserAvatarDTO(Avatar avatar){
-        this(
+    public static UserAvatarDTO fromAvatar(Avatar avatar) {
+        return new UserAvatarDTO(
                 avatar.getUserCode(),
                 avatar.getUserAvatarGender(),
                 avatar.getUserAvatarHair(),

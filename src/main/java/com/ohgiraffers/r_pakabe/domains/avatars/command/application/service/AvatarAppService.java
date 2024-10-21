@@ -28,11 +28,16 @@ public class AvatarAppService {
             throw new ApplicationException(ErrorCode.NO_SUCH_AVATAR);
         }
 
-        return new UserAvatarDTO(avatar);
+        return UserAvatarDTO.fromAvatar(avatar);
     }
 
     public void makeUserAvatar(UserAvatarDTO avatarDTO) {
         userDomainService.checkUserExistsByCode(avatarDTO.userCode());
+        Avatar existAvatar = avatarDomainService.getAvatarByUserCode(avatarDTO.userCode());
+        if (existAvatar != null) {
+            throw new ApplicationException(ErrorCode.AVATAR_ALREADY_EXIST);
+        }
+
         avatarDomainService.saveAvatar(new Avatar(avatarDTO));
     }
 
@@ -62,7 +67,7 @@ public class AvatarAppService {
         }
         List<UserAvatarDTO> userAvatarDTOList = new ArrayList<>();
         for (Avatar avatar : avatarList) {
-            userAvatarDTOList.add(new UserAvatarDTO(avatar));
+            userAvatarDTOList.add(UserAvatarDTO.fromAvatar(avatar));
         }
         return userAvatarDTOList;
     }
