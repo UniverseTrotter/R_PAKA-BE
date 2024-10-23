@@ -37,7 +37,13 @@ out/
 .vscode/
 
 ### env file ###
-/.env
+*.env
 
 ### docker files ###
 /docker/
+
+### dev.yml ###
+/src/main/resources/application-dev.yml
+
+### log ###
+*.log

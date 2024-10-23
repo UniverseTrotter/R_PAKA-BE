@@ -25,6 +25,7 @@ dependencies {
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.mysql:mysql-connector-j'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    runtimeOnly 'org.postgresql:postgresql'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
     //lombok
@@ -37,6 +38,12 @@ dependencies {
 
     //swagger
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
+
+    // Postgres type
+//    implementation 'com.vladmihalcea:hibernate-types-52:2.21.1'
+//    implementation 'com.vladmihalcea:hibernate-types-60:2.21.1'
+
+
 }
 
 tasks.named('test') {

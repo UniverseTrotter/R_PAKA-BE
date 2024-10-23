@@ -1,26 +1,17 @@
-server:
-  port: 8765
-  forward-headers-strategy: native
-
 spring:
+  profiles:
+    include: common, dev
   config:
-    import: optional:file:.env[.properties]
+    import:
+    - optional:file:.env
+    - optional:file:dev
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${MYSQL_URL}
-    username: ${MYSQL_USER}
-    password: ${MYSQL_PASSWORD}
-  jpa:
-    show-sql: true
-    database: mysql
-    hibernate:
-      ddl-auto: create
-    properties:
-      hibernate:
-        format_sql: true
-        show_sql: true
-        highlight_sql: true
-        use_sql_comments: true
+    driver-class-name: org.postgresql.Driver
+    url: ${POSTGRESQL_URL}
+    username: ${POSTGRESQL_USER}
+    password: ${POSTGRESQL_PASSWORD}
+
+
 logging:
   pattern:
     dateformat: "yyyy-MM-dd HH:mm:ss:SSS"
