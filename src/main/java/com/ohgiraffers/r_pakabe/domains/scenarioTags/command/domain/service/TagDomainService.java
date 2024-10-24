@@ -26,6 +26,10 @@ public class TagDomainService {
         return tagRepository.findAll();
     }
 
+    public ScenarioTag createTag(ScenarioTag tag) {
+        return tagRepository.save(tag);
+    }
+
     public ScenarioTag saveTag(ScenarioTag scenarioTag) {
         return tagRepository.save(scenarioTag);
     }

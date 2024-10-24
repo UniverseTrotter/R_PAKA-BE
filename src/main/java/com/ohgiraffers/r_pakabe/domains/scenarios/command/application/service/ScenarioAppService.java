@@ -26,7 +26,11 @@ public class ScenarioAppService {
         return scenarioJoinService.getDataFromEntity(scenario);
     }
 
-    public void createScenario(ScenarioDTO scenarioDTO) {
+    public void uploadScenario(ScenarioDTO scenarioDTO) {
+        Scenario scenario = scenarioDomainService.getScenarioById(scenarioDTO.scenarioCode());
+        if (scenario == null) {
+            scenarioJoinService.createEntityFromDTO(scenarioDTO);
+        }
     }
 
 }

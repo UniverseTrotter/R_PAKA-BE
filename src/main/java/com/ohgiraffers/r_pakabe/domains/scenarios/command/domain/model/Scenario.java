@@ -2,10 +2,7 @@ package com.ohgiraffers.r_pakabe.domains.scenarios.command.domain.model;
 
 import com.ohgiraffers.r_pakabe.common.BaseTimeEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
@@ -58,6 +55,18 @@ public class Scenario extends BaseTimeEntity {
     @JdbcTypeCode(SqlTypes.ARRAY)
     @Column(columnDefinition = "integer[]")
     private List<Integer> tags;
+
+    @Builder
+    public Scenario(String scenarioTitle, List<Integer> genre, String mainQuest, List<String> subQuest, String detail, List<Integer> scenarioAvatarList, List<Integer> worldParts, List<Integer> tags) {
+        this.scenarioTitle = scenarioTitle;
+        this.genre = genre;
+        this.mainQuest = mainQuest;
+        this.subQuest = subQuest;
+        this.detail = detail;
+        this.scenarioAvatarList = scenarioAvatarList;
+        this.worldParts = worldParts;
+        this.tags = tags;
+    }
 
 
     @Override

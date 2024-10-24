@@ -26,6 +26,10 @@ public class GenreDomainService {
         return genreRepository.findByGenreName(genreName).orElse(null);
     }
 
+    public Genre updateGenre(Genre genre) {
+        return genreRepository.save(genre);
+    }
+
     public Genre createGenre(Genre genre) {
         return genreRepository.save(genre);
     }
