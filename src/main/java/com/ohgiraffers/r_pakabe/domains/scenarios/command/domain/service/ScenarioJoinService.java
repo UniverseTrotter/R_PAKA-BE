@@ -93,7 +93,41 @@ public class ScenarioJoinService {
 
 
     public Scenario createEntityFromDTO(ScenarioDTO scenarioDTO){
-        Scenario scenario = new Scenario();
-        return scenario;
+        List<ScenarioAvatarDTO> avatarList = scenarioDTO.scenarioAvatarList();
+        List<WorldPartDTO> worldPartList = scenarioDTO.worldParts();
+        List<GenreDTO> genreList = scenarioDTO.genre();
+        List<ScenarioTagDTO> tagList = scenarioDTO.tags();
+
+        List<Integer> avatarIndex = new ArrayList<>();
+        List<Integer> worldIndex = new ArrayList<>();
+        List<Integer> genreIndex = new ArrayList<>();
+        List<Integer> tagIndex = new ArrayList<>();
+
+        for (ScenarioAvatarDTO avatarDTO : avatarList){
+            ScenarioAvatar avatar = this.scenarioAvatarDomainService.getScenarioAvatar(avatarDTO.senarioAvatarId());
+            if (avatar == null){
+                scenarioAvatarDomainService.createScenarioAvatar(
+                        ScenarioAvatar.builder()
+                                .avatarName(avatarDTO.avatarName())
+                                .outfit(avatarDTO.outfit())
+                                .build()
+                );
+            }else {
+                this.scenarioAvatarDomainService.updateScenarioAvatar(
+                        new ScenarioAvatar(
+                                avatar.getSenarioAvatarId(),
+                                avatarDTO.avatarName(),
+                                avatarDTO.outfit()
+                        )
+                );
+            }
+        }
+
+
+
+
+
+
+        return null;
     }
 }

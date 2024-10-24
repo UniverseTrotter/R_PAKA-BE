@@ -2,12 +2,10 @@ package com.ohgiraffers.r_pakabe.domains.scenarioWorlds.command.domain.model;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
-@NoArgsConstructor
+@NoArgsConstructor (access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
 @Entity
@@ -25,6 +23,12 @@ public class WorldPart {
     @Column
     @ColumnDefault("false")
     private boolean isPortalEnable;
+
+    @Builder
+    public WorldPart(String partName, boolean isPortalEnable) {
+        this.partName = partName;
+        this.isPortalEnable = isPortalEnable;
+    }
 
     @Override
     public String toString() {

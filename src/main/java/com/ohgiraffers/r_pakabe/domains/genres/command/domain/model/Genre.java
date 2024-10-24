@@ -1,11 +1,9 @@
 package com.ohgiraffers.r_pakabe.domains.genres.command.domain.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@NoArgsConstructor
+@NoArgsConstructor (access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
 @Entity
@@ -19,6 +17,11 @@ public class Genre {
     //장르 이름
     @Column(length = 20, unique = true)
     private String genreName;
+
+    @Builder
+    public Genre(String genreName) {
+        this.genreName = genreName;
+    }
 
     @Override
     public String toString() {

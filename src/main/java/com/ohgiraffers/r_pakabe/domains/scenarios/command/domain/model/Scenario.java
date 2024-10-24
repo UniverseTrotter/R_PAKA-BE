@@ -2,6 +2,7 @@ package com.ohgiraffers.r_pakabe.domains.scenarios.command.domain.model;
 
 import com.ohgiraffers.r_pakabe.common.BaseTimeEntity;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,7 @@ import org.hibernate.type.SqlTypes;
 
 import java.util.List;
 
-@NoArgsConstructor
+@NoArgsConstructor (access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
 @Entity

@@ -1,12 +1,10 @@
 package com.ohgiraffers.r_pakabe.domains.scenarioAvatars.command.domain.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
-@NoArgsConstructor
+@NoArgsConstructor (access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
 @Entity
@@ -25,6 +23,11 @@ public class ScenarioAvatar {
     @ColumnDefault("-1")
     private int outfit;
 
+    @Builder
+    public ScenarioAvatar(String avatarName, int outfit) {
+        this.avatarName = avatarName;
+        this.outfit = outfit;
+    }
 
     @Override
     public String toString() {

@@ -1,11 +1,9 @@
 package com.ohgiraffers.r_pakabe.domains.scenarioTags.command.domain.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@NoArgsConstructor
+@NoArgsConstructor (access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
 @Entity
@@ -19,6 +17,11 @@ public class ScenarioTag {
     //장르 이름
     @Column(length = 100, unique = true)
     private String tagName;
+
+    @Builder
+    public ScenarioTag(String tagName) {
+        this.tagName = tagName;
+    }
 
     @Override
     public String toString() {
