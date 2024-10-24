@@ -1,7 +1,6 @@
 package com.ohgiraffers.r_pakabe.domains.scenarios.command.domain.model;
 
 import com.ohgiraffers.r_pakabe.common.BaseTimeEntity;
-import com.ohgiraffers.r_pakabe.domains.scenarioAvatars.command.domain.model.ScenarioAvatar;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,13 +22,13 @@ public class Scenario extends BaseTimeEntity {
     private Long scenarioCode;
 
     //시나리오 제목
-    @Column(length = 250)
+    @Column(length = 250, unique = true)
     private String scenarioTitle;
 
     //장르 리스트
     @JdbcTypeCode(SqlTypes.ARRAY)
-    @Column(columnDefinition = "text[]")
-    private List<String> genre;
+    @Column(columnDefinition = "integer[]")
+    private List<Integer> genre;
 
     //메인 퀘스트
     @Column(length = 1000)
@@ -56,7 +55,22 @@ public class Scenario extends BaseTimeEntity {
 
     //태그 리스트
     @JdbcTypeCode(SqlTypes.ARRAY)
-    @Column(columnDefinition = "text[]")
-    private List<String> tags;
+    @Column(columnDefinition = "integer[]")
+    private List<Integer> tags;
 
+
+    @Override
+    public String toString() {
+        return "Scenario{" +
+                "scenarioCode=" + scenarioCode +
+                ", scenarioTitle='" + scenarioTitle + '\'' +
+                ", genre=" + genre +
+                ", mainQuest='" + mainQuest + '\'' +
+                ", subQuest=" + subQuest +
+                ", detail='" + detail + '\'' +
+                ", scenarioAvatarList=" + scenarioAvatarList +
+                ", worldParts=" + worldParts +
+                ", tags=" + tags +
+                '}';
+    }
 }

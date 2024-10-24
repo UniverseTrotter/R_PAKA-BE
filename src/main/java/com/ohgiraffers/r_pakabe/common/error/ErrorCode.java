@@ -17,8 +17,8 @@ public enum ErrorCode {
     BAD_USER_DATA(HttpStatus.BAD_REQUEST,"USER-006","입력값이 올바르지 않습니다."),
     USER_NOT_EXIST(HttpStatus.UNAUTHORIZED, "USER-007", "해당 유저가 없습니다."),
     NO_SUCH_AVATAR(HttpStatus.BAD_REQUEST,"AVATAR-001","해당 유저의 아바타가 없습니다."),
-    AVATAR_ALREADY_EXIST(HttpStatus.BAD_REQUEST,"AVATAR-002", "해당 유저의 아바타가 이미 존재합니다.")
-    ;
+    AVATAR_ALREADY_EXIST(HttpStatus.BAD_REQUEST,"AVATAR-002", "해당 유저의 아바타가 이미 존재합니다."),
+    NO_SUCH_SCENARIO(HttpStatus.BAD_REQUEST,"SCENARIO-001" , "해당 시나리오가 없습니다.");
 
     private HttpStatus status;
     private String errorCode;

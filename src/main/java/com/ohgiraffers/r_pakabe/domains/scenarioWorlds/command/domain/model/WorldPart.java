@@ -16,7 +16,7 @@ public class WorldPart {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long partId;
+    private Integer partId;
 
     @Column
     @ColumnDefault("여기에 장소명을 입력")

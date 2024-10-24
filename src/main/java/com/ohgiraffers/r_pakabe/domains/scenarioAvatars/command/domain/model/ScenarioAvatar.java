@@ -15,7 +15,7 @@ public class ScenarioAvatar {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long senarioAvatarId;
+    private Integer senarioAvatarId;
 
     @Column
     @ColumnDefault("여기에 이름을 입력")

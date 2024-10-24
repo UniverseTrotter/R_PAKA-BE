@@ -28,7 +28,7 @@ public class AvatarAppService {
             throw new ApplicationException(ErrorCode.NO_SUCH_AVATAR);
         }
 
-        return UserAvatarDTO.fromAvatar(avatar);
+        return UserAvatarDTO.fromEntity(avatar);
     }
 
     public void makeUserAvatar(UserAvatarDTO avatarDTO) {
@@ -67,7 +67,7 @@ public class AvatarAppService {
         }
         List<UserAvatarDTO> userAvatarDTOList = new ArrayList<>();
         for (Avatar avatar : avatarList) {
-            userAvatarDTOList.add(UserAvatarDTO.fromAvatar(avatar));
+            userAvatarDTOList.add(UserAvatarDTO.fromEntity(avatar));
         }
         return userAvatarDTOList;
     }

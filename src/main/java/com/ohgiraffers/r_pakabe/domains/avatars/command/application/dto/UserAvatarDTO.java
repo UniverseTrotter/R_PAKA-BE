@@ -11,7 +11,7 @@ public record UserAvatarDTO(
         int userAvatarSkin,
         int userAvatarHand
 ){
-    public static UserAvatarDTO fromAvatar(Avatar avatar) {
+    public static UserAvatarDTO fromEntity(Avatar avatar) {
         return new UserAvatarDTO(
                 avatar.getUserCode(),
                 avatar.getUserAvatarGender(),
