@@ -11,6 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @RequiredArgsConstructor
 @Service
@@ -18,6 +21,15 @@ public class ScenarioAppService {
 
     private final ScenarioDomainService scenarioDomainService;
     private final ScenarioJoinService scenarioJoinService;
+
+    public List<ScenarioDTO> getAllScenarioList() {
+        List<Scenario> scenarioList = scenarioDomainService.getAllScenarios();
+        List<ScenarioDTO> DTOList = new ArrayList<>();
+        for (Scenario scenario : scenarioList) {
+            DTOList.add(scenarioJoinService.getDataFromEntity(scenario));
+        }
+        return DTOList;
+    }
 
 
     public ScenarioDTO getScenario(Long scenarioCode) {

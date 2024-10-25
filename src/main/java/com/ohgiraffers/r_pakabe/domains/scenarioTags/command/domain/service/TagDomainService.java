@@ -15,7 +15,7 @@ public class TagDomainService {
     }
 
     public ScenarioTag findTagByCode(Integer tagCode) {
-        return tagRepository.findById(tagCode).get();
+        return tagRepository.findById(tagCode).orElse(null);
     }
 
     public ScenarioTag findTagByName(String name) {

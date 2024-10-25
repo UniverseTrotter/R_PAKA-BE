@@ -32,7 +32,7 @@ public class ScenarioAvatarAppService {
                             .outfit(avatarDTO.outfit())
                             .build()
             );
-        }else {
+        }/*else {
             avatar = this.scenarioAvatarDomainService.updateScenarioAvatar(
                     new ScenarioAvatar(
                             avatar.getSenarioAvatarId(),
@@ -40,7 +40,7 @@ public class ScenarioAvatarAppService {
                             avatarDTO.outfit()
                     )
             );
-        }
+        }*/
         return avatar;
     }
 

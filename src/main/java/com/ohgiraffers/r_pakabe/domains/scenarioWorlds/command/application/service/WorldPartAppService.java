@@ -32,7 +32,7 @@ public class WorldPartAppService {
                             .isPortalEnable(worldPartDTO.isPortalEnable())
                             .build()
             );
-        }else {
+        }/*else {
             worldPart = this.worldPartDomainService.updateWorldPart(
                     new WorldPart(
                             worldPart.getPartId(),
@@ -40,7 +40,7 @@ public class WorldPartAppService {
                             worldPartDTO.isPortalEnable()
                     )
             );
-        }
+        }*/
         return worldPart;
     }
 

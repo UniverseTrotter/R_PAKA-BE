@@ -28,24 +28,15 @@ public class TagAppService {
         log.info("Upload scenario tag : {}", tagDTO);
         ScenarioTag tag = this.tagDomainService.findTagByCode(tagDTO.tagCode());
         if (tag == null) {
-            tag = tagDomainService.createTag(
-                    ScenarioTag.builder()
-                            .tagName(tagDTO.tagName())
-                            .build()
-            );
-        }else {
-            tag = this.tagDomainService.updateTag(
-                    new ScenarioTag(
-                            tag.getTagCode(),
-                            tagDTO.tagName())
-            );
+            tag = creatTag(tagDTO);
         }
         return tag;
     }
 
     public ScenarioTag creatTag(ScenarioTagDTO tagDTO) {
+        //name 기준으로 판정
         log.info("Create scenario tag : {}", tagDTO);
-        ScenarioTag tag = this.tagDomainService.findTagByCode(tagDTO.tagCode());
+        ScenarioTag tag = tagDomainService.findTagByName(tagDTO.tagName());
         if (tag != null) {
             throw new ApplicationException(ErrorCode.TAG_ALREADY_EXIT);
         }

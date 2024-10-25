@@ -24,18 +24,18 @@ public class GenreAppService {
 
     public Genre uploadGenre(GenreDTO genreDTO) {
         log.info("Upload genre : {}", genreDTO);
-        Genre genre = this.genreDomainService.findGenreById(genreDTO.genreCode());
+        Genre genre = this.genreDomainService.findGenreByName(genreDTO.genreName());
         if (genre == null) {
             genre = genreDomainService.createGenre(
                     Genre.builder()
                             .genreName(genreDTO.genreName())
                             .build()
             );
-        }else {
+        }/*else {
             genre = this.genreDomainService.updateGenre(
                     new Genre(genreDTO.genreName())
             );
-        }
+        }*/
         return genre;
     }
 }

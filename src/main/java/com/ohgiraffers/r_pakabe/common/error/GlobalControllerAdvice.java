@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,6 +46,7 @@ public class GlobalControllerAdvice {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> applicationHandler(Exception e){
         log.error("Unexpected Error occurs {}", e.getMessage());
+        System.out.println(Arrays.toString(e.getStackTrace()));
 
         ErrorCode error = ErrorCode.INTERNAL_SERVER_ERROR;
 
