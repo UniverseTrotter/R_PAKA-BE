@@ -3,21 +3,17 @@ package com.ohgiraffers.r_pakabe.domains.scenarios.command.domain.service;
 import com.ohgiraffers.r_pakabe.domains.genres.command.application.dto.GenreDTO;
 import com.ohgiraffers.r_pakabe.domains.genres.command.application.service.GenreAppService;
 import com.ohgiraffers.r_pakabe.domains.genres.command.domain.model.Genre;
-import com.ohgiraffers.r_pakabe.domains.genres.command.domain.service.GenreDomainService;
 import com.ohgiraffers.r_pakabe.domains.scenarioAvatars.command.application.dto.ScenarioAvatarDTO;
 import com.ohgiraffers.r_pakabe.domains.scenarioAvatars.command.application.service.ScenarioAvatarAppService;
 import com.ohgiraffers.r_pakabe.domains.scenarioAvatars.command.domain.model.ScenarioAvatar;
-import com.ohgiraffers.r_pakabe.domains.scenarioAvatars.command.domain.service.ScenarioAvatarDomainService;
 import com.ohgiraffers.r_pakabe.domains.scenarioTags.command.application.service.TagAppService;
 import com.ohgiraffers.r_pakabe.domains.scenarioWorlds.command.application.dto.WorldPartDTO;
 import com.ohgiraffers.r_pakabe.domains.scenarioWorlds.command.application.service.WorldPartAppService;
 import com.ohgiraffers.r_pakabe.domains.scenarioWorlds.command.domain.model.WorldPart;
-import com.ohgiraffers.r_pakabe.domains.scenarioWorlds.command.domain.service.WorldPartDomainService;
 import com.ohgiraffers.r_pakabe.domains.scenarios.command.application.dto.ScenarioDTO;
 import com.ohgiraffers.r_pakabe.domains.scenarios.command.domain.model.Scenario;
 import com.ohgiraffers.r_pakabe.domains.scenarioTags.command.application.dto.ScenarioTagDTO;
 import com.ohgiraffers.r_pakabe.domains.scenarioTags.command.domain.model.ScenarioTag;
-import com.ohgiraffers.r_pakabe.domains.scenarioTags.command.domain.service.TagDomainService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -107,15 +103,29 @@ public class ScenarioJoinService {
             tagIndex.add(tag.getTagCode());
         }
 
-        return Scenario.builder()
-                .scenarioTitle(scenarioDTO.scenarioTitle())
-                .genre(genreIndex)
-                .mainQuest(scenarioDTO.mainQuest())
-                .subQuest(scenarioDTO.subQuest())
-                .detail(scenarioDTO.detail())
-                .scenarioAvatarList(avatarIndex)
-                .worldParts(worldIndex)
-                .tags(tagIndex)
-                .build();
+        if (scenarioDTO.scenarioCode() == -1) {
+            return Scenario.builder()
+                    .scenarioTitle(scenarioDTO.scenarioTitle())
+                    .genre(genreIndex)
+                    .mainQuest(scenarioDTO.mainQuest())
+                    .subQuest(scenarioDTO.subQuest())
+                    .detail(scenarioDTO.detail())
+                    .scenarioAvatarList(avatarIndex)
+                    .worldParts(worldIndex)
+                    .tags(tagIndex)
+                    .build();
+        }else {
+            return new Scenario(
+                    scenarioDTO.scenarioCode(),
+                    scenarioDTO.scenarioTitle(),
+                    genreIndex,
+                    scenarioDTO.mainQuest(),
+                    scenarioDTO.subQuest(),
+                    scenarioDTO.detail(),
+                    avatarIndex,
+                    worldIndex,
+                    tagIndex
+            );
+        }
     }
 }

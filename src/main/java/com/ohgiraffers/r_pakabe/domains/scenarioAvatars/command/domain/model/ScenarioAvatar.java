@@ -16,7 +16,7 @@ public class ScenarioAvatar {
     private Integer senarioAvatarId;
 
     @Column
-    @ColumnDefault("여기에 이름을 입력")
+//    @ColumnDefault(value = "여기에 이름을 입력")
     private String avatarName;
 
     @Column

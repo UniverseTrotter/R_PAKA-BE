@@ -7,6 +7,9 @@ import com.ohgiraffers.r_pakabe.domains.scenarioTags.command.application.dto.Sce
 
 import java.util.List;
 
+/**
+ * @param scenarioCode -1 이면 새로 생성
+ * */
 public record ScenarioDTO(
         Long scenarioCode,
         String scenarioTitle,
@@ -18,4 +21,31 @@ public record ScenarioDTO(
         List<WorldPartDTO> worldParts,
         List<ScenarioTagDTO> tags
 ) {
+    public static ScenarioDTO getEmptyDTO() {
+        return new ScenarioDTO(
+                -1L,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+    }
+
+    public static ScenarioDTO insertCreateCode(ScenarioCreateDTO createDTO) {
+        return new ScenarioDTO(
+                -1L,
+                createDTO.scenarioTitle(),
+                createDTO.genre(),
+                createDTO.mainQuest(),
+                createDTO.subQuest(),
+                createDTO.detail(),
+                createDTO.scenarioAvatarList(),
+                createDTO.worldParts(),
+                createDTO.tags()
+        );
+    }
 }

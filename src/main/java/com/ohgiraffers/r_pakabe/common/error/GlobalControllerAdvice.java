@@ -18,7 +18,7 @@ public class GlobalControllerAdvice {
 
     @ExceptionHandler(ApplicationException.class)
     public ResponseEntity<?> applicationHandler(ApplicationException e){
-        log.error("Error occurs {}", e.toString());
+        log.error("Error occurs {}", e.getErrorCode());
 
         Map<String,Object> data = new HashMap<>();
         data.put("status",e.getErrorCode().getStatus().value());

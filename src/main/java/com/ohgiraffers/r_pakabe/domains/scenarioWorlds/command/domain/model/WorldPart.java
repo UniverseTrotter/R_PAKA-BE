@@ -17,7 +17,7 @@ public class WorldPart {
     private Integer partId;
 
     @Column
-    @ColumnDefault("여기에 장소명을 입력")
+//    @ColumnDefault("여기에 장소명을 입력")
     private String partName;
 
     @Column

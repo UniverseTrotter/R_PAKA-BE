@@ -4,8 +4,10 @@ import com.ohgiraffers.r_pakabe.domains.genres.command.application.dto.GenreDTO;
 import com.ohgiraffers.r_pakabe.domains.genres.command.domain.model.Genre;
 import com.ohgiraffers.r_pakabe.domains.genres.command.domain.service.GenreDomainService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class GenreAppService {
@@ -21,6 +23,7 @@ public class GenreAppService {
     }
 
     public Genre uploadGenre(GenreDTO genreDTO) {
+        log.info("Upload genre : {}", genreDTO);
         Genre genre = this.genreDomainService.findGenreById(genreDTO.genreCode());
         if (genre == null) {
             genre = genreDomainService.createGenre(

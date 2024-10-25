@@ -4,8 +4,10 @@ import com.ohgiraffers.r_pakabe.domains.scenarioWorlds.command.application.dto.W
 import com.ohgiraffers.r_pakabe.domains.scenarioWorlds.command.domain.model.WorldPart;
 import com.ohgiraffers.r_pakabe.domains.scenarioWorlds.command.domain.service.WorldPartDomainService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class WorldPartAppService {
@@ -21,6 +23,7 @@ public class WorldPartAppService {
     }
 
     public WorldPart uploadWorldPart(WorldPartDTO worldPartDTO) {
+        log.info("Upload WorldPart : {}", worldPartDTO);
         WorldPart worldPart = this.worldPartDomainService.getWorldPart(worldPartDTO.partId());
         if (worldPart == null) {
             worldPart = worldPartDomainService.createWorldPart(
