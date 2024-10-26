@@ -5,9 +5,13 @@ import com.ohgiraffers.r_pakabe.common.error.ErrorCode;
 import com.ohgiraffers.r_pakabe.domains.scenarioTags.command.application.dto.ScenarioTagDTO;
 import com.ohgiraffers.r_pakabe.domains.scenarioTags.command.domain.model.ScenarioTag;
 import com.ohgiraffers.r_pakabe.domains.scenarioTags.command.domain.service.TagDomainService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -62,5 +66,46 @@ public class TagAppService {
     }
 
 
+    @Transactional
+    public List<ScenarioTagDTO> getAllTags() {
+        List<ScenarioTag> tags = tagDomainService.findTagAll();
+        List<ScenarioTagDTO> tagDTOList = new ArrayList<>();
+        for (ScenarioTag tag : tags) {
+            tagDTOList.add(ScenarioTagDTO.fromEntity(tag));
+        }
+        return tagDTOList;
+    }
 
+    @Transactional
+    public ScenarioTagDTO findTagById(Integer tagId) {
+        ScenarioTag tag = this.tagDomainService.findTagByCode(tagId);
+        if (tag == null) {
+            throw new ApplicationException(ErrorCode.NO_SUCH_TAG);
+        }
+        return ScenarioTagDTO.fromEntity(tag);
+    }
+
+    public ScenarioTagDTO findTagByName(String tagName) {
+        ScenarioTag tag = this.tagDomainService.findTagByName(tagName);
+        if (tag == null) {
+            throw new ApplicationException(ErrorCode.NO_SUCH_TAG);
+        }
+        return ScenarioTagDTO.fromEntity(tag);
+    }
+
+    public void creatTag(String tagName) {
+        ScenarioTag tag = this.tagDomainService.findTagByName(tagName);
+        if (tag != null) {
+            throw new ApplicationException(ErrorCode.TAG_ALREADY_EXIT);
+        }
+        tagDomainService.createTag(new ScenarioTag(tagName));
+    }
+
+    public void deleteTag(Integer tagId) {
+        ScenarioTag tag = this.tagDomainService.findTagByCode(tagId);
+        if (tag == null) {
+            throw new ApplicationException(ErrorCode.NO_SUCH_TAG);
+        }
+        tagDomainService.deleteTag(tagId);
+    }
 }

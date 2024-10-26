@@ -5,6 +5,7 @@ import com.ohgiraffers.r_pakabe.common.RecordNullChecker;
 import com.ohgiraffers.r_pakabe.common.error.ApplicationException;
 import com.ohgiraffers.r_pakabe.common.error.NullfieldException;
 import com.ohgiraffers.r_pakabe.domains.genres.command.application.dto.GenreDTO;
+import com.ohgiraffers.r_pakabe.domains.genres.command.application.dto.GenreRequestDTO;
 import com.ohgiraffers.r_pakabe.domains.genres.command.application.service.GenreAppService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -26,30 +27,15 @@ public class GenreContorller {
     private final GenreAppService genreAppService;
 
 
-    @Operation(summary = "장르 리스트", description = "저장된 장르 전체 리스트를 가져옵니다.")
+    @Operation(summary = "장르 리스트", description = "등록된 장르 전체를 리스트로 가져옵니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공적으로 처리 되었습니다."),
             @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
     })
-    @GetMapping("list")
+    @GetMapping("/list")
     public ResponseEntity<?> getAllGenre() {
         List<GenreDTO> genrelist = genreAppService.findAllGenre();
         return ResponseEntity.ok().body(genrelist);
-    }
-
-    @Operation(summary = "장르 생성", description = "새 장르를 생성합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공적으로 처리 되었습니다."),
-            @ApiResponse(responseCode = "400", description = "입력값이 올바르지 않습니다."),
-            @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
-    })
-    @PostMapping("/upload")
-    public ResponseEntity<?> createGenre(@RequestParam String genreName) throws Exception {
-        if (genreName == null || genreName.isEmpty()) {
-            throw new NullfieldException("장르명이 입력되지 않았습니다");
-        }
-        genreAppService.createGenre(genreName);
-        return ResponseEntity.ok().build();
     }
 
     @Operation(summary = "번호로 장르 찾기", description = "번호로 장르 객체를 반환합니다.")
@@ -59,11 +45,9 @@ public class GenreContorller {
             @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
     })
     @GetMapping("/get/id")
-    public ResponseEntity<?> findGenreById(@RequestParam Integer genreId) throws Exception {
-        if (genreId == null) {
-            throw new NullfieldException("번호가 입력되지 않았습니다.");
-        }
-        GenreDTO genreDTO = genreAppService.findGenreById(genreId);
+    public ResponseEntity<?> findGenreById(@ModelAttribute GenreRequestDTO.GenreIdDTO genreIdDTO) throws Exception {
+        RecordNullChecker.hasNullFields(genreIdDTO);
+        GenreDTO genreDTO = genreAppService.findGenreById(genreIdDTO.genreId());
         return ResponseEntity.ok().body(genreDTO);
     }
 
@@ -74,23 +58,39 @@ public class GenreContorller {
             @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
     })
     @GetMapping("/get/name")
-    public ResponseEntity<?> findGenreByName(@RequestParam String genreName) throws Exception {
-        if (genreName == null) {
-            throw new NullfieldException("장르명이 입력되지 않았습니다.");
-        }
-        GenreDTO genreDTO = genreAppService.findGenreByName(genreName);
+    public ResponseEntity<?> findGenreByName(@ModelAttribute GenreRequestDTO.GenreNameDTO genreNameDTO) throws Exception {
+        RecordNullChecker.hasNullFields(genreNameDTO);
+        GenreDTO genreDTO = genreAppService.findGenreByName(genreNameDTO.genreName());
         return ResponseEntity.ok().body(genreDTO);
     }
 
-    @Operation(summary = "장르 삭제", description = "저장된 장르 전체 리스트를 가져옵니다.")
+
+
+    @Operation(summary = "장르 생성", description = "새 장르를 생성합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공적으로 처리 되었습니다."),
+            @ApiResponse(responseCode = "400", description = "입력값이 올바르지 않습니다."),
+            @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
+    })
+    @PostMapping("/create")
+    public ResponseEntity<?> createGenre(@RequestParam GenreRequestDTO.GenreNameDTO genreNameDTO) throws Exception {
+        RecordNullChecker.hasNullFields(genreNameDTO);
+        genreAppService.createGenre(genreNameDTO.genreName());
+        log.info("Create Tag : {}", genreNameDTO.genreName());
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "(관리용) 장르 삭제", description = "장르를 삭제합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공적으로 처리 되었습니다."),
             @ApiResponse(responseCode = "400", description = "입력값이 올바르지 않습니다."),
             @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
     })
     @PostMapping("/delete")
-    public ResponseEntity<?> deleteGenre(@RequestParam Integer genreId) {
-        genreAppService.deleteGenre(genreId);
+    public ResponseEntity<?> deleteGenre(@RequestParam GenreRequestDTO.GenreIdDTO genreIdDTO) throws Exception {
+        RecordNullChecker.hasNullFields(genreIdDTO);
+        genreAppService.deleteGenre(genreIdDTO.genreId());
+        log.info("Delete Tag : {}", genreIdDTO.genreId());
         return ResponseEntity.ok().build();
     }
 

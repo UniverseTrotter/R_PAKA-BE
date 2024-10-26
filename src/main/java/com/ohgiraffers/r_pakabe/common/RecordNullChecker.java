@@ -1,10 +1,12 @@
 package com.ohgiraffers.r_pakabe.common;
 
 import com.ohgiraffers.r_pakabe.common.error.NullfieldException;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.RecordComponent;
 
+@Slf4j
 public class RecordNullChecker {
 
     /**
@@ -15,7 +17,7 @@ public class RecordNullChecker {
         for (RecordComponent component : components) {
             Method accessor = component.getAccessor();
             Object value = accessor.invoke(record);
-            System.out.println("필드 이름: " + component.getName() + ", 값: " + value);
+            log.info("[Record Null Checker] 필드 이름: {}, 값: {}", component.getName(), value);
             if (value == null || "".equals(value) || "null".equals(value)) {
                 throw new NullfieldException(
                         "필드가 입력되지 않았습니다 : " + component.getName());
