@@ -12,15 +12,55 @@ public class RequestScenarioDTO {
             Long scenarioCode
     ) {}
 
-    public record CreateScenarioDTO(
+    public record UploadScenarioDTO(
             String scenarioTitle,
-            List<GenreDTO> genre,
             String mainQuest,
             List<String> subQuest,
             String detail,
             List<ScenarioAvatarDTO> scenarioAvatarList,
             List<WorldPartDTO> worldParts,
+            List<GenreDTO> genre,
             List<ScenarioTagDTO> tags
     ){}
+
+
+    public record CreateScenarioDTO(
+            String scenarioTitle,
+            String mainQuest,
+            List<String> subQuest,
+            String detail,
+            List<Integer> scenarioAvatarList,
+            List<Integer> worldParts,
+            List<String> genre,
+            List<String> tags
+    ){
+
+    }
+
+    public record NewScenarioDTO(
+            Long scenarioCode,
+            String scenarioTitle,
+            String mainQuest,
+            List<String> subQuest,
+            String detail,
+            List<Integer> scenarioAvatarList,
+            List<Integer> worldParts,
+            List<String> genre,
+            List<String> tags
+    ){
+        public static NewScenarioDTO insertCreateCode(CreateScenarioDTO createDTO){
+            return new NewScenarioDTO(
+                    -1L,    //create code
+                    createDTO.scenarioTitle(),
+                    createDTO.mainQuest(),
+                    createDTO.subQuest(),
+                    createDTO.detail(),
+                    createDTO.scenarioAvatarList(),
+                    createDTO.worldParts(),
+                    createDTO.genre(),
+                    createDTO.tags()
+            );
+        }
+    }
 
 }

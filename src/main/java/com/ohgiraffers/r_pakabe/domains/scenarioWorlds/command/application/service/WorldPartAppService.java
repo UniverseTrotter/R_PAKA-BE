@@ -20,14 +20,14 @@ import java.util.List;
 public class WorldPartAppService {
     private final WorldPartDomainService worldPartDomainService;
 
-    public WorldPartDTO loadWorldPart(Integer worldPartId) {
-        WorldPart worldPart = worldPartDomainService.getWorldPart(worldPartId);
-        if (worldPart == null) {
-            return WorldPartDTO.getEmpty();
-        }else {
-            return WorldPartDTO.fromEntity(worldPart);
-        }
-    }
+//    public WorldPartDTO loadWorldPart(Integer worldPartId) {
+//        WorldPart worldPart = worldPartDomainService.getWorldPart(worldPartId);
+//        if (worldPart == null) {
+//            return WorldPartDTO.getEmpty();
+//        }else {
+//            return WorldPartDTO.fromEntity(worldPart);
+//        }
+//    }
 
     public WorldPart uploadWorldPart(WorldPartDTO worldPartDTO) {
         log.info("Upload WorldPart : {}", worldPartDTO);
@@ -39,15 +39,7 @@ public class WorldPartAppService {
                             .isPortalEnable(worldPartDTO.isPortalEnable())
                             .build()
             );
-        }/*else {
-            worldPart = this.worldPartDomainService.updateWorldPart(
-                    new WorldPart(
-                            worldPart.getPartId(),
-                            worldPartDTO.partName(),
-                            worldPartDTO.isPortalEnable()
-                    )
-            );
-        }*/
+        }
         return worldPart;
     }
 

@@ -19,14 +19,14 @@ import java.util.List;
 public class TagAppService {
     private final TagDomainService tagDomainService;
 
-    public ScenarioTagDTO loadTag(Integer tagId) {
-        ScenarioTag tag = this.tagDomainService.findTagByCode(tagId);
-        if (tag == null) {
-            return ScenarioTagDTO.getEmpty();
-        }else {
-            return ScenarioTagDTO.fromEntity(tag);
-        }
-    }
+//    public ScenarioTagDTO loadTag(Integer tagId) {
+//        ScenarioTag tag = this.tagDomainService.findTagByCode(tagId);
+//        if (tag == null) {
+//            return ScenarioTagDTO.getEmpty();
+//        }else {
+//            return ScenarioTagDTO.fromEntity(tag);
+//        }
+//    }
 
     public ScenarioTag uploadScenarioTag(ScenarioTagDTO tagDTO) {
         log.info("Upload scenario tag : {}", tagDTO);

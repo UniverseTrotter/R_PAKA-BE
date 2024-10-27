@@ -74,7 +74,7 @@ public class GenreContorller {
             @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
     })
     @PostMapping("/create")
-    public ResponseEntity<?> createGenre(@RequestParam GenreRequestDTO.GenreNameDTO genreNameDTO) throws Exception {
+    public ResponseEntity<?> createGenre(@RequestBody GenreRequestDTO.GenreNameDTO genreNameDTO) throws Exception {
         RecordNullChecker.hasNullFields(genreNameDTO);
         genreAppService.createGenre(genreNameDTO.genreName());
         return ResponseEntity.ok().build();
@@ -87,7 +87,7 @@ public class GenreContorller {
             @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
     })
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteGenre(@RequestParam GenreRequestDTO.GenreIdDTO genreIdDTO) throws Exception {
+    public ResponseEntity<?> deleteGenre(@RequestBody GenreRequestDTO.GenreIdDTO genreIdDTO) throws Exception {
         RecordNullChecker.hasNullFields(genreIdDTO);
         genreAppService.deleteGenre(genreIdDTO.genreId());
         return ResponseEntity.ok().build();

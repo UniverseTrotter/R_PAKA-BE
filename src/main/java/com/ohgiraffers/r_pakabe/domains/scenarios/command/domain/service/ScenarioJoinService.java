@@ -10,6 +10,7 @@ import com.ohgiraffers.r_pakabe.domains.scenarioTags.command.application.service
 import com.ohgiraffers.r_pakabe.domains.scenarioWorlds.command.application.dto.WorldPartDTO;
 import com.ohgiraffers.r_pakabe.domains.scenarioWorlds.command.application.service.WorldPartAppService;
 import com.ohgiraffers.r_pakabe.domains.scenarioWorlds.command.domain.model.WorldPart;
+import com.ohgiraffers.r_pakabe.domains.scenarios.command.application.dto.RequestScenarioDTO;
 import com.ohgiraffers.r_pakabe.domains.scenarios.command.application.dto.ScenarioDTO;
 import com.ohgiraffers.r_pakabe.domains.scenarios.command.domain.model.Scenario;
 import com.ohgiraffers.r_pakabe.domains.scenarioTags.command.application.dto.ScenarioTagDTO;
@@ -43,36 +44,36 @@ public class ScenarioJoinService {
         List<ScenarioTagDTO> tagList = new ArrayList<>();
 
         for (int index : avatarIndex){
-            avatarList.add(scenarioAvatarAppService.loadAvatar(index));
+            avatarList.add(scenarioAvatarAppService.findScenarioAvatarById(index));
         }
 
         for (int index : worldIndex){
-            worldPartList.add(worldPartAppService.loadWorldPart(index));
+            worldPartList.add(worldPartAppService.findWorldPartById(index));
         }
 
         for (int index : genreIndex){
-            genreList.add(genreAppService.loadGenre(index));
+            genreList.add(genreAppService.findGenreById(index));
         }
 
         for (int index : tagIndex){
-            tagList.add(tagAppService.loadTag(index));
+            tagList.add(tagAppService.findTagById(index));
         }
 
         return new ScenarioDTO(
                 scenario.getScenarioCode(),
                 scenario.getScenarioTitle(),
-                genreList,
                 scenario.getMainQuest(),
                 scenario.getSubQuest(),
                 scenario.getDetail(),
                 avatarList,
                 worldPartList,
+                genreList,
                 tagList
         );
     }
 
 
-    public Scenario createEntityFromDTO(ScenarioDTO scenarioDTO){
+    public Scenario uploadEntityFromDTO(ScenarioDTO scenarioDTO){
         List<ScenarioAvatarDTO> avatarList = scenarioDTO.scenarioAvatarList();
         List<WorldPartDTO> worldPartList = scenarioDTO.worldParts();
         List<GenreDTO> genreList = scenarioDTO.genre();
@@ -104,6 +105,7 @@ public class ScenarioJoinService {
         }
 
         if (scenarioDTO.scenarioCode() == -1) {
+            //새로 만든 엔티티
             return Scenario.builder()
                     .scenarioTitle(scenarioDTO.scenarioTitle())
                     .genre(genreIndex)
@@ -115,17 +117,73 @@ public class ScenarioJoinService {
                     .tags(tagIndex)
                     .build();
         }else {
+            //update 용 엔티티
             return new Scenario(
                     scenarioDTO.scenarioCode(),
                     scenarioDTO.scenarioTitle(),
-                    genreIndex,
                     scenarioDTO.mainQuest(),
                     scenarioDTO.subQuest(),
                     scenarioDTO.detail(),
                     avatarIndex,
                     worldIndex,
+                    genreIndex,
                     tagIndex
             );
         }
     }
+
+
+    public Scenario createEntityFromDto(RequestScenarioDTO.NewScenarioDTO scenarioDTO) {
+
+        List<Integer> avatarList = scenarioDTO.scenarioAvatarList();
+        List<Integer> worldPartList = scenarioDTO.worldParts();
+        List<String> genreList = scenarioDTO.genre();
+        List<String> tagList = scenarioDTO.tags();
+
+        List<Integer> genreIndex = new ArrayList<>();
+        List<Integer> tagIndex = new ArrayList<>();
+
+        for (int avatar : avatarList){
+            scenarioAvatarAppService.findScenarioAvatarById(avatar);
+        }
+
+        for (int worldPart : worldPartList){
+            worldPartAppService.findWorldPartById(worldPart);
+        }
+
+        for (String genre : genreList){
+            GenreDTO genreDTO = genreAppService.findGenreByName(genre);
+            genreIndex.add(genreDTO.genreCode());
+        }
+        for (String tag : tagList){
+            ScenarioTagDTO scenarioTagDTO= tagAppService.findTagByName(tag);
+            tagIndex.add(scenarioTagDTO.tagCode());
+        }
+
+        if (scenarioDTO.scenarioCode() == -1) {
+            return Scenario.builder()
+                    .scenarioTitle(scenarioDTO.scenarioTitle())
+                    .mainQuest(scenarioDTO.mainQuest())
+                    .subQuest(scenarioDTO.subQuest())
+                    .detail(scenarioDTO.detail())
+                    .scenarioAvatarList(scenarioDTO.scenarioAvatarList())
+                    .worldParts(scenarioDTO.worldParts())
+                    .genre(genreIndex)
+                    .tags(tagIndex)
+                    .build();
+        }else {
+            return new Scenario(
+                    scenarioDTO.scenarioCode(),
+                    scenarioDTO.scenarioTitle(),
+                    scenarioDTO.mainQuest(),
+                    scenarioDTO.subQuest(),
+                    scenarioDTO.detail(),
+                    avatarList,
+                    worldPartList,
+                    genreIndex,
+                    tagIndex
+            );
+        }
+    }
+
 }

@@ -19,14 +19,14 @@ import java.util.List;
 public class GenreAppService {
     private final GenreDomainService genreDomainService;
 
-    public GenreDTO loadGenre(Integer genreId) {
-        Genre genre = this.genreDomainService.findGenreById(genreId);
-        if (genre == null) {
-            return GenreDTO.getEmpty();
-        }else {
-            return GenreDTO.formEntity(genre);
-        }
-    }
+//    public GenreDTO loadGenre(Integer genreId) {
+//        Genre genre = this.genreDomainService.findGenreById(genreId);
+//        if (genre == null) {
+//            return GenreDTO.getEmpty();
+//        }else {
+//            return GenreDTO.formEntity(genre);
+//        }
+//    }
 
     public Genre uploadGenre(GenreDTO genreDTO) {
         log.info("Upload genre : {}", genreDTO);
@@ -37,11 +37,7 @@ public class GenreAppService {
                             .genreName(genreDTO.genreName())
                             .build()
             );
-        }/*else {
-            genre = this.genreDomainService.updateGenre(
-                    new Genre(genreDTO.genreName())
-            );
-        }*/
+        }
         return genre;
     }
 

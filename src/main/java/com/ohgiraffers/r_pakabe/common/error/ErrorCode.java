@@ -19,6 +19,7 @@ public enum ErrorCode {
     NO_SUCH_AVATAR(HttpStatus.BAD_REQUEST,"AVATAR-001","해당 아바타가 없습니다."),
     AVATAR_ALREADY_EXIST(HttpStatus.BAD_REQUEST,"AVATAR-002", "해당 아바타가 이미 존재합니다."),
     NO_SUCH_SCENARIO(HttpStatus.BAD_REQUEST,"SCENARIO-001" , "해당 시나리오가 없습니다."),
+    SCENARIO_ALREADY_EXIT(HttpStatus.BAD_REQUEST, "SCENARIO-002", "해당 제목의 시나리오가 이미 있습니다."),
     TAG_ALREADY_EXIT(HttpStatus.BAD_REQUEST, "TAG-001", "해당 태그가 이미 있습니다."),
     NO_SUCH_TAG(HttpStatus.BAD_REQUEST, "TAG-002", "해당 태그가 없습니다."),
     GENRE_ALREADY_EXIT(HttpStatus.BAD_REQUEST, "GENRE-001", "해당 장르가 이미 있습니다."),

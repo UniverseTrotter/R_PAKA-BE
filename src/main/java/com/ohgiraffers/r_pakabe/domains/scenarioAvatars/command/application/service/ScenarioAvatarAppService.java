@@ -20,15 +20,18 @@ import java.util.List;
 public class ScenarioAvatarAppService {
     private final ScenarioAvatarDomainService scenarioAvatarDomainService;
 
-    public ScenarioAvatarDTO loadAvatar(Integer avatarId) {
-        ScenarioAvatar avatar = scenarioAvatarDomainService.getScenarioAvatar(avatarId);
-        if (avatar == null){
-           return ScenarioAvatarDTO.getEmpty();
-        }else {
-            return ScenarioAvatarDTO.fromEntity(avatar);
-        }
-    }
+//    public ScenarioAvatarDTO loadAvatar(Integer avatarId) {
+//        ScenarioAvatar avatar = scenarioAvatarDomainService.getScenarioAvatar(avatarId);
+//        if (avatar == null){
+//           return ScenarioAvatarDTO.getEmpty();
+//        }else {
+//            return ScenarioAvatarDTO.fromEntity(avatar);
+//        }
+//    }
 
+    /**
+     * DTO를 보고 판단하기? 정말 필요한가?
+     * */
     public ScenarioAvatar uploadScenarioAvatar(ScenarioAvatarDTO avatarDTO) {
         log.info("Upload scenario avatar : {}", avatarDTO);
         ScenarioAvatar avatar = scenarioAvatarDomainService.getScenarioAvatar(avatarDTO.senarioAvatarId());

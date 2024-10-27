@@ -13,12 +13,12 @@ import java.util.List;
 public record ScenarioDTO(
         Long scenarioCode,
         String scenarioTitle,
-        List<GenreDTO> genre,
         String mainQuest,
         List<String> subQuest,
         String detail,
         List<ScenarioAvatarDTO> scenarioAvatarList,
         List<WorldPartDTO> worldParts,
+        List<GenreDTO> genre,
         List<ScenarioTagDTO> tags
 ) {
     public static ScenarioDTO getEmptyDTO() {
@@ -35,16 +35,16 @@ public record ScenarioDTO(
         );
     }
 
-    public static ScenarioDTO insertCreateCode(RequestScenarioDTO.CreateScenarioDTO createDTO) {
+    public static ScenarioDTO insertCreateCode(RequestScenarioDTO.UploadScenarioDTO createDTO) {
         return new ScenarioDTO(
                 -1L,
                 createDTO.scenarioTitle(),
-                createDTO.genre(),
                 createDTO.mainQuest(),
                 createDTO.subQuest(),
                 createDTO.detail(),
                 createDTO.scenarioAvatarList(),
                 createDTO.worldParts(),
+                createDTO.genre(),
                 createDTO.tags()
         );
     }
