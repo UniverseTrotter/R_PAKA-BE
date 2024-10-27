@@ -45,7 +45,7 @@ public class GenreAppService {
         return genre;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<GenreDTO> findAllGenre() {
         List<Genre> genreList = genreDomainService.getAllGenres();
         List<GenreDTO> genreDTOList = new ArrayList<>();
@@ -55,7 +55,7 @@ public class GenreAppService {
         return genreDTOList;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public GenreDTO findGenreById(Integer genreId) {
         Genre genre = this.genreDomainService.findGenreById(genreId);
         if (genre == null) {
@@ -64,7 +64,7 @@ public class GenreAppService {
         return GenreDTO.formEntity(genre);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public GenreDTO findGenreByName(String genreName) {
         Genre genre = this.genreDomainService.findGenreByName(genreName);
         if (genre == null) {
@@ -79,7 +79,8 @@ public class GenreAppService {
         if (genre != null) {        //이미 있으면 안됨
             throw new ApplicationException(ErrorCode.GENRE_ALREADY_EXIT);
         }
-        this.genreDomainService.createGenre(new Genre(genreName));
+        genre =  this.genreDomainService.createGenre(new Genre(genreName));
+        log.info("Create Tag : {}", genre);
     }
 
     @Transactional
@@ -89,5 +90,6 @@ public class GenreAppService {
             throw new ApplicationException(ErrorCode.NO_SUCH_GENRE);
         }
         genreDomainService.deleteGenre(genreId);
+        log.info("Delete Tag : {}", genre);
     }
 }

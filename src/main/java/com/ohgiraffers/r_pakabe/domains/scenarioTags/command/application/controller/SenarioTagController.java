@@ -20,10 +20,10 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/tag")
-@Tag(name = "태그", description = "태그 생성, 삭제 관련 api")
+@Tag(name = "시나리오 태그", description = "태그 생성, 삭제 관련 api")
 public class SenarioTagController {
-    private final TagAppService tagAppService;
 
+    private final TagAppService tagAppService;
 
     @Operation(summary = "모든 태그 리스트", description = "등록된 모든 태그를 리스트로 불러옵니다.")
     @ApiResponses(value = {
@@ -37,7 +37,8 @@ public class SenarioTagController {
     }
 
 
-    @Operation(summary = "번호로 태그 찾기", description = "번호로 태그 객체를 반환합니다.")
+    @Operation(summary = "(관리용) 번호로 태그 찾기", description = "번호로 태그 객체를 반환합니다.<br>" +
+            "기능은 하지만 관리용 이외에는 추천 하지 않습니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공적으로 처리 되었습니다."),
             @ApiResponse(responseCode = "400", description = "입력값이 올바르지 않습니다."),
@@ -77,7 +78,6 @@ public class SenarioTagController {
         RecordNullChecker.hasNullFields(tagNameDTO);
         String tagName = tagNameDTO.tagName();
         tagAppService.creatTag(tagName);
-        log.info("Create Tag : {}", tagName);
         return ResponseEntity.ok().build();
     }
 
@@ -87,12 +87,11 @@ public class SenarioTagController {
             @ApiResponse(responseCode = "400", description = "입력값이 올바르지 않습니다."),
             @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
     })
-    @PostMapping("/delete")
+    @DeleteMapping("/delete")
     public ResponseEntity<?> deleteTag(@RequestBody TagRequestDTO.TagIdDTO tagIdDTO) throws Exception {
         RecordNullChecker.hasNullFields(tagIdDTO);
         Integer tagId = tagIdDTO.tagId();
         tagAppService.deleteTag(tagId);
-        log.info("Delete Tag ID : {}", tagId);
         return ResponseEntity.ok().build();
     }
 

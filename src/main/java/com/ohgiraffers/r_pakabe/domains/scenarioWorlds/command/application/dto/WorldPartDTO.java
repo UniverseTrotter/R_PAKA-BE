@@ -11,7 +11,7 @@ public record WorldPartDTO(
         return new WorldPartDTO(
                 worldPart.getPartId(),
                 worldPart.getPartName(),
-                worldPart.isPortalEnable()
+                worldPart.getIsPortalEnable()
         );
     }
 

@@ -21,12 +21,16 @@ public class ScenarioAvatar {
 
     @Column
     @ColumnDefault("-1")
-    private int outfit;
+    private Integer outfit;
+
+    @Column
+    private Boolean isPlayable;
 
     @Builder
-    public ScenarioAvatar(String avatarName, int outfit) {
+    public ScenarioAvatar(String avatarName, Integer outfit, Boolean isPlayable) {
         this.avatarName = avatarName;
         this.outfit = outfit;
+        this.isPlayable = isPlayable;
     }
 
     @Override
@@ -35,6 +39,7 @@ public class ScenarioAvatar {
                 "senarioAvatarId=" + senarioAvatarId +
                 ", avatarName='" + avatarName + '\'' +
                 ", outfit=" + outfit +
+                ", isPlayable=" + isPlayable +
                 '}';
     }
 }

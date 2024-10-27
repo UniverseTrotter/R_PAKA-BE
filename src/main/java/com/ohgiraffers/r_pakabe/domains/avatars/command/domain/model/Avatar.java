@@ -55,7 +55,7 @@ public class Avatar {
     @Override
     public String toString() {
         return "Avatar{" +
-                "id=" + id +
+                "avatarId=" + id +
                 ", userCode=" + userCode +
                 ", userAvatarGender=" + userAvatarGender +
                 ", userAvatarHair=" + userAvatarHair +

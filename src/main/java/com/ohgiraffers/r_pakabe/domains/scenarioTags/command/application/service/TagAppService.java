@@ -5,10 +5,10 @@ import com.ohgiraffers.r_pakabe.common.error.ErrorCode;
 import com.ohgiraffers.r_pakabe.domains.scenarioTags.command.application.dto.ScenarioTagDTO;
 import com.ohgiraffers.r_pakabe.domains.scenarioTags.command.domain.model.ScenarioTag;
 import com.ohgiraffers.r_pakabe.domains.scenarioTags.command.domain.service.TagDomainService;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +66,7 @@ public class TagAppService {
     }
 
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<ScenarioTagDTO> getAllTags() {
         List<ScenarioTag> tags = tagDomainService.findTagAll();
         List<ScenarioTagDTO> tagDTOList = new ArrayList<>();
@@ -76,7 +76,7 @@ public class TagAppService {
         return tagDTOList;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public ScenarioTagDTO findTagById(Integer tagId) {
         ScenarioTag tag = this.tagDomainService.findTagByCode(tagId);
         if (tag == null) {
@@ -85,6 +85,7 @@ public class TagAppService {
         return ScenarioTagDTO.fromEntity(tag);
     }
 
+    @Transactional(readOnly = true)
     public ScenarioTagDTO findTagByName(String tagName) {
         ScenarioTag tag = this.tagDomainService.findTagByName(tagName);
         if (tag == null) {
@@ -93,19 +94,23 @@ public class TagAppService {
         return ScenarioTagDTO.fromEntity(tag);
     }
 
+    @Transactional
     public void creatTag(String tagName) {
         ScenarioTag tag = this.tagDomainService.findTagByName(tagName);
         if (tag != null) {
             throw new ApplicationException(ErrorCode.TAG_ALREADY_EXIT);
         }
-        tagDomainService.createTag(new ScenarioTag(tagName));
+        tag = tagDomainService.createTag(new ScenarioTag(tagName));
+        log.info("Create Tag : {}", tag);
     }
 
+    @Transactional
     public void deleteTag(Integer tagId) {
         ScenarioTag tag = this.tagDomainService.findTagByCode(tagId);
         if (tag == null) {
             throw new ApplicationException(ErrorCode.NO_SUCH_TAG);
         }
         tagDomainService.deleteTag(tagId);
+        log.info("Delete Tag ID : {}", tag);
     }
 }

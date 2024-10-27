@@ -22,7 +22,7 @@ public class WorldPart {
 
     @Column
     @ColumnDefault("false")
-    private boolean isPortalEnable;
+    private Boolean isPortalEnable;
 
     @Builder
     public WorldPart(String partName, boolean isPortalEnable) {

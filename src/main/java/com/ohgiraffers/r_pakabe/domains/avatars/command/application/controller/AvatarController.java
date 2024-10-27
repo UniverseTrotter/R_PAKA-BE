@@ -63,9 +63,7 @@ public class AvatarController {
 
 
 
-
-
-    @Operation(summary = "관리용 : 유저 아바타 리스트", description = "모든 유저 아바타 정보를 가져옵니다.")
+    @Operation(summary = "(관리용) 유저 아바타 리스트", description = "모든 유저 아바타 정보를 가져옵니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공적으로 반환 되었습니다."),
             @ApiResponse(responseCode = "400", description = "저장된 아바타가 하나도 없습니다."),
@@ -77,7 +75,7 @@ public class AvatarController {
         return ResponseEntity.ok(avatarDTO);
     }
 
-    @Operation(summary = "관리용 : 아바타 삭제", description = "회원 아바타 정보를 삭제합니다.")
+    @Operation(summary = "(관리용) 아바타 삭제", description = "회원 아바타 정보를 삭제합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공적으로 반환 되었습니다."),
             @ApiResponse(responseCode = "500", description = "예상치 못한 예러")

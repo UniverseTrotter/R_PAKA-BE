@@ -22,10 +22,10 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/genre")
-@Tag(name = "장르", description = "장르 생성, 삭제 api")
+@Tag(name = "시나리오 장르", description = "장르 생성, 삭제 api")
 public class GenreContorller {
-    private final GenreAppService genreAppService;
 
+    private final GenreAppService genreAppService;
 
     @Operation(summary = "장르 리스트", description = "등록된 장르 전체를 리스트로 가져옵니다.")
     @ApiResponses(value = {
@@ -38,7 +38,8 @@ public class GenreContorller {
         return ResponseEntity.ok().body(genrelist);
     }
 
-    @Operation(summary = "번호로 장르 찾기", description = "번호로 장르 객체를 반환합니다.")
+    @Operation(summary = "(관리용) 번호로 장르 찾기", description = "번호로 장르 객체를 반환합니다.<br>" +
+            "기능은 하지만 관리용 이외에는 추천 하지 않습니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공적으로 처리 되었습니다."),
             @ApiResponse(responseCode = "400", description = "입력값이 올바르지 않습니다."),
@@ -51,7 +52,7 @@ public class GenreContorller {
         return ResponseEntity.ok().body(genreDTO);
     }
 
-    @Operation(summary = "장르명으로 찾기", description = "이름으로 장르 객체를 반환합니다.")
+    @Operation(summary = "장르 찾기", description = "이름으로 장르 객체를 반환합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공적으로 처리 되었습니다."),
             @ApiResponse(responseCode = "400", description = "입력값이 올바르지 않습니다."),
@@ -76,7 +77,6 @@ public class GenreContorller {
     public ResponseEntity<?> createGenre(@RequestParam GenreRequestDTO.GenreNameDTO genreNameDTO) throws Exception {
         RecordNullChecker.hasNullFields(genreNameDTO);
         genreAppService.createGenre(genreNameDTO.genreName());
-        log.info("Create Tag : {}", genreNameDTO.genreName());
         return ResponseEntity.ok().build();
     }
 
@@ -86,11 +86,10 @@ public class GenreContorller {
             @ApiResponse(responseCode = "400", description = "입력값이 올바르지 않습니다."),
             @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
     })
-    @PostMapping("/delete")
+    @DeleteMapping("/delete")
     public ResponseEntity<?> deleteGenre(@RequestParam GenreRequestDTO.GenreIdDTO genreIdDTO) throws Exception {
         RecordNullChecker.hasNullFields(genreIdDTO);
         genreAppService.deleteGenre(genreIdDTO.genreId());
-        log.info("Delete Tag : {}", genreIdDTO.genreId());
         return ResponseEntity.ok().build();
     }
 

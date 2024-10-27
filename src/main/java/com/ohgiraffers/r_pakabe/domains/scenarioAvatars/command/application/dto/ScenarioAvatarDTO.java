@@ -5,13 +5,15 @@ import com.ohgiraffers.r_pakabe.domains.scenarioAvatars.command.domain.model.Sce
 public record ScenarioAvatarDTO(
         Integer senarioAvatarId,
         String avatarName,
-        int outfit
+        Integer outfit,
+        Boolean isPlayalbe
 ) {
     public static ScenarioAvatarDTO fromEntity(final ScenarioAvatar entity) {
         return new ScenarioAvatarDTO(
                 entity.getSenarioAvatarId(),
                 entity.getAvatarName(),
-                entity.getOutfit()
+                entity.getOutfit(),
+                entity.getIsPlayable()
         );
     }
 
@@ -19,7 +21,8 @@ public record ScenarioAvatarDTO(
         return new ScenarioAvatarDTO(
                 -1,
                 "Empty",
-                -1
+                -1,
+                false
         );
     }
 }
