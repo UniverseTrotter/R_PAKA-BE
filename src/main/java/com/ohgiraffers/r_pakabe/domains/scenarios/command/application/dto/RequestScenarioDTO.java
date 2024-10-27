@@ -7,14 +7,20 @@ import com.ohgiraffers.r_pakabe.domains.scenarioWorlds.command.application.dto.W
 
 import java.util.List;
 
-public record ScenarioCreateDTO(
-        String scenarioTitle,
-        List<GenreDTO> genre,
-        String mainQuest,
-        List<String> subQuest,
-        String detail,
-        List<ScenarioAvatarDTO> scenarioAvatarList,
-        List<WorldPartDTO> worldParts,
-        List<ScenarioTagDTO> tags
-) {
+public class RequestScenarioDTO {
+    public record ScenarioIdDTO(
+            Long scenarioCode
+    ) {}
+
+    public record CreateScenarioDTO(
+            String scenarioTitle,
+            List<GenreDTO> genre,
+            String mainQuest,
+            List<String> subQuest,
+            String detail,
+            List<ScenarioAvatarDTO> scenarioAvatarList,
+            List<WorldPartDTO> worldParts,
+            List<ScenarioTagDTO> tags
+    ){}
+
 }

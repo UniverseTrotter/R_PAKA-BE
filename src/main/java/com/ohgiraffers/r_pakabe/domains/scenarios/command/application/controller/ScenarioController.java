@@ -1,7 +1,7 @@
 package com.ohgiraffers.r_pakabe.domains.scenarios.command.application.controller;
 
 import com.ohgiraffers.r_pakabe.common.RecordNullChecker;
-import com.ohgiraffers.r_pakabe.domains.scenarios.command.application.dto.ScenarioCreateDTO;
+import com.ohgiraffers.r_pakabe.domains.scenarios.command.application.dto.RequestScenarioDTO;
 import com.ohgiraffers.r_pakabe.domains.scenarios.command.application.dto.ScenarioDTO;
 import com.ohgiraffers.r_pakabe.domains.scenarios.command.application.service.ScenarioAppService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,19 +25,6 @@ public class ScenarioController {
     private final ScenarioAppService scenarioAppService;
 
 
-    @Operation(summary = "시나리오 불러오기", description = "리스트에서 선택된 코드로 시나리오를 가져옵니다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공적으로 처리 되었습니다."),
-            @ApiResponse(responseCode = "400", description = "해당 시나리오가 없습니다"),
-            @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
-    })
-    @GetMapping("/detail")
-    public ResponseEntity<?> loadScenarioDetail(Long scenarioCode) {
-        ScenarioDTO dto = scenarioAppService.getScenario(scenarioCode);
-        return ResponseEntity.ok(dto);
-    }
-
-
     @Operation(summary = "테스트) 시나리오 모두 불러오기", description = "모든 시나리오를 불러옵니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공적으로 처리 되었습니다."),
@@ -51,6 +38,19 @@ public class ScenarioController {
     }
 
 
+    @Operation(summary = "시나리오 불러오기", description = "리스트에서 선택된 코드로 시나리오를 가져옵니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공적으로 처리 되었습니다."),
+            @ApiResponse(responseCode = "400", description = "해당 시나리오가 없습니다"),
+            @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
+    })
+    @GetMapping("/detail")
+    public ResponseEntity<?> loadScenarioDetail(Long scenarioCode) {
+        ScenarioDTO dto = scenarioAppService.getScenario(scenarioCode);
+        return ResponseEntity.ok(dto);
+    }
+
+
     @Operation(summary = "테스트) 시나리오 만들기", description = "새로운 시나리오를 등록합니다.<br>" +
             "<h4>업데이트와 차이는 scenarioCode의 유무 입니다.</h4>")
     @ApiResponses(value = {
@@ -58,7 +58,7 @@ public class ScenarioController {
             @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
     })
     @PostMapping("/create")
-    public ResponseEntity<?> createScenario(@RequestBody ScenarioCreateDTO scenarioDTO) throws Exception {
+    public ResponseEntity<?> createScenario(@RequestBody RequestScenarioDTO.CreateScenarioDTO scenarioDTO) throws Exception {
         log.info("createScenario {}", scenarioDTO);
         RecordNullChecker.hasNullFields(scenarioDTO);
         scenarioAppService.createScenario(scenarioDTO);
@@ -73,7 +73,7 @@ public class ScenarioController {
             @ApiResponse(responseCode = "400", description = "해당 시나리오가 없습니다"),
             @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
     })
-    @PostMapping("/update")
+    @PutMapping("/update")
     public ResponseEntity<?> updateScenario(@RequestBody ScenarioDTO scenarioDTO) {
         log.info("updateScenario {}", scenarioDTO);
 //        return ResponseEntity.ok().build();        //통신 테스트용

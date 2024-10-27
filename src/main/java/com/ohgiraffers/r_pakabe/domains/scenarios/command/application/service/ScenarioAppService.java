@@ -2,13 +2,12 @@ package com.ohgiraffers.r_pakabe.domains.scenarios.command.application.service;
 
 import com.ohgiraffers.r_pakabe.common.error.ApplicationException;
 import com.ohgiraffers.r_pakabe.common.error.ErrorCode;
-import com.ohgiraffers.r_pakabe.domains.scenarios.command.application.dto.ScenarioCreateDTO;
+import com.ohgiraffers.r_pakabe.domains.scenarios.command.application.dto.RequestScenarioDTO;
 import com.ohgiraffers.r_pakabe.domains.scenarios.command.application.dto.ScenarioDTO;
 import com.ohgiraffers.r_pakabe.domains.scenarios.command.domain.model.Scenario;
 import com.ohgiraffers.r_pakabe.domains.scenarios.command.domain.service.ScenarioDomainService;
 import com.ohgiraffers.r_pakabe.domains.scenarios.command.domain.service.ScenarioJoinService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -40,7 +39,7 @@ public class ScenarioAppService {
         return scenarioJoinService.getDataFromEntity(scenario);
     }
 
-    public void createScenario(ScenarioCreateDTO createDTO) {
+    public void createScenario(RequestScenarioDTO.CreateScenarioDTO  createDTO) {
         ScenarioDTO scenarioDTO = ScenarioDTO.insertCreateCode(createDTO);
         Scenario scenario = scenarioJoinService.createEntityFromDTO(scenarioDTO);
         scenarioDomainService.createScenario(scenario);

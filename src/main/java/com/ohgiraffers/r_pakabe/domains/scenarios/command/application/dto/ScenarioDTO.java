@@ -35,7 +35,7 @@ public record ScenarioDTO(
         );
     }
 
-    public static ScenarioDTO insertCreateCode(ScenarioCreateDTO createDTO) {
+    public static ScenarioDTO insertCreateCode(RequestScenarioDTO.CreateScenarioDTO createDTO) {
         return new ScenarioDTO(
                 -1L,
                 createDTO.scenarioTitle(),
