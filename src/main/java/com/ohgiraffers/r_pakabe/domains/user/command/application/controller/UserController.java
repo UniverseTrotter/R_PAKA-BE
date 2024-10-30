@@ -3,6 +3,7 @@ package com.ohgiraffers.r_pakabe.domains.user.command.application.controller;
 import com.ohgiraffers.r_pakabe.common.RecordNullChecker;
 import com.ohgiraffers.r_pakabe.common.error.NullfieldException;
 import com.ohgiraffers.r_pakabe.domains.user.command.application.dto.UserRequestDTO;
+import com.ohgiraffers.r_pakabe.domains.user.command.application.dto.UserResponseDTO;
 import com.ohgiraffers.r_pakabe.domains.user.command.application.service.UserAppService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -32,8 +33,8 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<?> userRegister(UserRequestDTO.RegisterDTO registerDTO) throws Exception{
         RecordNullChecker.hasNullFields(registerDTO);
-        userAppService.userRegister(registerDTO);
-        return ResponseEntity.ok().build();
+        UserResponseDTO.authDTO authDTO = userAppService.userRegister(registerDTO);
+        return ResponseEntity.ok(authDTO);
     }
 
     @Operation(summary = "회원 정보 조회", description = "회원코드로 회원 id와 닉네임을 가져옵니다.")

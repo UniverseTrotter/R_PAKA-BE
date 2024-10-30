@@ -35,7 +35,7 @@ public class UserAppService {
     }
 
     @Transactional
-    public void userRegister(UserRequestDTO.RegisterDTO registerDTO) {
+    public UserResponseDTO.authDTO userRegister(UserRequestDTO.RegisterDTO registerDTO) {
 
         if (userDomainService.findByUserId(registerDTO.userId()) != null) {
             throw new ApplicationException(ErrorCode.ID_ALREADY_EXIT);
@@ -47,7 +47,9 @@ public class UserAppService {
                 .nickname(registerDTO.nickname())
                 .build();
 
-        userDomainService.registerUser(user);
+        return new UserResponseDTO.authDTO(
+                userDomainService.registerUser(user).getUserCode()
+        );
     }
 
     @Transactional

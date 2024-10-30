@@ -42,8 +42,8 @@ public class UserDomainService {
         return userRepository.findByUserId(userId).orElse(null);
     }
 
-    public void registerUser(User user) {
-        userRepository.save(user);
+    public User registerUser(User user) {
+        return userRepository.save(user);
     }
 
     public void updateUser(User user) {
