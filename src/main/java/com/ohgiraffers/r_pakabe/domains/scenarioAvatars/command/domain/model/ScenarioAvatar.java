@@ -13,7 +13,7 @@ public class ScenarioAvatar {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer senarioAvatarId;
+    private Integer scenarioAvatarId;
 
     @Column
 //    @ColumnDefault(value = "여기에 이름을 입력")
@@ -24,6 +24,7 @@ public class ScenarioAvatar {
     private Integer outfit;
 
     @Column
+    @ColumnDefault("false")
     private Boolean isPlayable;
 
     @Builder
@@ -36,7 +37,7 @@ public class ScenarioAvatar {
     @Override
     public String toString() {
         return "ScenarioAvatar{" +
-                "senarioAvatarId=" + senarioAvatarId +
+                "scenarioAvatarId=" + scenarioAvatarId +
                 ", avatarName='" + avatarName + '\'' +
                 ", outfit=" + outfit +
                 ", isPlayable=" + isPlayable +

@@ -67,6 +67,7 @@ public class WorldPartAppService {
         WorldPart worldPart = WorldPart.builder()
                 .partName(createWorldDTO.WorldName())
                 .isPortalEnable(createWorldDTO.isPortalEnable())
+                .towardWorldPartId(createWorldDTO.towardWorldPartId())
                 .build();
         worldPart = worldPartDomainService.createWorldPart(worldPart);
         log.info("Created WorldPart : {}", worldPart);
@@ -83,7 +84,8 @@ public class WorldPartAppService {
         worldPart = new WorldPart(
                 worldPart.getPartId(),
                 worldDTO.partName(),
-                worldDTO.isPortalEnable()
+                worldDTO.isPortalEnable(),
+                worldDTO.towardWorldPartId()
         );
         worldPart = worldPartDomainService.updateWorldPart(worldPart);
         log.info("Updated WorldPart : {}", worldPart);

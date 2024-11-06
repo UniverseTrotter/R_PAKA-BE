@@ -76,7 +76,7 @@ public class ScenarioController {
     })
     @PostMapping("/create")
     public ResponseEntity<?> createScenario(@RequestBody RequestScenarioDTO.CreateScenarioDTO scenarioDTO) throws Exception {
-        RecordNullChecker.hasNullFields(scenarioDTO);
+//        RecordNullChecker.hasNullFields(scenarioDTO);     //장르와 태그 부재로 null 체크 안하게
         ScenarioDTO created = scenarioAppService.createScenario(scenarioDTO);
         return ResponseEntity.ok(created);
     }

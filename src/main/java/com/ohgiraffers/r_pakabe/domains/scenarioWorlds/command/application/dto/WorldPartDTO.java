@@ -5,13 +5,15 @@ import com.ohgiraffers.r_pakabe.domains.scenarioWorlds.command.domain.model.Worl
 public record WorldPartDTO(
         Integer partId,
         String partName,
-        boolean isPortalEnable
+        boolean isPortalEnable,
+        Integer towardWorldPartId
 ) {
     public static WorldPartDTO fromEntity(final WorldPart worldPart) {
         return new WorldPartDTO(
                 worldPart.getPartId(),
                 worldPart.getPartName(),
-                worldPart.getIsPortalEnable()
+                worldPart.getIsPortalEnable(),
+                worldPart.getTowardWorldPartId()
         );
     }
 
@@ -19,7 +21,8 @@ public record WorldPartDTO(
         return new WorldPartDTO(
                 -1,
                 "Empty",
-                false
+                false,
+                -1
         );
     }
 }

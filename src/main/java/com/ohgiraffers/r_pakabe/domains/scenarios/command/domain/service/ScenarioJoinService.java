@@ -86,7 +86,7 @@ public class ScenarioJoinService {
 
         for (ScenarioAvatarDTO avatarDTO : avatarList){
             ScenarioAvatar avatar = this.scenarioAvatarAppService.uploadScenarioAvatar(avatarDTO);
-            avatarIndex.add(avatar.getSenarioAvatarId());
+            avatarIndex.add(avatar.getScenarioAvatarId());
         }
 
         for (WorldPartDTO worldPartDTO : worldPartList){

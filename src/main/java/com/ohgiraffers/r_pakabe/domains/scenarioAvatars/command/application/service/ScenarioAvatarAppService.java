@@ -34,7 +34,7 @@ public class ScenarioAvatarAppService {
      * */
     public ScenarioAvatar uploadScenarioAvatar(ScenarioAvatarDTO avatarDTO) {
         log.info("Upload scenario avatar : {}", avatarDTO);
-        ScenarioAvatar avatar = scenarioAvatarDomainService.getScenarioAvatar(avatarDTO.senarioAvatarId());
+        ScenarioAvatar avatar = scenarioAvatarDomainService.getScenarioAvatar(avatarDTO.scenarioAvatarId());
         if (avatar == null){
             avatar = scenarioAvatarDomainService.createScenarioAvatar(
                     ScenarioAvatar.builder()
@@ -87,12 +87,12 @@ public class ScenarioAvatarAppService {
 
     @Transactional
     public ScenarioAvatarDTO updateAvatar(ScenarioAvatarDTO avatarDTO) {
-        ScenarioAvatar avatar = scenarioAvatarDomainService.getScenarioAvatar(avatarDTO.senarioAvatarId());
+        ScenarioAvatar avatar = scenarioAvatarDomainService.getScenarioAvatar(avatarDTO.scenarioAvatarId());
         if (avatar == null){
             throw new ApplicationException(ErrorCode.NO_SUCH_AVATAR);
         }
         avatar = new ScenarioAvatar(
-                avatar.getSenarioAvatarId(),
+                avatar.getScenarioAvatarId(),
                 avatarDTO.avatarName(),
                 avatarDTO.outfit(),
                 avatarDTO.isPlayalbe()
