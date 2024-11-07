@@ -30,7 +30,7 @@ public class ScenarioAvatarAppService {
         ScenarioAvatar avatar = scenarioAvatarDomainService.getScenarioAvatar(avatarDTO.scenarioAvatarId());
         if (avatar == null){
             avatar = mapper.toScenarioAvatarEntity(
-                    mapper.toCreateAvatarDTO(avatarDTO)      // userCode 를 제거
+                    mapper.toCreateAvatarDTO(avatarDTO)      // userCode 제거
             );
             avatar = scenarioAvatarDomainService.createScenarioAvatar(avatar);
             log.info("Create scenario avatar Because not found : {}", avatar);

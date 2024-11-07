@@ -20,25 +20,18 @@ import java.util.List;
 public class WorldPartAppService {
     private final WorldPartDomainService worldPartDomainService;
 
-//    public WorldPartDTO loadWorldPart(Integer worldPartId) {
-//        WorldPart worldPart = worldPartDomainService.getWorldPart(worldPartId);
-//        if (worldPart == null) {
-//            return WorldPartDTO.getEmpty();
-//        }else {
-//            return WorldPartDTO.fromEntity(worldPart);
-//        }
-//    }
 
     public WorldPart uploadWorldPart(WorldPartDTO worldPartDTO) {
-        log.info("Upload WorldPart : {}", worldPartDTO);
         WorldPart worldPart = this.worldPartDomainService.getWorldPart(worldPartDTO.partId());
         if (worldPart == null) {
             worldPart = worldPartDomainService.createWorldPart(
                     WorldPart.builder()
                             .partName(worldPartDTO.partName())
                             .isPortalEnable(worldPartDTO.isPortalEnable())
+                            .towardWorldPartId(worldPartDTO.towardWorldPartId())
                             .build()
             );
+            log.info("Create worldPart Because not found : {}", worldPart);
         }
         return worldPart;
     }
