@@ -120,38 +120,38 @@ public class ScenarioController {
 
 
 
-
-    @Operation(summary = "테스트) 시나리오 만들기", description = "새로운 시나리오를 등록합니다.<br>" +
-            "<h4>업데이트와 차이는 scenarioCode의 유무 입니다.</h4>",deprecated = true)
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공적으로 처리 되었습니다."),
-            @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
-    })
-    @PostMapping("/upload")
-    public ResponseEntity<?> uploadScenario(@RequestBody RequestScenarioDTO.UploadScenarioDTO scenarioDTO) throws Exception {
-        RecordNullChecker.hasNullFields(scenarioDTO);
-        ScenarioDTO created = scenarioAppService.createScenario(scenarioDTO);
-        return ResponseEntity.ok(created);
-    }
-
-
-    @Operation(summary = "작업중) 시나리오 업데이트", description = "기존 시나리오를 업데이트합니다.<br>" +
-            "<h4>scenarioCode를 필요로 합니다.</h4>", deprecated = true)
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공적으로 처리 되었습니다."),
-            @ApiResponse(responseCode = "400", description = "해당 시나리오가 없습니다"),
-            @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
-    })
-    @PutMapping("/renew")
-    public ResponseEntity<?> renewScenario(@RequestBody ScenarioDTO scenarioDTO) {
-        log.info("updateScenario {}", scenarioDTO);
-//        return ResponseEntity.ok().build();        //통신 테스트용
-        if (scenarioDTO.scenarioCode() == null) {
-            return ResponseEntity.badRequest().build();
-        }
-        scenarioAppService.renewScenario(scenarioDTO);
-        return ResponseEntity.ok().build();
-    }
+//
+//    @Operation(summary = "테스트) 시나리오 만들기", description = "새로운 시나리오를 등록합니다.<br>" +
+//            "<h4>업데이트와 차이는 scenarioCode의 유무 입니다.</h4>",deprecated = true)
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "200", description = "성공적으로 처리 되었습니다."),
+//            @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
+//    })
+//    @PostMapping("/upload")
+//    public ResponseEntity<?> uploadScenario(@RequestBody RequestScenarioDTO.UploadScenarioDTO scenarioDTO) throws Exception {
+//        RecordNullChecker.hasNullFields(scenarioDTO);
+//        ScenarioDTO created = scenarioAppService.createScenario(scenarioDTO);
+//        return ResponseEntity.ok(created);
+//    }
+//
+//
+//    @Operation(summary = "작업중) 시나리오 업데이트", description = "기존 시나리오를 업데이트합니다.<br>" +
+//            "<h4>scenarioCode를 필요로 합니다.</h4>", deprecated = true)
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "200", description = "성공적으로 처리 되었습니다."),
+//            @ApiResponse(responseCode = "400", description = "해당 시나리오가 없습니다"),
+//            @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
+//    })
+//    @PutMapping("/renew")
+//    public ResponseEntity<?> renewScenario(@RequestBody ScenarioDTO scenarioDTO) {
+//        log.info("updateScenario {}", scenarioDTO);
+////        return ResponseEntity.ok().build();        //통신 테스트용
+//        if (scenarioDTO.scenarioCode() == null) {
+//            return ResponseEntity.badRequest().build();
+//        }
+//        scenarioAppService.renewScenario(scenarioDTO);
+//        return ResponseEntity.ok().build();
+//    }
 
 
 }
