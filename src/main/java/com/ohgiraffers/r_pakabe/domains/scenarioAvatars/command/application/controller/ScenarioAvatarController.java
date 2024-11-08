@@ -4,6 +4,7 @@ import com.ohgiraffers.r_pakabe.common.RecordNullChecker;
 import com.ohgiraffers.r_pakabe.domains.scenarioAvatars.command.application.dto.RequestAvatarDTO;
 import com.ohgiraffers.r_pakabe.domains.scenarioAvatars.command.application.dto.ScenarioAvatarDTO;
 import com.ohgiraffers.r_pakabe.domains.scenarioAvatars.command.application.service.ScenarioAvatarAppService;
+import com.ohgiraffers.r_pakabe.domains.scenarioAvatars.command.domain.model.ScenarioAvatar;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -95,6 +96,24 @@ public class ScenarioAvatarController {
         Integer avatarId = avatarIdDTO.avatarId();
         scenarioAvatarAppService.deleteAvatar(avatarId);
         return ResponseEntity.ok().build();
+    }
+
+
+
+    @Operation(summary = "시나리오용 아바타 생성 로직", description =
+            "시나리오 입력중에 들어온 아바타를 처리하는 방식 테스트<br>" +
+            "id 값으로 아바타를 찾으면, 기존값을 불러오고 입력된 값은 무시됩니다.", deprecated = true)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공적으로 처리 되었습니다."),
+            @ApiResponse(responseCode = "400", description = "입력값이 올바르지 않습니다."),
+            @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
+    })
+    @PostMapping("/upload")
+    public ResponseEntity<?> uploadScenarioAvatar(
+            @RequestBody ScenarioAvatarDTO scenarioAvatarDTO) throws Exception {
+        RecordNullChecker.hasNullFields(scenarioAvatarDTO);
+        ScenarioAvatar avatar = scenarioAvatarAppService.uploadScenarioAvatar(scenarioAvatarDTO);
+        return ResponseEntity.ok(avatar);
     }
 
 }

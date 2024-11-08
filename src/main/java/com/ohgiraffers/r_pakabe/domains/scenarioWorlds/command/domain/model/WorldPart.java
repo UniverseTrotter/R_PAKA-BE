@@ -24,10 +24,14 @@ public class WorldPart {
     @ColumnDefault("false")
     private Boolean isPortalEnable;
 
+    @Column
+    private Integer towardWorldPartId;
+
     @Builder
-    public WorldPart(String partName, boolean isPortalEnable) {
+    public WorldPart(String partName, Boolean isPortalEnable, Integer towardWorldPartId) {
         this.partName = partName;
         this.isPortalEnable = isPortalEnable;
+        this.towardWorldPartId = towardWorldPartId;
     }
 
     @Override
@@ -36,6 +40,7 @@ public class WorldPart {
                 "partId=" + partId +
                 ", partName='" + partName + '\'' +
                 ", isPortalEnable=" + isPortalEnable +
+                ", towardWorldPartId=" + towardWorldPartId +
                 '}';
     }
 }
