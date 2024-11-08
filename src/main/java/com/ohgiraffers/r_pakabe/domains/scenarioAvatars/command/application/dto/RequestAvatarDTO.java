@@ -1,6 +1,5 @@
 package com.ohgiraffers.r_pakabe.domains.scenarioAvatars.command.application.dto;
 
-import jakarta.persistence.Column;
 
 public class RequestAvatarDTO {
 
@@ -18,6 +17,7 @@ public class RequestAvatarDTO {
             Float axisX,
             Float axisY,
             Float axisZ,
+            Float rotation,
             Integer worldId
     ){}
 }

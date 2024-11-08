@@ -1,6 +1,5 @@
 package com.ohgiraffers.r_pakabe.domains.scenarioAvatars.command.application.dto;
 
-import com.ohgiraffers.r_pakabe.domains.scenarioAvatars.command.domain.model.ScenarioAvatar;
 
 public record ScenarioAvatarDTO(
         Integer scenarioAvatarId,
@@ -13,5 +12,6 @@ public record ScenarioAvatarDTO(
         Float axisX,
         Float axisY,
         Float axisZ,
+        Float rotation,
         Integer worldId
 ) {}

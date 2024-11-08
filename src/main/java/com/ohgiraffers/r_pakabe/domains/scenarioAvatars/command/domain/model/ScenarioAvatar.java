@@ -50,6 +50,9 @@ public class ScenarioAvatar {
     private Float axisZ;
 
     @Column
+    private Float rotation;
+
+    @Column
     private Integer worldId;
 
 
