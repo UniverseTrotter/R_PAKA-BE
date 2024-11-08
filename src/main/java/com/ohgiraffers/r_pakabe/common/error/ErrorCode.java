@@ -26,6 +26,7 @@ public enum ErrorCode {
     NO_SUCH_GENRE(HttpStatus.BAD_REQUEST, "GENRE-002", "해당 장르가 없습니다."),
     WORLD_ALREADY_EXIT(HttpStatus.BAD_REQUEST, "WORLD-001", "해당 ID의 월드가 이미 있습니다."),
     NO_SUCH_WORLD(HttpStatus.BAD_REQUEST, "WORLD-002", "해당 월드가 없습니다."),
+    NO_SUCH_SETTING(HttpStatus.BAD_REQUEST, "SCENARIO-003", "해당 시나리오에 유저의 세팅이 없습니다."),
     ;
 
     private HttpStatus status;

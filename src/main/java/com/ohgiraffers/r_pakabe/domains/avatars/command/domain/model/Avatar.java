@@ -7,6 +7,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * 유저의 외형을 저장
+ * */
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
