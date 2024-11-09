@@ -5,7 +5,8 @@
     <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
 
     <!-- 로그 파일이 저장될 디렉토리 설정 -->
-    <property name="LOG_PATH" value="logs"/>
+    <property name="LOG_PATH" value="C:/dev/logs/R-paka"/>
+
 
     <!-- 파일 롤링을 위한 File Appender 설정 -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">

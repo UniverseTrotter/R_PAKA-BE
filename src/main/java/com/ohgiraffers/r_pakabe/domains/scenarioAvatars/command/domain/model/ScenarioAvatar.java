@@ -1,9 +1,13 @@
 package com.ohgiraffers.r_pakabe.domains.scenarioAvatars.command.domain.model;
 
+import com.ohgiraffers.r_pakabe.domains.scenarioAvatars.command.application.dto.RequestAvatarDTO;
+import com.ohgiraffers.r_pakabe.domains.scenarioAvatars.command.application.dto.ScenarioAvatarDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
+@ToString
+@Builder
 @NoArgsConstructor (access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
@@ -13,10 +17,9 @@ public class ScenarioAvatar {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer senarioAvatarId;
+    private Integer scenarioAvatarId;
 
     @Column
-//    @ColumnDefault(value = "여기에 이름을 입력")
     private String avatarName;
 
     @Column
@@ -24,22 +27,33 @@ public class ScenarioAvatar {
     private Integer outfit;
 
     @Column
+    @ColumnDefault("false")
     private Boolean isPlayable;
 
-    @Builder
-    public ScenarioAvatar(String avatarName, Integer outfit, Boolean isPlayable) {
-        this.avatarName = avatarName;
-        this.outfit = outfit;
-        this.isPlayable = isPlayable;
-    }
+    @Column
+    private Integer health;
 
-    @Override
-    public String toString() {
-        return "ScenarioAvatar{" +
-                "senarioAvatarId=" + senarioAvatarId +
-                ", avatarName='" + avatarName + '\'' +
-                ", outfit=" + outfit +
-                ", isPlayable=" + isPlayable +
-                '}';
-    }
+    @Column
+    private Integer strength;
+
+    @Column
+    private Integer dex;
+
+
+    @Column
+    private Float axisX;
+
+    @Column
+    private Float axisY;
+
+    @Column
+    private Float axisZ;
+
+    @Column
+    private Float rotation;
+
+    @Column
+    private Integer worldId;
+
+
 }

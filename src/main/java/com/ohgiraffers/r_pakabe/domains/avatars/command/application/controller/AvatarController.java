@@ -22,7 +22,7 @@ public class AvatarController {
     }
 
 
-    @Operation(summary = "회원 아바타 정보", description = "회원코드로 아바타 정보를 가져옵니다.")
+    @Operation(summary = "유저 아바타 정보", description = "유저코드로 아바타 정보를 가져옵니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공적으로 반환 되었습니다."),
             @ApiResponse(responseCode = "400", description = "해당 유저에게 아바타가 없습니다"),
@@ -35,7 +35,7 @@ public class AvatarController {
         return ResponseEntity.ok(avatarDTO);
     }
 
-    @Operation(summary = "회원 아바타 업로드", description = "회원코드로 아바타를 생성합니다.")
+    @Operation(summary = "유저 아바타 업로드", description = "유저코드로 아바타를 생성합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공적으로 처리 되었습니다."),
             @ApiResponse(responseCode = "401", description = "해당 유저가 없습니다"),
@@ -48,7 +48,7 @@ public class AvatarController {
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "회원 아바타 수정 ", description = "해당 회원의 아바타 정보를 수정합니다.")
+    @Operation(summary = "유저 아바타 수정 ", description = "유저 회원의 아바타 정보를 수정합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공적으로 반환 되었습니다."),
             @ApiResponse(responseCode = "400", description = "해당 유저에게 아바타가 없습니다"),
