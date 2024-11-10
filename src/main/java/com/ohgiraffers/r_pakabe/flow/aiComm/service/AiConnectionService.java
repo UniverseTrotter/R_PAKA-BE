@@ -1,4 +1,4 @@
-package com.ohgiraffers.r_pakabe.flow;
+package com.ohgiraffers.r_pakabe.flow.aiComm.service;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
