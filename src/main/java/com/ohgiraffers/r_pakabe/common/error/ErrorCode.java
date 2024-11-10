@@ -27,6 +27,8 @@ public enum ErrorCode {
     WORLD_ALREADY_EXIT(HttpStatus.BAD_REQUEST, "WORLD-001", "해당 ID의 월드가 이미 있습니다."),
     NO_SUCH_WORLD(HttpStatus.BAD_REQUEST, "WORLD-002", "해당 월드가 없습니다."),
     NO_SUCH_SETTING(HttpStatus.BAD_REQUEST, "SCENARIO-003", "해당 시나리오에 유저의 세팅이 없습니다."),
+    REDUNDANT_ROOM_NUMBER(HttpStatus.BAD_REQUEST, "RUNNING-001", "같은 번호의 방이 이미 진행중 입니다."),
+    NO_SUCH_ROOM(HttpStatus.BAD_REQUEST, "RUNNING-002", "해당 번호의 방이 존재하지 않습니다."),
     ;
 
     private HttpStatus status;
