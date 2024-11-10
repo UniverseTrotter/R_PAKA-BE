@@ -25,10 +25,9 @@ public class SceneHistory {
     @Id
     private String id;
 
-    @Indexed(unique = true)
     private Long roomNum;
 
-    private List<String> history;
+    private String history;
 
     @CreatedDate
     private LocalDateTime createdAt;

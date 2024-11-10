@@ -10,8 +10,8 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RunningStoryDTO{
-
+public class RunningEntityDTO {
+    private String id;
     private Integer roomNum;
     private String scenarioTitle;
     private String mainQuest;

@@ -25,6 +25,10 @@ public class RunningStoryDomainService {
         return runningStoryRepository.save(runningStory);
     }
 
+    public RunningStory updateRunningStory(RunningStory runningStory) {
+        return runningStoryRepository.save(runningStory);
+    }
+
     public void deleteRunningStory(Integer roomNum) {
         runningStoryRepository.deleteRunningStoryByRoomNum(roomNum);
     }

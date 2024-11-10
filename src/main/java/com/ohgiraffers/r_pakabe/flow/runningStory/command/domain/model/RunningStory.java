@@ -1,5 +1,7 @@
 package com.ohgiraffers.r_pakabe.flow.runningStory.command.domain.model;
 
+import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.dto.NpcDTO;
+import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.dto.PlayerDTO;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -25,15 +27,11 @@ public class RunningStory {
     private Integer roomNum;
 
     private String scenarioTitle;
-
     private String mainQuest;
-
     private List<String> subQuest;
-
     private String detail;
-
-    private List<String> scenarioAvatarList;
-
+    private List<PlayerDTO> playerList;
+    private List<NpcDTO> npcList;
     private List<String> genre;
 
 

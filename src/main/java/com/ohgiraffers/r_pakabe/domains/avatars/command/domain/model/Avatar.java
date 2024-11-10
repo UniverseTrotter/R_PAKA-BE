@@ -25,18 +25,18 @@ public class Avatar {
     private Long userCode;
 
     @Column
-    private int userAvatarGender;
+    private Integer userAvatarGender;
     @Column
-    private int userAvatarHair;
+    private Integer userAvatarHair;
     @Column
-    private int userAvatarBody;
+    private Integer userAvatarBody;
     @Column
-    private int userAvatarSkin;
+    private Integer userAvatarSkin;
     @Column
-    private int userAvatarHand;
+    private Integer userAvatarHand;
 
     @Builder
-    public Avatar(Long userCode, int userAvatarGender, int userAvatarHair, int userAvatarBody, int userAvatarSkin, int userAvatarHand) {
+    public Avatar(Long userCode, Integer userAvatarGender, Integer userAvatarHair, Integer userAvatarBody, Integer userAvatarSkin, Integer userAvatarHand) {
         this.userCode = userCode;
         this.userAvatarGender = userAvatarGender;
         this.userAvatarHair = userAvatarHair;

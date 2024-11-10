@@ -18,7 +18,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/test/running")
-@Tag(name = "진행중인 시나리오", description = "시나리오 조회")
 public class RunningStoryController {
 
     private final RunningStoryAppService appService;
@@ -58,6 +57,20 @@ public class RunningStoryController {
         RunningStoryDTO createdDto = appService.createRunningStory(dto);
         return ResponseEntity.ok(createdDto);
     }
+
+
+    @Operation(summary = "진행중인 시나리오 갱신", description = "진행중인 시나리오의 정보를 업데이트 합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공적으로 처리 되었습니다."),
+            @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
+    })
+    @PostMapping("/update")
+    public ResponseEntity<?> updateScenario(@RequestBody RunningStoryDTO dto){
+        RunningStoryDTO updated = appService.updateRunningStory(dto);
+        return ResponseEntity.ok(updated);
+    }
+
+
 
 
     @Operation(summary = "진행중인 시나리오 삭제", description = "해당 방 번호로 진행중인 시나리오의 정보를 삭제합니다.")

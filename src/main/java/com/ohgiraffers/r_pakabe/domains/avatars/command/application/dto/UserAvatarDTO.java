@@ -5,11 +5,11 @@ import com.ohgiraffers.r_pakabe.domains.avatars.command.domain.model.Avatar;
 
 public record UserAvatarDTO(
         Long userCode,
-        int userAvatarGender,
-        int userAvatarHair,
-        int userAvatarBody,
-        int userAvatarSkin,
-        int userAvatarHand
+        Integer userAvatarGender,
+        Integer userAvatarHair,
+        Integer userAvatarBody,
+        Integer userAvatarSkin,
+        Integer userAvatarHand
 ){
     public static UserAvatarDTO fromEntity(Avatar avatar) {
         return new UserAvatarDTO(
