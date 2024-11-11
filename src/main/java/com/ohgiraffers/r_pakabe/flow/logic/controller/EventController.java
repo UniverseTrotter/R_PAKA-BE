@@ -1,5 +1,6 @@
 package com.ohgiraffers.r_pakabe.flow.logic.controller;
 
+import com.ohgiraffers.r_pakabe.flow.logic.dto.RequestPlayDTO;
 import com.ohgiraffers.r_pakabe.flow.logic.dto.ResponsePlayDTO;
 import com.ohgiraffers.r_pakabe.flow.logic.service.DiceService;
 import com.ohgiraffers.r_pakabe.flow.logic.service.EventService;
@@ -8,12 +9,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/progress")
@@ -29,9 +31,28 @@ public class EventController {
             @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
     })
     @PostMapping("/start")
-    public ResponseEntity<?> start(){
+    public Mono<ResponseEntity<?>> start(@RequestBody RequestPlayDTO.DialogStartDTO dialogStartDTO) {
+        return eventService.startDialog(dialogStartDTO) // Mono<DialogOpeningDTO>
+                .map(ResponseEntity::ok); // 응답을 ResponseEntity로 래핑
+//                .doOnError(error -> log.error("Error while starting dialog: {}", error.getMessage()))
+//                .onErrorReturn(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                        .body("An error occurred while starting the dialog"));
+
+    }
+
+
+    @Operation(summary = "대화 전송", description = ".")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공적으로 처리 되었습니다."),
+            @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
+    })
+    @PostMapping("/send")
+    public ResponseEntity<?> send(@RequestBody RequestPlayDTO.DialogSendDTO dialogSendDTO) {
         return null;
     }
+
+
+
 
 
     @Operation(summary = "다이스 판정", description = ".")

@@ -2,6 +2,10 @@ package com.ohgiraffers.r_pakabe.flow.logic.dto;
 
 public class ResponsePlayDTO {
 
+    public record DialogOpeningDTO(
+            String OpeningChat
+    ){}
+
     public record DialogDTO(
             Integer roomNum,
             String event,

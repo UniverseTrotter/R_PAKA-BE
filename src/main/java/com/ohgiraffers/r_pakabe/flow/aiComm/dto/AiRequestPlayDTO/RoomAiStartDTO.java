@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoomStartDTO {
+public class RoomAiStartDTO {
     private Integer sessionID;
     private String title;
     private List<String> genre;

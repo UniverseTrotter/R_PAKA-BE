@@ -9,8 +9,8 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DialogStartDTO {
-
+public class DialogAiStartDTO {
+    private Integer SessionId;
     private String location;
     private String npcName;
     private List<String> history;

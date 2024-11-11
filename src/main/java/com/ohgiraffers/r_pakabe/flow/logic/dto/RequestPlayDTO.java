@@ -12,8 +12,13 @@ public class RequestPlayDTO {
 
     public record DialogStartDTO(
             Integer roomNum,
-            Integer location,
-            Integer npc
+            String location,
+            String npc
+    ){}
+
+    public record DialogSendDTO(
+            Integer roomNum,
+            String userChat
     ){}
 
     public record DiceResultDTO(
