@@ -20,14 +20,14 @@ public class AiTestController {
     @Operation(summary = "test")
     @GetMapping("/test/ai/get")
     public ResponseEntity<Mono<String>> test() {
-        Mono<String> stringMono = connectionService.getDataTest();
+        Mono<String> stringMono = connectionService.getData("");
         return ResponseEntity.ok(stringMono);
     }
 
     @Operation(summary = "test")
     @PostMapping("/test/ai/post")
     public ResponseEntity<Mono<String>> testPost() {
-        Mono<String> stringMono = connectionService.postDataTest("test");
+        Mono<String> stringMono = connectionService.postData("test","");
         return ResponseEntity.ok(stringMono);
     }
 }

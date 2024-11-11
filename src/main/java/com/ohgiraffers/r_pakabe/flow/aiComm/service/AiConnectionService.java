@@ -11,22 +11,23 @@ public class AiConnectionService {
 
     private final WebClient webClient;
 
+    private static final String baseUri = "https://boss-goblin-tolerant.ngrok-free.app";
+
     @Autowired
     public AiConnectionService(WebClient webClient) {
         this.webClient = webClient;
     }
 
-    public Mono<String> getDataTest() {
+    public Mono<String> getData(String targetUri) {
         return webClient.get()
-                .uri("https://boss-goblin-tolerant.ngrok-free.app/")
+                .uri(baseUri + targetUri)
                 .retrieve()
                 .bodyToMono(String.class);
     }
 
-
-    public Mono<String> postDataTest(Object requestBody) {
+    public Mono<String> postData(Object requestBody, String targetUri) {
         return webClient.post()
-                .uri("https://boss-goblin-tolerant.ngrok-free.app/")
+                .uri(baseUri + targetUri)
                 .body(Mono.just(requestBody), Object.class)
                 .retrieve()
                 .bodyToMono(String.class);

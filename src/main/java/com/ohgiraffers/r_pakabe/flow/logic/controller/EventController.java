@@ -56,8 +56,6 @@ public class EventController {
     }
 
 
-
-
     @Operation(summary = "대화를 종료합니다.", description = ".")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공적으로 처리 되었습니다."),
@@ -69,6 +67,9 @@ public class EventController {
     }
 
 
+
+
+
     @Operation(summary = "다이스 롤", description = "주사위 2개를 굴립니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공적으로 처리 되었습니다."),
@@ -78,6 +79,16 @@ public class EventController {
     public ResponseEntity<?> diceRoll(){
         ResponsePlayDTO.DiceRollDTO diceRollDTO = diceService.rollDice();
         return ResponseEntity.ok(diceRollDTO);
+    }
+
+    @Operation(summary = "강제 배틀 진입", description = ".", deprecated = true)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공적으로 처리 되었습니다."),
+            @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
+    })
+    @GetMapping("/force")
+    public ResponseEntity<?> forceBattle(){
+        return null;
     }
 
 

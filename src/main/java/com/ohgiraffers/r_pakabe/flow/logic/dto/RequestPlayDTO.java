@@ -6,8 +6,8 @@ public class RequestPlayDTO {
 
     public record roomStartDTO(
             Integer roomNum,
-            Integer scenarioId,
-            List<Integer> userCodes
+            Long scenarioId,
+            List<Long> userCodes
     ){}
 
     public record DialogStartDTO(

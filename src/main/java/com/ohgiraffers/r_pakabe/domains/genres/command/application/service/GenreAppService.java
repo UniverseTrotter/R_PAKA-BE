@@ -69,6 +69,16 @@ public class GenreAppService {
         return GenreDTO.formEntity(genre);
     }
 
+    @Transactional(readOnly = true)
+    public List<String> findGenreByList(List<Integer> genreIdList) {
+        List<String> genreList = new ArrayList<>();
+        for (Integer genreId : genreIdList) {
+            Genre genre = this.genreDomainService.findGenreById(genreId);
+            genreList.add(genre.getGenreName());
+        }
+        return genreList;
+    }
+
     @Transactional
     public void createGenre(String genreName) {
         Genre genre = this.genreDomainService.findGenreByName(genreName);
