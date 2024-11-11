@@ -6,7 +6,7 @@ public class ResponsePlayDTO {
             String OpeningChat
     ){}
 
-    public record DialogDTO(
+    public record AnalyzedDTO(
             Integer roomNum,
             String event,
             String bonus,

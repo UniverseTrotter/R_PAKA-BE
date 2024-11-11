@@ -1,8 +1,14 @@
 package com.ohgiraffers.r_pakabe.flow.logic.service;
 
 
+import com.ohgiraffers.r_pakabe.common.error.ApplicationException;
+import com.ohgiraffers.r_pakabe.common.error.ErrorCode;
 import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiRequestPlayDTO.DialogAiStartDTO;
+import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiRequestPlayDTO.RequestAnalyzeDTO;
+import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiResponsePlayDTO.DialogAnalyzedDTO;
+import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiResponsePlayDTO.DialogResponseDTO;
 import com.ohgiraffers.r_pakabe.flow.aiComm.service.AiRequestService;
+import com.ohgiraffers.r_pakabe.flow.logic.dto.AnalyzedEvent;
 import com.ohgiraffers.r_pakabe.flow.logic.dto.RequestPlayDTO;
 import com.ohgiraffers.r_pakabe.flow.logic.dto.ResponsePlayDTO;
 import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.service.RunningStoryAppService;
@@ -51,6 +57,67 @@ public class EventService {
     }
 
 
+    public ResponsePlayDTO.AnalyzedDTO sendDialog(RequestPlayDTO.DialogSendDTO dialogSendDTO) {
+        //ai 로부터 받아옴
+        DialogAnalyzedDTO analyzed = aiService.analyzeDialog(dialogSendDTO).block();
 
+        if (analyzed == null || analyzed.getEvent() == null){
+            log.error("돌아온 이벤트가 없음");
+            throw new ApplicationException(ErrorCode.CANNOT_HANDLE_EVENT);
+        }
+
+        ResponsePlayDTO.AnalyzedDTO analyzedDTO;
+
+        switch (getAnalyzedEvent(analyzed.getEvent())) {
+            case DIALOG -> analyzedDTO = responseDialog(
+                    new RequestAnalyzeDTO(dialogSendDTO.roomNum(), dialogSendDTO.userChat())
+            );
+            case DICE -> analyzedDTO = new ResponsePlayDTO.AnalyzedDTO(
+                    dialogSendDTO.roomNum(),
+                    analyzed.getEvent(),
+                    analyzed.getBonus(),
+                    ""
+            );
+            case BATTLE -> analyzedDTO = new ResponsePlayDTO.AnalyzedDTO(
+                    dialogSendDTO.roomNum(),
+                    analyzed.getEvent(),
+                    "",
+                    ""
+            );
+            default -> {
+                log.error("이벤트가 Enum 에 있는 값이 아님");
+                throw new ApplicationException(ErrorCode.CANNOT_HANDLE_EVENT);
+            }
+        }
+
+
+        if (analyzedDTO == null) {
+            log.error("이벤트로 만들어낸 데이터가 문제있음");
+            throw new ApplicationException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+        return analyzedDTO;
+    }
+
+    private static AnalyzedEvent getAnalyzedEvent(String event) {
+        try {
+            return AnalyzedEvent.valueOf(event);
+        } catch (IllegalArgumentException e) {
+            return AnalyzedEvent.ERROR;
+        }
+    }
+
+    public ResponsePlayDTO.AnalyzedDTO responseDialog(RequestAnalyzeDTO requestAnalyzeDTO){
+        DialogResponseDTO responseDTO = aiService.requestDialog(requestAnalyzeDTO).block();
+        if (responseDTO == null || responseDTO.getResponse() == null) {
+            log.error("받은 대사가 없음");
+            throw new ApplicationException(ErrorCode.CANNOT_HANDLE_EVENT);
+        }
+        return new ResponsePlayDTO.AnalyzedDTO(
+                requestAnalyzeDTO.getRoomNum(),
+                AnalyzedEvent.DIALOG.getDescription(),
+                "",
+                responseDTO.getResponse()
+        );
+    }
 
 }

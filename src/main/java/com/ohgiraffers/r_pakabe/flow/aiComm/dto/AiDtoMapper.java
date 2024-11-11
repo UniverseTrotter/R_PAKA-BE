@@ -1,6 +1,8 @@
 package com.ohgiraffers.r_pakabe.flow.aiComm.dto;
 
+import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiRequestPlayDTO.RequestAnalyzeDTO;
 import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiRequestPlayDTO.RoomAiStartDTO;
+import com.ohgiraffers.r_pakabe.flow.logic.dto.RequestPlayDTO;
 import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.dto.NpcDTO;
 import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.dto.PlayerDTO;
 import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.dto.RunningStoryDTO;
@@ -36,4 +38,6 @@ public interface AiDtoMapper {
                 .map(NpcDTO::getAvatarName) // 이름만 추출
                 .collect(Collectors.toList());
     }
+
+    RequestAnalyzeDTO sendDtoToAnalyzeDto(RequestPlayDTO.DialogSendDTO dialogSendDTO);
 }
