@@ -10,4 +10,9 @@ public class ResponsePlayDTO {
     ){}
 
 
+    public record DiceRollDTO(
+            Integer diceFst,
+            Integer diceSnd
+    ){}
+
 }

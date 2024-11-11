@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/room")
-@Tag(name = "방 컨트롤러", description = "방 생성 삭제")
+@Tag(name = "플레이 방 컨트롤러", description = "방 생성 삭제")
 public class RoomController {
 
 
