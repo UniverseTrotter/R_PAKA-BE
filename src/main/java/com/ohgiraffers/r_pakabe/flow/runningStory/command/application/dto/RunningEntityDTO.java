@@ -5,8 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Entity 컨트롤용
+ * */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,5 +25,7 @@ public class RunningEntityDTO {
     private List<NpcDTO> npcList;
     private List<String> genre;
 
+    private LocalDateTime startAt;
+    private LocalDateTime endAt;
 }
 

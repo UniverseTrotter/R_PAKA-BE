@@ -25,7 +25,7 @@ public class SceneHistory {
     @Id
     private String id;
 
-    private Long roomNum;
+    private Integer roomNum;
 
     private String history;
 

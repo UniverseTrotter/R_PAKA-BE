@@ -3,10 +3,12 @@ package com.ohgiraffers.r_pakabe.flow.runningStory.command.domain.model;
 import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.dto.NpcDTO;
 import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.dto.PlayerDTO;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -34,5 +36,9 @@ public class RunningStory {
     private List<NpcDTO> npcList;
     private List<String> genre;
 
+
+    @CreatedDate
+    private LocalDateTime startAt;
+    private LocalDateTime endAt;
 
 }
