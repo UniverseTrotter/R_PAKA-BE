@@ -4,5 +4,5 @@ import java.time.LocalDateTime;
 
 public record HistoryDto(
         String history,
-        LocalDateTime createdAt
+        String createdAt
 ){}

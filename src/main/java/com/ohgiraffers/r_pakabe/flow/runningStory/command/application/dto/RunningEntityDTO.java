@@ -25,7 +25,7 @@ public class RunningEntityDTO {
     private List<NpcDTO> npcList;
     private List<String> genre;
 
-    private LocalDateTime startAt;
-    private LocalDateTime endAt;
+    private String startAt;
+    private String endAt;
 }
 

@@ -1,5 +1,8 @@
 package com.ohgiraffers.r_pakabe.flow.sceneHistory.command.domain.model;
 
+import com.ohgiraffers.r_pakabe.common.PolyTime;
+import com.ohgiraffers.r_pakabe.common.PolyTimeAttributeConverter;
+import jakarta.persistence.Convert;
 import lombok.*;
 
 import org.springframework.data.annotation.CreatedDate;

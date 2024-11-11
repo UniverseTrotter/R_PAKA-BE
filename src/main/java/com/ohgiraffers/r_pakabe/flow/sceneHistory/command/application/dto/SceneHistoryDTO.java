@@ -17,5 +17,5 @@ public class SceneHistoryDTO {
     private String id;
     private Integer roomNum;
     private String history;
-    private LocalDateTime createdAt;
+    private String createdAt;
 }

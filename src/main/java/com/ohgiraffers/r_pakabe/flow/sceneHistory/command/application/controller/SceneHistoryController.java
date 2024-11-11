@@ -54,6 +54,7 @@ public class SceneHistoryController {
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody RequestHistoryDTO.createDTO createDTO){
         SceneHistoryDTO created = appService.createHistory(createDTO);
+        System.out.println(created);
         return ResponseEntity.ok(created);
     }
 
