@@ -1,19 +1,4 @@
 services:
-#  db:
-#    container_name: rpakadb
-#    image: mysql:latest
-#    restart: always
-#    environment:
-#      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-#      MYSQL_DATABASE: rpakadb
-#      MYSQL_USER: ${MYSQL_USER}
-#      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-#      TZ: "Asia/Seoul"
-#    ports:
-#      - "23306:3306"
-#    volumes:
-#      - ./docker/rpakadb/mysql_data:/var/lib/mysql
-#      - ./docker/rpakadb/my.cnf:/etc/mysql/my.cnf
   db:
     container_name: postgres_db-dev
     image: postgres:latest
@@ -25,6 +10,25 @@ services:
      TZ: "Asia/Seoul"
     ports:
       - "15432:5432"
+    volumes:
+      - ./docker/postgres/data:/var/lib/postgresql/data
+
+  mongodb:
+    container_name: mongodb-dev
+    image: mongo:latest
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: mongo_db
+      TZ: "Asia/Seoul"
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./docker/mongodb/data/db:/data/db
+      - ./docker/mongodb/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
+
+
 #    volumes:
 #      - ./docker/rpakadb/mysql_data:/var/lib/mysql
 #      - ./docker/rpakadb/my.cnf:/etc/mysql/my.cnf
