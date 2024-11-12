@@ -2,10 +2,7 @@ package com.ohgiraffers.r_pakabe.flow.dialogArchive.command.application.service;
 
 import com.ohgiraffers.r_pakabe.common.error.ApplicationException;
 import com.ohgiraffers.r_pakabe.common.error.ErrorCode;
-import com.ohgiraffers.r_pakabe.flow.dialogArchive.command.application.dto.CreateDialogArchiveDTO;
-import com.ohgiraffers.r_pakabe.flow.dialogArchive.command.application.dto.DialogArchiveDTO;
-import com.ohgiraffers.r_pakabe.flow.dialogArchive.command.application.dto.DialogArchiveMapper;
-import com.ohgiraffers.r_pakabe.flow.dialogArchive.command.application.dto.RoomArchiveDTO;
+import com.ohgiraffers.r_pakabe.flow.dialogArchive.command.application.dto.*;
 import com.ohgiraffers.r_pakabe.flow.dialogArchive.command.domain.model.DialogArchive;
 import com.ohgiraffers.r_pakabe.flow.dialogArchive.command.domain.service.DialogArchiveDomainService;
 import lombok.RequiredArgsConstructor;
@@ -33,9 +30,11 @@ public class DialogArchiveAppService {
 
     public RoomArchiveDTO findRoomArchiveByRoomNum(Integer roomNum) {
         List<DialogArchive> roomArchive = domainService.findArchiveByRoomNum(roomNum);
-        List<String> dialogs = new ArrayList<>();
+        List<SingleLineDTO> dialogs = new ArrayList<>();
         for (DialogArchive dialogArchive : roomArchive) {
-            dialogs.add(dialogArchive.getDialog());
+            dialogs.add(
+                    new SingleLineDTO(dialogArchive.getSpeaker(),dialogArchive.getDialog())
+            );
         }
         return new RoomArchiveDTO(roomNum,dialogs);
     }

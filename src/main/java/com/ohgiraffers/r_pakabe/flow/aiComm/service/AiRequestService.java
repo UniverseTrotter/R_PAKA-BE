@@ -1,13 +1,12 @@
 package com.ohgiraffers.r_pakabe.flow.aiComm.service;
 
 import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiDtoMapper;
-import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiRequestPlayDTO.DialogAiStartDTO;
-import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiRequestPlayDTO.DiceDialogDTO;
-import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiRequestPlayDTO.RequestAnalyzeDTO;
-import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiRequestPlayDTO.RoomAiStartDTO;
+import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiRequestPlayDTO.*;
 import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiResponsePlayDTO.DialogAnalyzedDTO;
 import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiResponsePlayDTO.DialogResponseDTO;
 import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiResponsePlayDTO.DialogStartResponseDTO;
+import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiResponsePlayDTO.EndDialogDTO;
+import com.ohgiraffers.r_pakabe.flow.dialogArchive.command.application.dto.RoomArchiveDTO;
 import com.ohgiraffers.r_pakabe.flow.logic.dto.RequestPlayDTO;
 import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.dto.RunningStoryDTO;
 import lombok.RequiredArgsConstructor;
@@ -71,6 +70,14 @@ public class AiRequestService {
     public Mono<DialogResponseDTO> responseDice(DiceDialogDTO requestDto) {
         return connectionService.responseDice(requestDto)
                 .doOnNext(result-> log.info("Received Dice Dialog Response : {}", result))
+                .onErrorMap(Exception::new);
+
+    }
+
+    public Mono<EndDialogDTO> endDialog(RoomArchiveDTO archiveDTO) {
+        RequestEndDTO endDTO = mapper.archiveToEndDto(archiveDTO);
+        return connectionService.endDialog(endDTO)
+                .doOnNext(result-> log.info("Received End Dialog Response : {}", result))
                 .onErrorMap(Exception::new);
 
     }

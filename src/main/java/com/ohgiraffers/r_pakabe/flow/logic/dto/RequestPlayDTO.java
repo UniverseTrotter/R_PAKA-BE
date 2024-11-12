@@ -38,4 +38,9 @@ public class RequestPlayDTO {
             Integer healthPoint,
             List<String> status
     ){}
+
+    public record RoomNumDTO(
+            Integer roomNum
+    ){}
+
 }
