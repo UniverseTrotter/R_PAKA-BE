@@ -196,6 +196,16 @@ public class EventService {
         List<PlayerDTO> playerList = runningStoryDTO.getPlayerList();
         List<NpcDTO> npcList = runningStoryDTO.getNpcList();
 
+        String battleResult = "";
+        if (battleResultDTO.isBattleWon()) {
+            battleResult = "전투결과, 플레이어 측이 승리하였다.";
+        }else {
+            battleResult = "전투결과, 플레이어 측이 패배하였다.";
+        }
+        dialogArchiveService.save(
+                new CreateDialogArchiveDTO(battleResultDTO.roomNum(), "system", battleResult)
+        );
+
         // 플레이어 상태 업데이트 및 사망 판정
         for (RequestPlayDTO.UserStatusDTO status : userSatusList) {
             for (PlayerDTO player : playerList) {
