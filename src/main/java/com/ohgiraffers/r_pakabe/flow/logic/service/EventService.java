@@ -16,6 +16,7 @@ import com.ohgiraffers.r_pakabe.flow.dialogArchive.command.application.service.D
 import com.ohgiraffers.r_pakabe.flow.logic.dto.AnalyzedEvent;
 import com.ohgiraffers.r_pakabe.flow.logic.dto.RequestPlayDTO;
 import com.ohgiraffers.r_pakabe.flow.logic.dto.ResponsePlayDTO;
+import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.dto.NpcDTO;
 import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.dto.PlayerDTO;
 import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.service.RunningStoryAppService;
 import com.ohgiraffers.r_pakabe.flow.sceneHistory.command.application.dto.ResponseHistoryDTO;
@@ -115,12 +116,14 @@ public class EventService {
     }
 
     private static AnalyzedEvent getAnalyzedEvent(String event) {
-        try {
-            return AnalyzedEvent.valueOf(event);
-        } catch (IllegalArgumentException e) {
-            return AnalyzedEvent.ERROR;
+        for (AnalyzedEvent e : AnalyzedEvent.values()) { // 모든 열거형 상수 순회
+            if (e.getDescription().equals(event)) {      // description과 입력값 비교
+                return e;                                // 일치하는 상수 반환
+            }
         }
+        return AnalyzedEvent.ERROR;                     // 없으면 ERROR 반환
     }
+
 
     public ResponsePlayDTO.EventDTO responseDialog(RequestAnalyzeDTO requestAnalyzeDTO){
         DialogResponseDTO responseDTO = aiService.requestDialog(requestAnalyzeDTO).block();

@@ -17,7 +17,7 @@ import java.util.List;
 @Service
 public class DialogArchiveAppService {
     private final DialogArchiveDomainService domainService;
-    DialogArchiveMapper mapper;
+    private final DialogArchiveMapper mapper;
 
     public List<DialogArchiveDTO> findAll() {
         List<DialogArchive> allArchive = domainService.findAllArchive();

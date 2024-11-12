@@ -78,7 +78,7 @@ public class AiConnectionService {
 
     public Mono<DialogResponseDTO> responseDice(DiceDialogDTO requestDto) {
         return webClient.post()
-                .uri(baseUri + "/responseDailog/")
+                .uri(baseUri + "/responseDice/")
                 .body(Mono.just(requestDto), DiceDialogDTO.class)
                 .retrieve()
                 .bodyToMono(DialogResponseDTO.class);
