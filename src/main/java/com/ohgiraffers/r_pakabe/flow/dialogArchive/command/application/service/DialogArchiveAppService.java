@@ -50,8 +50,9 @@ public class DialogArchiveAppService {
 
     public DialogArchiveDTO save(CreateDialogArchiveDTO createDialogArchiveDTO) {
         DialogArchive created = DialogArchive.builder()
-                .roomNum(createDialogArchiveDTO.getRoomNum())
-                .dialog(createDialogArchiveDTO.getDialog())
+                .roomNum(createDialogArchiveDTO.roomNum())
+                .speaker(createDialogArchiveDTO.speaker())
+                .dialog(createDialogArchiveDTO.dialog())
                 .build();
         created = domainService.create(created);
         return mapper.toDto(created);

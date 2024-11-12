@@ -4,6 +4,7 @@ package com.ohgiraffers.r_pakabe.flow.aiComm.service;
 import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiRequestPlayDTO.DialogAiStartDTO;
 import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiRequestPlayDTO.DiceDialogDTO;
 import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiRequestPlayDTO.RequestAnalyzeDTO;
+import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiRequestPlayDTO.RoomAiStartDTO;
 import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiResponsePlayDTO.DialogAnalyzedDTO;
 import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiResponsePlayDTO.DialogResponseDTO;
 import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiResponsePlayDTO.DialogStartResponseDTO;
@@ -39,18 +40,27 @@ public class AiConnectionService {
                 .bodyToMono(String.class);
     }
 
+
+    public Mono<String> startScenario(RoomAiStartDTO startDTO) {
+        return webClient.post()
+                .uri(baseUri + "/startScenario/")
+                .body(Mono.just(startDTO), RoomAiStartDTO.class)
+                .retrieve()
+                .bodyToMono(String.class);
+    }
+
     public Mono<DialogStartResponseDTO> startDialog(DialogAiStartDTO requestBody) {
         return webClient.post()
-                .uri(baseUri + "/startDailog")
-                .body(Mono.just(requestBody), Object.class)
+                .uri(baseUri + "/startDailog/")
+                .body(Mono.just(requestBody), DialogAiStartDTO.class)
                 .retrieve()
                 .bodyToMono(DialogStartResponseDTO.class);
     }
 
     public Mono<DialogAnalyzedDTO> analyseDialog(RequestAnalyzeDTO requestBody) {
         return webClient.post()
-                .uri(baseUri + "/analyzeUserMsg")
-                .body(Mono.just(requestBody), Object.class)
+                .uri(baseUri + "/analyzeUserMsg/")
+                .body(Mono.just(requestBody), RequestAnalyzeDTO.class)
                 .retrieve()
                 .bodyToMono(DialogAnalyzedDTO.class);
     }
@@ -58,16 +68,16 @@ public class AiConnectionService {
 
     public Mono<DialogResponseDTO> requestDialog(RequestAnalyzeDTO requestAnalyzeDTO) {
         return webClient.post()
-                .uri(baseUri + "/responseDailog")
-                .body(Mono.just(requestAnalyzeDTO), Object.class)
+                .uri(baseUri + "/responseDailog/")
+                .body(Mono.just(requestAnalyzeDTO), RequestAnalyzeDTO.class)
                 .retrieve()
                 .bodyToMono(DialogResponseDTO.class);
     }
 
     public Mono<DialogResponseDTO> responseDice(DiceDialogDTO requestDto) {
         return webClient.post()
-                .uri(baseUri + "/responseDailog")
-                .body(Mono.just(requestDto), Object.class)
+                .uri(baseUri + "/responseDailog/")
+                .body(Mono.just(requestDto), DiceDialogDTO.class)
                 .retrieve()
                 .bodyToMono(DialogResponseDTO.class);
     }
