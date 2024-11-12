@@ -26,4 +26,11 @@ public class ResponsePlayDTO {
             List<Integer>clearSubQuestNum
     ){}
 
+
+    public record RunningListDTO(
+            Integer roomNum,
+            String scenarioTitle
+    ){}
+
+
 }

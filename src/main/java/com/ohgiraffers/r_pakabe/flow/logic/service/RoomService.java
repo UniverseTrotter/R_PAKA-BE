@@ -4,7 +4,6 @@ package com.ohgiraffers.r_pakabe.flow.logic.service;
 import com.ohgiraffers.r_pakabe.domains.avatars.command.application.dto.UserAvatarDTO;
 import com.ohgiraffers.r_pakabe.domains.avatars.command.application.service.AvatarAppService;
 import com.ohgiraffers.r_pakabe.domains.genres.command.application.dto.GenreDTO;
-import com.ohgiraffers.r_pakabe.domains.genres.command.application.service.GenreAppService;
 import com.ohgiraffers.r_pakabe.domains.scenarioAvatars.command.application.dto.ScenarioAvatarDTO;
 import com.ohgiraffers.r_pakabe.domains.scenarioAvatars.command.application.service.ScenarioAvatarAppService;
 import com.ohgiraffers.r_pakabe.domains.scenarios.command.application.dto.ScenarioDTO;
@@ -17,6 +16,7 @@ import com.ohgiraffers.r_pakabe.domains.userScenarioSettings.command.application
 import com.ohgiraffers.r_pakabe.flow.aiComm.service.AiRequestService;
 import com.ohgiraffers.r_pakabe.flow.logic.dto.PlayMapper;
 import com.ohgiraffers.r_pakabe.flow.logic.dto.RequestPlayDTO;
+import com.ohgiraffers.r_pakabe.flow.logic.dto.ResponsePlayDTO;
 import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.dto.NpcDTO;
 import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.dto.PlayerDTO;
 import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.dto.RunningStoryDTO;
@@ -112,6 +112,19 @@ public class RoomService {
         return genreList;
     }
 
+
+    public List<ResponsePlayDTO.RunningListDTO> getRunningList() {
+        List<RunningStoryDTO> runningList =runningService.getAllRunningStory();
+        List<ResponsePlayDTO.RunningListDTO> runningDTOList = new ArrayList<>();
+        for (RunningStoryDTO runningDTO : runningList){
+            runningDTOList.add(new ResponsePlayDTO.RunningListDTO(
+                    runningDTO.getRoomNum(),
+                    runningDTO.getScenarioTitle()
+            ));
+        }
+
+        return runningDTOList;
+    }
 
     public void endRoom(Integer RoomNum) {
         runningService.deleteRunningStory(RoomNum);

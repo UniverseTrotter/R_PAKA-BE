@@ -34,6 +34,7 @@ public class RunningStoryAppService {
         return dtos;
     }
 
+
     @Transactional(readOnly = true)
     public RunningStoryDTO getRunningStoryById(Integer roomNumber) {
         RunningStory story = domainService.getRunningStory(roomNumber);
