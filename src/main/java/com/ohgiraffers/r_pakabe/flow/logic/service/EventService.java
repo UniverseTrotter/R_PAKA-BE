@@ -4,10 +4,13 @@ package com.ohgiraffers.r_pakabe.flow.logic.service;
 import com.ohgiraffers.r_pakabe.common.error.ApplicationException;
 import com.ohgiraffers.r_pakabe.common.error.ErrorCode;
 import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiRequestPlayDTO.DialogAiStartDTO;
+import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiRequestPlayDTO.DiceDialogDTO;
 import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiRequestPlayDTO.RequestAnalyzeDTO;
 import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiResponsePlayDTO.DialogAnalyzedDTO;
 import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiResponsePlayDTO.DialogResponseDTO;
 import com.ohgiraffers.r_pakabe.flow.aiComm.service.AiRequestService;
+import com.ohgiraffers.r_pakabe.flow.dialogArchive.command.application.dto.CreateDialogArchiveDTO;
+import com.ohgiraffers.r_pakabe.flow.dialogArchive.command.application.service.DialogArchiveAppService;
 import com.ohgiraffers.r_pakabe.flow.logic.dto.AnalyzedEvent;
 import com.ohgiraffers.r_pakabe.flow.logic.dto.RequestPlayDTO;
 import com.ohgiraffers.r_pakabe.flow.logic.dto.ResponsePlayDTO;
@@ -30,6 +33,7 @@ public class EventService {
     private final AiRequestService aiService;
     private final SceneHistoryAppService historyService;
     private final RunningStoryAppService runningService;
+    private final DialogArchiveAppService dialogArchiveService;
 
 
     public Mono<ResponsePlayDTO.DialogOpeningDTO> startDialog(RequestPlayDTO.DialogStartDTO dialogStartDTO) {
@@ -42,7 +46,12 @@ public class EventService {
                 historyList
         );
         return aiService.startDialog(startDTO)
-                .map(response -> new ResponsePlayDTO.DialogOpeningDTO(response.getOpeningChat()));
+                .map(response -> {
+                    dialogArchiveService.save(
+                            new CreateDialogArchiveDTO(dialogStartDTO.roomNum(),"player", response.getOpeningChat())
+                    );
+                    return new ResponsePlayDTO.DialogOpeningDTO(response.getOpeningChat());
+                });
     }
 
     private List<String> trimHistoryList(ResponseHistoryDTO.HistoryListDTO historyDTO) {
@@ -57,7 +66,7 @@ public class EventService {
     }
 
 
-    public ResponsePlayDTO.AnalyzedDTO sendDialog(RequestPlayDTO.DialogSendDTO dialogSendDTO) {
+    public ResponsePlayDTO.EventDTO sendDialog(RequestPlayDTO.DialogSendDTO dialogSendDTO) {
         //ai 로부터 받아옴
         DialogAnalyzedDTO analyzed = aiService.analyzeDialog(dialogSendDTO).block();
 
@@ -66,19 +75,19 @@ public class EventService {
             throw new ApplicationException(ErrorCode.CANNOT_HANDLE_EVENT);
         }
 
-        ResponsePlayDTO.AnalyzedDTO analyzedDTO;
+        ResponsePlayDTO.EventDTO eventDTO;
 
         switch (getAnalyzedEvent(analyzed.getEvent())) {
-            case DIALOG -> analyzedDTO = responseDialog(
+            case DIALOG -> eventDTO = responseDialog(
                     new RequestAnalyzeDTO(dialogSendDTO.roomNum(), dialogSendDTO.userChat())
             );
-            case DICE -> analyzedDTO = new ResponsePlayDTO.AnalyzedDTO(
+            case DICE -> eventDTO = new ResponsePlayDTO.EventDTO(
                     dialogSendDTO.roomNum(),
                     analyzed.getEvent(),
                     analyzed.getBonus(),
                     ""
             );
-            case BATTLE -> analyzedDTO = new ResponsePlayDTO.AnalyzedDTO(
+            case BATTLE -> eventDTO = new ResponsePlayDTO.EventDTO(
                     dialogSendDTO.roomNum(),
                     analyzed.getEvent(),
                     "",
@@ -91,11 +100,16 @@ public class EventService {
         }
 
 
-        if (analyzedDTO == null) {
+        if (eventDTO == null) {
             log.error("이벤트로 만들어낸 데이터가 문제있음");
             throw new ApplicationException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
-        return analyzedDTO;
+
+        dialogArchiveService.save(
+                new CreateDialogArchiveDTO(dialogSendDTO.roomNum(),"player", dialogSendDTO.userChat())
+        );
+
+        return eventDTO;
     }
 
     private static AnalyzedEvent getAnalyzedEvent(String event) {
@@ -106,13 +120,19 @@ public class EventService {
         }
     }
 
-    public ResponsePlayDTO.AnalyzedDTO responseDialog(RequestAnalyzeDTO requestAnalyzeDTO){
+    public ResponsePlayDTO.EventDTO responseDialog(RequestAnalyzeDTO requestAnalyzeDTO){
         DialogResponseDTO responseDTO = aiService.requestDialog(requestAnalyzeDTO).block();
         if (responseDTO == null || responseDTO.getResponse() == null) {
             log.error("받은 대사가 없음");
             throw new ApplicationException(ErrorCode.CANNOT_HANDLE_EVENT);
         }
-        return new ResponsePlayDTO.AnalyzedDTO(
+
+
+        dialogArchiveService.save(
+                new CreateDialogArchiveDTO(requestAnalyzeDTO.getRoomNum(),"player", requestAnalyzeDTO.getUserChat())
+        );
+
+        return new ResponsePlayDTO.EventDTO(
                 requestAnalyzeDTO.getRoomNum(),
                 AnalyzedEvent.DIALOG.getDescription(),
                 "",
@@ -120,4 +140,42 @@ public class EventService {
         );
     }
 
+    public ResponsePlayDTO.EventDTO diceRoll(RequestPlayDTO.DiceResultDTO resultDTO) {
+        int diceNum = resultDTO.diceFst() + resultDTO.diceSnd();
+        boolean isSuccess;
+        if (2 <= diceNum && diceNum <= 6){
+            isSuccess = false;
+        } else if (7 <= diceNum && diceNum <= 12) {
+            isSuccess = true;
+        }else {
+            throw new ApplicationException(ErrorCode.INVALID_DICE);
+        }
+
+        String diceResult = "";
+        if (isSuccess) {
+            diceResult = "성공";
+        }else {
+            diceResult = "실패";
+        }
+
+        String userChat = dialogArchiveService.findLatestByRoomNum(resultDTO.roomNum()).getDialog();
+
+        DiceDialogDTO requestDto = new DiceDialogDTO(
+                resultDTO.roomNum(),
+                userChat,
+                diceResult
+        );
+
+        DialogResponseDTO responseDTO = aiService.responseDice(requestDto).block();
+        if (responseDTO == null || responseDTO.getResponse() == null) {
+            throw new ApplicationException(ErrorCode.EMPTY_RESPONSE);
+        }
+
+        return new ResponsePlayDTO.EventDTO(
+                resultDTO.roomNum(),
+                AnalyzedEvent.DIALOG.getDescription(),
+                "",
+                responseDTO.getResponse()
+        );
+    }
 }

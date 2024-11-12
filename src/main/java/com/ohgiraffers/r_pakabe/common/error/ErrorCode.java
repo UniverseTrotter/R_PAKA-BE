@@ -30,7 +30,12 @@ public enum ErrorCode {
     REDUNDANT_ROOM_NUMBER(HttpStatus.BAD_REQUEST, "RUNNING-001", "같은 번호의 방이 이미 진행중 입니다."),
     NO_SUCH_ROOM(HttpStatus.BAD_REQUEST, "RUNNING-002", "해당 번호의 방이 존재하지 않습니다."),
     CANNOT_HANDLE_EVENT(HttpStatus.UNPROCESSABLE_ENTITY, "PLAY-001", "예상치 못한 이벤트 판정입니다."),
+    INVALID_DICE(HttpStatus.BAD_REQUEST, "PLAY-002", "올바르지 않은 주사위 수치 입니다."),
+    NO_DIALOG(HttpStatus.BAD_REQUEST, "PLAY-003", "대화 기록이 없습니다."),
+    EMPTY_RESPONSE(HttpStatus.BAD_REQUEST, "PLAY-004", "대답이 오지 않았습니다."),
+
     ;
+
 
     private HttpStatus status;
     private String errorCode;

@@ -47,8 +47,8 @@ public class EventController {
     })
     @PostMapping("/send")
     public ResponseEntity<?> send(@RequestBody RequestPlayDTO.DialogSendDTO dialogSendDTO) {
-        ResponsePlayDTO.AnalyzedDTO analyzedDTO = eventService.sendDialog(dialogSendDTO);
-        return ResponseEntity.ok(analyzedDTO);
+        ResponsePlayDTO.EventDTO eventDTO = eventService.sendDialog(dialogSendDTO);
+        return ResponseEntity.ok(eventDTO);
     }
 
 
@@ -61,12 +61,13 @@ public class EventController {
             @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
     })
     @PostMapping("/dice")
-    public ResponseEntity<?> dice(){
-        return null;
+    public ResponseEntity<?> dice(RequestPlayDTO.DiceResultDTO resultDTO) {
+        ResponsePlayDTO.EventDTO eventDTO = eventService.diceRoll(resultDTO);
+        return ResponseEntity.ok(eventDTO);
     }
 
 
-    @Operation(summary = "전투 종료", description = ".")
+    @Operation(summary = "전투 결과", description = ".")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공적으로 처리 되었습니다."),
             @ApiResponse(responseCode = "500", description = "예상치 못한 예러")

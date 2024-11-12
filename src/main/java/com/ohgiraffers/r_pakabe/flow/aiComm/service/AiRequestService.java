@@ -2,6 +2,7 @@ package com.ohgiraffers.r_pakabe.flow.aiComm.service;
 
 import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiDtoMapper;
 import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiRequestPlayDTO.DialogAiStartDTO;
+import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiRequestPlayDTO.DiceDialogDTO;
 import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiRequestPlayDTO.RequestAnalyzeDTO;
 import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiRequestPlayDTO.RoomAiStartDTO;
 import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiResponsePlayDTO.DialogAnalyzedDTO;
@@ -26,7 +27,7 @@ public class AiRequestService {
     public void startPlay(RunningStoryDTO runningDTO) {
         RoomAiStartDTO startDTO = mapper.runningToStart(runningDTO);
         startDTO.setTitle(runningDTO.getScenarioTitle());
-        startDTO.setSessionID(runningDTO.getRoomNum());
+        startDTO.setRoomNum(runningDTO.getRoomNum());
 
         log.info("Start Play : {}", startDTO);
         Mono<String> response = connectionService.postData(startDTO, "/startScenario");
@@ -43,7 +44,7 @@ public class AiRequestService {
         log.info("Start Dialog : {}", startDialogDTO);
 
         return connectionService.startDialog(startDialogDTO)
-                .doOnNext(result -> log.info("Received DialogStartResponseDTO: {}", result))
+                .doOnNext(result -> log.info("Received Dialog Start Response : {}", result))
                 .onErrorMap(Exception::new);
     }
 
@@ -51,7 +52,7 @@ public class AiRequestService {
         RequestAnalyzeDTO analyzeDTO = mapper.sendDtoToAnalyzeDto(dialogSendDTO);
         return connectionService.analyseDialog(analyzeDTO)
                 .map(response -> {
-                    log.info("Received DialogAnalyzedDTO: {}", response);
+                    log.info("Received Dialog Analyzed : {}", response);
                     return new DialogAnalyzedDTO(
                             response.getEvent(),
                             response.getBonus()
@@ -62,7 +63,14 @@ public class AiRequestService {
 
     public Mono<DialogResponseDTO> requestDialog(RequestAnalyzeDTO requestAnalyzeDTO) {
         return connectionService.requestDialog(requestAnalyzeDTO)
-                .doOnNext(result-> log.info("Received DialogResponseDTO: {}", result))
+                .doOnNext(result-> log.info("Received Dialog Response : {}", result))
+                .onErrorMap(Exception::new);
+
+    }
+
+    public Mono<DialogResponseDTO> responseDice(DiceDialogDTO requestDto) {
+        return connectionService.responseDice(requestDto)
+                .doOnNext(result-> log.info("Received Dice Dialog Response : {}", result))
                 .onErrorMap(Exception::new);
 
     }

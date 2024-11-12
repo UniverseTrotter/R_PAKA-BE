@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RoomAiStartDTO {
-    private Integer sessionID;
+    private Integer roomNum;
     private String title;
     private List<String> genre;
     private String mainQuest;

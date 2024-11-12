@@ -2,6 +2,7 @@ package com.ohgiraffers.r_pakabe.flow.aiComm.service;
 
 
 import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiRequestPlayDTO.DialogAiStartDTO;
+import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiRequestPlayDTO.DiceDialogDTO;
 import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiRequestPlayDTO.RequestAnalyzeDTO;
 import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiResponsePlayDTO.DialogAnalyzedDTO;
 import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiResponsePlayDTO.DialogResponseDTO;
@@ -59,6 +60,14 @@ public class AiConnectionService {
         return webClient.post()
                 .uri(baseUri + "/responseDailog")
                 .body(Mono.just(requestAnalyzeDTO), Object.class)
+                .retrieve()
+                .bodyToMono(DialogResponseDTO.class);
+    }
+
+    public Mono<DialogResponseDTO> responseDice(DiceDialogDTO requestDto) {
+        return webClient.post()
+                .uri(baseUri + "/responseDailog")
+                .body(Mono.just(requestDto), Object.class)
                 .retrieve()
                 .bodyToMono(DialogResponseDTO.class);
     }
