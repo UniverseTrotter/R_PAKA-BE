@@ -113,7 +113,8 @@ public class RoomService {
     }
 
 
-    public void endRoom() {
+    public void endRoom(Integer RoomNum) {
+        runningService.deleteRunningStory(RoomNum);
     }
 
 }
