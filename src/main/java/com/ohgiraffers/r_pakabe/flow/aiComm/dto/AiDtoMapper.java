@@ -1,7 +1,9 @@
 package com.ohgiraffers.r_pakabe.flow.aiComm.dto;
 
 import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiRequestPlayDTO.RequestAnalyzeDTO;
+import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiRequestPlayDTO.RequestEndDTO;
 import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiRequestPlayDTO.RoomAiStartDTO;
+import com.ohgiraffers.r_pakabe.flow.dialogArchive.command.application.dto.RoomArchiveDTO;
 import com.ohgiraffers.r_pakabe.flow.logic.dto.RequestPlayDTO;
 import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.dto.NpcDTO;
 import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.dto.PlayerDTO;
@@ -40,4 +42,6 @@ public interface AiDtoMapper {
     }
 
     RequestAnalyzeDTO sendDtoToAnalyzeDto(RequestPlayDTO.DialogSendDTO dialogSendDTO);
+
+    RequestEndDTO archiveToEndDto(RoomArchiveDTO archiveDTO);
 }

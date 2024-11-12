@@ -1,5 +1,7 @@
 package com.ohgiraffers.r_pakabe.flow.logic.dto;
 
+import java.util.List;
+
 public class ResponsePlayDTO {
 
     public record DialogOpeningDTO(
@@ -7,7 +9,6 @@ public class ResponsePlayDTO {
     ){}
 
     public record EventDTO(
-            Integer roomNum,
             String event,
             String bonus,
             String npcChat
@@ -17,6 +18,12 @@ public class ResponsePlayDTO {
     public record DiceRollDTO(
             Integer diceFst,
             Integer diceSnd
+    ){}
+
+    public record EndResultDTO(
+            String history,
+            String isMainQuestClear,
+            List<Integer>clearSubQuestNum
     ){}
 
 }

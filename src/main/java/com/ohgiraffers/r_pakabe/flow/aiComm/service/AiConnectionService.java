@@ -4,9 +4,11 @@ package com.ohgiraffers.r_pakabe.flow.aiComm.service;
 import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiRequestPlayDTO.DialogAiStartDTO;
 import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiRequestPlayDTO.DiceDialogDTO;
 import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiRequestPlayDTO.RequestAnalyzeDTO;
+import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiRequestPlayDTO.RequestEndDTO;
 import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiResponsePlayDTO.DialogAnalyzedDTO;
 import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiResponsePlayDTO.DialogResponseDTO;
 import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiResponsePlayDTO.DialogStartResponseDTO;
+import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiResponsePlayDTO.EndDialogDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -70,5 +72,13 @@ public class AiConnectionService {
                 .body(Mono.just(requestDto), Object.class)
                 .retrieve()
                 .bodyToMono(DialogResponseDTO.class);
+    }
+
+    public Mono<EndDialogDTO> endDialog(RequestEndDTO endDTO) {
+        return webClient.post()
+                .uri(baseUri + "/endDialog")
+                .body(Mono.just(endDTO), RequestEndDTO.class)
+                .retrieve()
+                .bodyToMono(EndDialogDTO.class);
     }
 }

@@ -8,12 +8,15 @@ import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiRequestPlayDTO.DiceDialogDTO;
 import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiRequestPlayDTO.RequestAnalyzeDTO;
 import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiResponsePlayDTO.DialogAnalyzedDTO;
 import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiResponsePlayDTO.DialogResponseDTO;
+import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiResponsePlayDTO.EndDialogDTO;
 import com.ohgiraffers.r_pakabe.flow.aiComm.service.AiRequestService;
 import com.ohgiraffers.r_pakabe.flow.dialogArchive.command.application.dto.CreateDialogArchiveDTO;
+import com.ohgiraffers.r_pakabe.flow.dialogArchive.command.application.dto.RoomArchiveDTO;
 import com.ohgiraffers.r_pakabe.flow.dialogArchive.command.application.service.DialogArchiveAppService;
 import com.ohgiraffers.r_pakabe.flow.logic.dto.AnalyzedEvent;
 import com.ohgiraffers.r_pakabe.flow.logic.dto.RequestPlayDTO;
 import com.ohgiraffers.r_pakabe.flow.logic.dto.ResponsePlayDTO;
+import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.dto.PlayerDTO;
 import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.service.RunningStoryAppService;
 import com.ohgiraffers.r_pakabe.flow.sceneHistory.command.application.dto.ResponseHistoryDTO;
 import com.ohgiraffers.r_pakabe.flow.sceneHistory.command.application.service.SceneHistoryAppService;
@@ -24,6 +27,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -82,13 +86,11 @@ public class EventService {
                     new RequestAnalyzeDTO(dialogSendDTO.roomNum(), dialogSendDTO.userChat())
             );
             case DICE -> eventDTO = new ResponsePlayDTO.EventDTO(
-                    dialogSendDTO.roomNum(),
                     analyzed.getEvent(),
                     analyzed.getBonus(),
                     ""
             );
             case BATTLE -> eventDTO = new ResponsePlayDTO.EventDTO(
-                    dialogSendDTO.roomNum(),
                     analyzed.getEvent(),
                     "",
                     ""
@@ -133,7 +135,6 @@ public class EventService {
         );
 
         return new ResponsePlayDTO.EventDTO(
-                requestAnalyzeDTO.getRoomNum(),
                 AnalyzedEvent.DIALOG.getDescription(),
                 "",
                 responseDTO.getResponse()
@@ -172,10 +173,65 @@ public class EventService {
         }
 
         return new ResponsePlayDTO.EventDTO(
-                resultDTO.roomNum(),
                 AnalyzedEvent.DIALOG.getDescription(),
                 "",
                 responseDTO.getResponse()
+        );
+    }
+
+
+
+    //캐릭터 상태 저장
+    public ResponsePlayDTO.EndResultDTO endBattle(RequestPlayDTO.BattleResultDTO battleResultDTO) {
+
+        List<RequestPlayDTO.UserStatusDTO> userSatusList = battleResultDTO.userSatusList();
+
+        List<PlayerDTO> playerList = runningService
+                .getRunningStoryById(battleResultDTO.roomNum())
+                .getPlayerList();
+
+        for (RequestPlayDTO.UserStatusDTO status : userSatusList) {
+            //Todo : 체력 저장
+
+
+            // 사망 판정
+            if (status.healthPoint() < 1){
+                status.status().add("죽음");
+                String nickName ="";
+                for (PlayerDTO player : playerList) {
+                    if (Objects.equals(status.userCode(), player.getUserCode())){
+                        nickName = player.getNickname();
+                    }
+                }
+                dialogArchiveService.save(
+                        new CreateDialogArchiveDTO(battleResultDTO.roomNum(),"system", nickName + " 사망하였다.")
+                );
+            }
+        }
+
+
+        return endDialog(battleResultDTO.roomNum());
+    }
+
+
+
+    //히스토리 생성, 퀘스트 판정, 대화 로그 전부 넘기기, 삭제
+    public ResponsePlayDTO.EndResultDTO endDialog(Integer roomNum) {
+        RoomArchiveDTO archiveDTO = dialogArchiveService.findRoomArchiveByRoomNum(roomNum);
+
+        EndDialogDTO endDialogDTO = aiService.endDialog(archiveDTO).block();
+        if (endDialogDTO == null || endDialogDTO.getHistory() == null || endDialogDTO.getHistory().isEmpty()) {
+            log.info("히스토리가 생성되지 않음");
+            throw new ApplicationException(ErrorCode.CANNOT_HANDLE_EVENT);
+        }
+
+
+        dialogArchiveService.delete(roomNum);
+
+        return new ResponsePlayDTO.EndResultDTO(
+                endDialogDTO.getHistory(),
+                endDialogDTO.getIsMainQuestClear(),
+                endDialogDTO.getClearSubQuestNum()
         );
     }
 }

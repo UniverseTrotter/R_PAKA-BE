@@ -61,7 +61,7 @@ public class EventController {
             @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
     })
     @PostMapping("/dice")
-    public ResponseEntity<?> dice(RequestPlayDTO.DiceResultDTO resultDTO) {
+    public ResponseEntity<?> dice(@RequestBody RequestPlayDTO.DiceResultDTO resultDTO) {
         ResponsePlayDTO.EventDTO eventDTO = eventService.diceRoll(resultDTO);
         return ResponseEntity.ok(eventDTO);
     }
@@ -73,8 +73,9 @@ public class EventController {
             @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
     })
     @PostMapping("/battle")
-    public ResponseEntity<?> battleEnd(){
-        return null;
+    public ResponseEntity<?> battleEnd(@RequestBody RequestPlayDTO.BattleResultDTO battleResultDTO) {
+        ResponsePlayDTO.EndResultDTO resultDTO = eventService.endBattle(battleResultDTO);
+        return ResponseEntity.ok(resultDTO);
     }
 
 
@@ -84,8 +85,9 @@ public class EventController {
             @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
     })
     @GetMapping("/end")
-    public ResponseEntity<?> end(){
-        return null;
+    public ResponseEntity<?> end(@RequestBody RequestPlayDTO.RoomNumDTO roomNumDTO) {
+        ResponsePlayDTO.EndResultDTO resultDTO = eventService.endDialog(roomNumDTO.roomNum());
+        return ResponseEntity.ok(resultDTO);
     }
 
 
