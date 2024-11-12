@@ -26,15 +26,21 @@ public class RequestPlayDTO {
             Integer diceFst,
             Integer diceSnd
     ){}
-
     public record BattleResultDTO(
             Integer roomNum,
             Boolean isBattleWon,
-            List<UserStatusDTO> userSatusList
+            List<UserStatusDTO> userSatusList,
+            NpcStatusDTO npcStatusDTO
     ){}
 
     public record UserStatusDTO(
             Long  userCode,
+            Integer healthPoint,
+            List<String> status
+    ){}
+
+    public record NpcStatusDTO(
+            Integer scenarioAvatarId,
             Integer healthPoint,
             List<String> status
     ){}

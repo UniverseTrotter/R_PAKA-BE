@@ -18,6 +18,7 @@ import com.ohgiraffers.r_pakabe.flow.logic.dto.RequestPlayDTO;
 import com.ohgiraffers.r_pakabe.flow.logic.dto.ResponsePlayDTO;
 import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.dto.NpcDTO;
 import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.dto.PlayerDTO;
+import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.dto.RunningStoryDTO;
 import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.service.RunningStoryAppService;
 import com.ohgiraffers.r_pakabe.flow.sceneHistory.command.application.dto.ResponseHistoryDTO;
 import com.ohgiraffers.r_pakabe.flow.sceneHistory.command.application.service.SceneHistoryAppService;
@@ -187,34 +188,71 @@ public class EventService {
     //캐릭터 상태 저장
     public ResponsePlayDTO.EndResultDTO endBattle(RequestPlayDTO.BattleResultDTO battleResultDTO) {
 
+        // 플레이어 상태 리스트 가져오기
         List<RequestPlayDTO.UserStatusDTO> userSatusList = battleResultDTO.userSatusList();
 
-        List<PlayerDTO> playerList = runningService
-                .getRunningStoryById(battleResultDTO.roomNum())
-                .getPlayerList();
+        // 현재 진행 중인 이야기에서 플레이어와 NPC 리스트 가져오기
+        RunningStoryDTO runningStoryDTO = runningService.getRunningStoryById(battleResultDTO.roomNum());
+        List<PlayerDTO> playerList = runningStoryDTO.getPlayerList();
+        List<NpcDTO> npcList = runningStoryDTO.getNpcList();
 
+        // 플레이어 상태 업데이트 및 사망 판정
         for (RequestPlayDTO.UserStatusDTO status : userSatusList) {
-            //Todo : 체력 저장
+            for (PlayerDTO player : playerList) {
+                if (Objects.equals(status.userCode(), player.getUserCode())) {
+                    // 체력 저장
+                    player.setHealthPoints(status.healthPoint());
+                    // 상태 저장
+                    player.setStatus(status.status());
 
+                    // 사망 판정
+                    if (status.healthPoint() < 1) {
+                        status.status().add("죽음");
+                        String nickName = player.getNickname();
 
-            // 사망 판정
-            if (status.healthPoint() < 1){
-                status.status().add("죽음");
-                String nickName ="";
-                for (PlayerDTO player : playerList) {
-                    if (Objects.equals(status.userCode(), player.getUserCode())){
-                        nickName = player.getNickname();
+                        // Archive 생성
+                        dialogArchiveService.save(
+                                new CreateDialogArchiveDTO(battleResultDTO.roomNum(), "system", nickName + " 사망하였다.")
+                        );
                     }
+                    break; // 해당 플레이어를 찾았으므로 루프 종료
                 }
-                dialogArchiveService.save(
-                        new CreateDialogArchiveDTO(battleResultDTO.roomNum(),"system", nickName + " 사망하였다.")
-                );
             }
         }
 
+        // NPC 상태 업데이트 및 사망 판정
+        RequestPlayDTO.NpcStatusDTO npcStatusDTO = battleResultDTO.npcStatusDTO();
+        if (npcStatusDTO != null) {
+            for (NpcDTO npc : npcList) {
+                if (Objects.equals(npc.getScenarioAvatarId(), npcStatusDTO.scenarioAvatarId())) {
+                    // 체력 저장
+                    npc.setHealthPoints(npcStatusDTO.healthPoint());
+                    // 상태 저장
+                    npc.setStatus(npcStatusDTO.status());
+
+                    // 사망 판정
+                    if (npcStatusDTO.healthPoint() < 1) {
+                        npc.getStatus().add("죽음");
+                        String npcName = npc.getAvatarName();
+
+                        // Archive 생성
+                        dialogArchiveService.save(
+                                new CreateDialogArchiveDTO(battleResultDTO.roomNum(), "system", npcName + " 사망하였다.")
+                        );
+                    }
+                    break; // 해당 NPC를 찾았으므로 루프 종료
+                }
+            }
+        }
+
+        // 업데이트된 플레이어 및 NPC 리스트 저장
+        runningStoryDTO.setPlayerList(playerList);
+        runningStoryDTO.setNpcList(npcList);
+        runningService.updateRunningStory(runningStoryDTO);
 
         return endDialog(battleResultDTO.roomNum());
     }
+
 
 
 
