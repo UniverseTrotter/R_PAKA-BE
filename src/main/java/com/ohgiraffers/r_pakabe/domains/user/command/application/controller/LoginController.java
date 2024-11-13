@@ -35,7 +35,6 @@ public class LoginController {
     })
     @PostMapping(value = "/login")
     public ResponseEntity<?> loginUser(UserRequestDTO.LoginDTO loginDTO) {
-        System.out.println(loginDTO);
         if (loginDTO.userId() == null || loginDTO.userId().isEmpty()) {
             throw new ApplicationException(ErrorCode.ID_IS_EMPTY);
         }else if (loginDTO.password() == null || loginDTO.password().isEmpty()) {
@@ -43,6 +42,7 @@ public class LoginController {
         }
 
         UserResponseDTO.authDTO authDTO = userAppService.userLogin(loginDTO);
+
         return ResponseEntity.ok().body(authDTO);
     }
 

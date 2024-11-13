@@ -84,7 +84,7 @@ public class EventController {
             @ApiResponse(responseCode = "200", description = "성공적으로 처리 되었습니다."),
             @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
     })
-    @GetMapping("/end")
+    @PostMapping("/end")
     public ResponseEntity<?> end(@RequestBody RequestPlayDTO.RoomNumDTO roomNumDTO) {
         ResponsePlayDTO.EndResultDTO resultDTO = eventService.endDialog(roomNumDTO.roomNum());
         return ResponseEntity.ok(resultDTO);

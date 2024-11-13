@@ -10,6 +10,7 @@ import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiResponsePlayDTO.DialogAnalyzed
 import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiResponsePlayDTO.DialogResponseDTO;
 import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiResponsePlayDTO.DialogStartResponseDTO;
 import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiResponsePlayDTO.EndDialogDTO;
+import com.ohgiraffers.r_pakabe.flow.logic.dto.RequestPlayDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -53,7 +54,7 @@ public class AiConnectionService {
 
     public Mono<DialogStartResponseDTO> startDialog(DialogAiStartDTO requestBody) {
         return webClient.post()
-                .uri(baseUri + "/startDailog/")
+                .uri(baseUri + "/startDialog/")
                 .body(Mono.just(requestBody), DialogAiStartDTO.class)
                 .retrieve()
                 .bodyToMono(DialogStartResponseDTO.class);
@@ -70,7 +71,7 @@ public class AiConnectionService {
 
     public Mono<DialogResponseDTO> requestDialog(RequestAnalyzeDTO requestAnalyzeDTO) {
         return webClient.post()
-                .uri(baseUri + "/responseDailog/")
+                .uri(baseUri + "/responseDialog/")
                 .body(Mono.just(requestAnalyzeDTO), RequestAnalyzeDTO.class)
                 .retrieve()
                 .bodyToMono(DialogResponseDTO.class);
@@ -86,9 +87,17 @@ public class AiConnectionService {
 
     public Mono<EndDialogDTO> endDialog(RequestEndDTO endDTO) {
         return webClient.post()
-                .uri(baseUri + "/endDialog")
+                .uri(baseUri + "/endDialog/")
                 .body(Mono.just(endDTO), RequestEndDTO.class)
                 .retrieve()
                 .bodyToMono(EndDialogDTO.class);
+    }
+
+    public Mono<Object> endScenario(RequestPlayDTO.RoomNumDTO roomNumDTO) {
+        return webClient.post()
+                .uri(baseUri + "/endScenario/")
+                .body(Mono.just(roomNumDTO), RequestPlayDTO.RoomNumDTO.class)
+                .retrieve()
+                .bodyToMono(Object.class);
     }
 }

@@ -6,6 +6,7 @@ import com.ohgiraffers.r_pakabe.domains.avatars.command.application.service.Avat
 import com.ohgiraffers.r_pakabe.domains.genres.command.application.dto.GenreDTO;
 import com.ohgiraffers.r_pakabe.domains.scenarioAvatars.command.application.dto.ScenarioAvatarDTO;
 import com.ohgiraffers.r_pakabe.domains.scenarioAvatars.command.application.service.ScenarioAvatarAppService;
+import com.ohgiraffers.r_pakabe.domains.scenarioWorlds.command.application.dto.WorldPartDTO;
 import com.ohgiraffers.r_pakabe.domains.scenarios.command.application.dto.ScenarioDTO;
 import com.ohgiraffers.r_pakabe.domains.scenarios.command.application.service.ScenarioAppService;
 import com.ohgiraffers.r_pakabe.domains.user.command.application.dto.UserResponseDTO;
@@ -52,6 +53,7 @@ public class RoomService {
         List<PlayerDTO> playerList = new ArrayList<>();
         List<NpcDTO> npcList = new ArrayList<>();
         List<String> genre = trimGenre(scenarioDTO.genre());
+        List<String> worldParts = new ArrayList<>();
 
         for (Long userCode : roomStartDTO.userCodes()){
             playerList.add(getPlayer(userCode, roomStartDTO.scenarioId()));
@@ -61,11 +63,16 @@ public class RoomService {
             npcList.add(getNpc(npcDto));
         }
 
+        for (WorldPartDTO worldDto : scenarioDTO.worldParts()){
+            worldParts.add(worldDto.partName());
+        }
+
         RunningStoryDTO runningDTO = RunningStoryDTO.builder()
                 .roomNum(roomStartDTO.roomNum())
                 .scenarioTitle(scenarioDTO.scenarioTitle())
                 .mainQuest(scenarioDTO.mainQuest())
                 .subQuest(scenarioDTO.subQuest())
+                .worldParts(worldParts)
                 .detail(scenarioDTO.detail())
                 .playerList(playerList)
                 .npcList(npcList)
@@ -128,6 +135,7 @@ public class RoomService {
 
     public void endRoom(Integer RoomNum) {
         runningService.deleteRunningStory(RoomNum);
+        aiService.endScenario(new RequestPlayDTO.RoomNumDTO(RoomNum)).block();
     }
 
 }

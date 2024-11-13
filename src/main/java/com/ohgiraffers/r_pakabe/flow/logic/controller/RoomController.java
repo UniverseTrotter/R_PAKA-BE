@@ -51,8 +51,8 @@ public class RoomController {
             @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
     })
     @PostMapping("/end")
-    public ResponseEntity<?> end(@RequestBody RequestPlayDTO.roomStartDTO roomStartDTO) {
-        roomService.endRoom(roomStartDTO.roomNum());
+    public ResponseEntity<?> end(@RequestBody RequestPlayDTO.RoomNumDTO roomNumDTO) {
+        roomService.endRoom(roomNumDTO.roomNum());
         return ResponseEntity.ok().build();
     }
 }

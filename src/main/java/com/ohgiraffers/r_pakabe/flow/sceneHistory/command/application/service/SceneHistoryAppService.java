@@ -6,6 +6,7 @@ import com.ohgiraffers.r_pakabe.flow.sceneHistory.command.application.dto.*;
 import com.ohgiraffers.r_pakabe.flow.sceneHistory.command.domain.model.SceneHistory;
 import com.ohgiraffers.r_pakabe.flow.sceneHistory.command.domain.service.SceneHistoryDomainService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
+@Slf4j
 @Service
 public class SceneHistoryAppService {
 
@@ -41,6 +43,7 @@ public class SceneHistoryAppService {
 
     @Transactional
     public SceneHistoryDTO createHistory(RequestHistoryDTO.createDTO createDTO) {
+        log.info("createHistory : {}", createDTO);
         return mapper.toDto(
                 domainService.create(
                         mapper.createdToToEntity(createDTO)

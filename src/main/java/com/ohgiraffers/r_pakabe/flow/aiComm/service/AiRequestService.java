@@ -8,6 +8,7 @@ import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiResponsePlayDTO.DialogStartRes
 import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiResponsePlayDTO.EndDialogDTO;
 import com.ohgiraffers.r_pakabe.flow.dialogArchive.command.application.dto.RoomArchiveDTO;
 import com.ohgiraffers.r_pakabe.flow.logic.dto.RequestPlayDTO;
+import com.ohgiraffers.r_pakabe.flow.logic.dto.ResponsePlayDTO;
 import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.dto.RunningStoryDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -81,4 +82,12 @@ public class AiRequestService {
                 .onErrorMap(Exception::new);
 
     }
+
+    public Mono<Object> endScenario(RequestPlayDTO.RoomNumDTO roomNumDTO) {
+        return connectionService.endScenario(roomNumDTO)
+                .doOnNext(result-> log.info("Received End Scenario Response : {}", result))
+                .onErrorMap(Exception::new);
+    }
+
+
 }

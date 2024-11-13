@@ -20,6 +20,7 @@ import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.dto.NpcDTO
 import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.dto.PlayerDTO;
 import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.dto.RunningStoryDTO;
 import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.service.RunningStoryAppService;
+import com.ohgiraffers.r_pakabe.flow.sceneHistory.command.application.dto.RequestHistoryDTO;
 import com.ohgiraffers.r_pakabe.flow.sceneHistory.command.application.dto.ResponseHistoryDTO;
 import com.ohgiraffers.r_pakabe.flow.sceneHistory.command.application.service.SceneHistoryAppService;
 import lombok.RequiredArgsConstructor;
@@ -127,6 +128,7 @@ public class EventService {
 
 
     public ResponsePlayDTO.EventDTO responseDialog(RequestAnalyzeDTO requestAnalyzeDTO){
+        log.info("request Analyze : {}", requestAnalyzeDTO.getUserChat());
         DialogResponseDTO responseDTO = aiService.requestDialog(requestAnalyzeDTO).block();
         if (responseDTO == null || responseDTO.getResponse() == null) {
             log.error("받은 대사가 없음");
@@ -135,7 +137,7 @@ public class EventService {
 
 
         dialogArchiveService.save(
-                new CreateDialogArchiveDTO(requestAnalyzeDTO.getRoomNum(),"player", requestAnalyzeDTO.getUserChat())
+                new CreateDialogArchiveDTO(requestAnalyzeDTO.getRoomNum(),"npc", responseDTO.getResponse())
         );
 
         return new ResponsePlayDTO.EventDTO(
@@ -275,6 +277,13 @@ public class EventService {
             log.info("히스토리가 생성되지 않음");
             throw new ApplicationException(ErrorCode.CANNOT_HANDLE_EVENT);
         }
+
+        historyService.createHistory(
+                new RequestHistoryDTO.createDTO(
+                        roomNum,
+                        endDialogDTO.getHistory()
+                )
+        );
 
 
         dialogArchiveService.delete(roomNum);

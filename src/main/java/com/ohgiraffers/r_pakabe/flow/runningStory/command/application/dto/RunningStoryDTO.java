@@ -20,6 +20,7 @@ public class RunningStoryDTO{
     private String mainQuest;
     private List<String> subQuest;
     private String detail;
+    private List<String> worldParts;
     private List<PlayerDTO> playerList;
     private List<NpcDTO> npcList;
     private List<String> genre;
