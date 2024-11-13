@@ -16,6 +16,7 @@ import java.util.List;
 public class RunningStoryDTO{
 
     private Integer roomNum;
+    private String roomTitle;
     private String scenarioTitle;
     private String mainQuest;
     private List<String> subQuest;

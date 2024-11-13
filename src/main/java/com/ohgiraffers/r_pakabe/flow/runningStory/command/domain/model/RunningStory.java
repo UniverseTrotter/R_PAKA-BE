@@ -27,6 +27,8 @@ public class RunningStory {
 
     @Indexed(unique = true)
     private Integer roomNum;
+    private String roomTitle;
+
 
     private String scenarioTitle;
     private String mainQuest;

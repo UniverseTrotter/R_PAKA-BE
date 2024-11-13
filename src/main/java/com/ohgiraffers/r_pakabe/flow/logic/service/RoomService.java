@@ -69,6 +69,7 @@ public class RoomService {
 
         RunningStoryDTO runningDTO = RunningStoryDTO.builder()
                 .roomNum(roomStartDTO.roomNum())
+                .roomTitle(roomStartDTO.roomTitle())
                 .scenarioTitle(scenarioDTO.scenarioTitle())
                 .mainQuest(scenarioDTO.mainQuest())
                 .subQuest(scenarioDTO.subQuest())
