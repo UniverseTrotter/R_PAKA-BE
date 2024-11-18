@@ -5,13 +5,12 @@
     <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
 
     <!-- 로그 파일이 저장될 디렉토리 설정 -->
-    <property name="LOG_PATH" value="C:/dev/logs/R-paka"/>
+    <property name="LOG_PATH" value="C:/dev/logs/dev/R-paka"/>
 
 
     <!-- 파일 롤링을 위한 File Appender 설정 -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-<!--        <file>${LOG_PATH}/app.log</file>-->
-        <append>false</append>
+        <append>true</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- 일별로 로그 파일 생성 -->
             <fileNamePattern>${LOG_PATH}/RpakaLog_%d{yyyy-MM-dd}.log</fileNamePattern>
@@ -25,12 +24,19 @@
         </encoder>
     </appender>
 
+    <!-- 비동기 처리를 위한 AsyncAppender 설정 -->
+    <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="FILE"/> <!-- FILE Appender를 비동기 처리 -->
+        <queueSize>10000</queueSize> <!-- 로그 큐 크기 -->
+        <discardingThreshold>0</discardingThreshold> <!-- 큐가 가득 찼을 때 로그를 폐기하지 않음 -->
+        <neverBlock>true</neverBlock> <!-- 큐가 가득 차더라도 호출 쓰레드를 블록하지 않음 -->
+    </appender>
+
     <!-- 루트 로거 설정 -->
     <root level="INFO">
         <!-- 기본 콘솔 앱렌더 추가 -->
         <appender-ref ref="CONSOLE"/>
-        <!-- 파일 앱렌더 추가 -->
-        <appender-ref ref="FILE"/>
+        <!-- 비동기 처리된 파일 앱렌더 추가 -->
+        <appender-ref ref="ASYNC"/>
     </root>
-
 </configuration>
