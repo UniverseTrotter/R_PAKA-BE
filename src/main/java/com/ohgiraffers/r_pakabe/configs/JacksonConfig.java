@@ -16,27 +16,6 @@ import java.time.format.DateTimeFormatter;
 @Configuration
 public class JacksonConfig {
 
-//    @Bean
-//    public ObjectMapper objectMapper() {
-//        return new ObjectMapper()
-//                .findAndRegisterModules()
-//                .enable(SerializationFeature.INDENT_OUTPUT)
-//                .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-//                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-//                .registerModule(new JavaTimeModule());
-//    }
-
-
-//    @Bean
-//    public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer() {
-//        return builder -> {
-//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-//
-//            builder.serializers(new LocalDateTimeSerializer(formatter));
-//            builder.deserializers(new LocalDateTimeDeserializer(formatter));
-//        };
-//    }
-
     @Bean
     public ObjectMapper objectMapper() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
