@@ -29,7 +29,7 @@ public class AiRequestService {
         startDTO.setTitle(runningDTO.getScenarioTitle());
         startDTO.setRoomNum(runningDTO.getRoomNum());
 
-        log.info("Start Play : {}", startDTO);
+        log.info("Start Play title : {} with RoomNum : {}", startDTO.getTitle(), startDTO.getRoomNum());
         Mono<String> response = connectionService.startScenario(startDTO);
 
         // 구독 설정
