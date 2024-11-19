@@ -17,7 +17,7 @@ public class ApiLoggingAspect {
 
     @Before("restControllerMethods()")
     public void logBefore(JoinPoint joinPoint) {
-        logger.info("API called: [{}].{} with args: {}",
+        logger.info("[{}] API called: ({}) with args: {}",
                 getSimpleClassName(joinPoint),
                 joinPoint.getSignature().getName(),
                 joinPoint.getArgs());
@@ -25,7 +25,7 @@ public class ApiLoggingAspect {
 
     @AfterReturning(value = "restControllerMethods()", returning = "result")
     public void logAfterReturning(JoinPoint joinPoint, Object result) {
-        logger.info("API response: [{}].{} with result: {}",
+        logger.info("[{}] API response: ({}) with result: {}",
                 getSimpleClassName(joinPoint),
                 joinPoint.getSignature().getName(),
                 result);
@@ -50,7 +50,7 @@ public class ApiLoggingAspect {
             long endTime = System.nanoTime(); // 요청 종료 시간
             long duration = (endTime - startTime) / 1_000_000; // 밀리초 단위로 변환
 
-            logger.info("API execution time: [{}].{} took {} ms",
+            logger.info("[{}] API execution time: ({}) took {} ms",
                     getSimpleClassName(joinPoint),
                     joinPoint.getSignature().getName(),
                     duration);
