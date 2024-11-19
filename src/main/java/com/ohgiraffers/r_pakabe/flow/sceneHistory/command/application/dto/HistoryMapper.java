@@ -1,7 +1,6 @@
 package com.ohgiraffers.r_pakabe.flow.sceneHistory.command.application.dto;
 
 import com.ohgiraffers.r_pakabe.common.PolyTime;
-import com.ohgiraffers.r_pakabe.domains.scenarioAvatars.command.application.dto.ScenarioAvatarMapper;
 import com.ohgiraffers.r_pakabe.flow.sceneHistory.command.domain.model.SceneHistory;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -13,7 +12,7 @@ import java.time.LocalDateTime;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface HistoryMapper {
 
-    ScenarioAvatarMapper INSTANCE = Mappers.getMapper(ScenarioAvatarMapper.class);
+    HistoryMapper INSTANCE = Mappers.getMapper(HistoryMapper.class);
 
     @Mapping(target = "createdAt", expression = "java(convertCreatedAtToString(entity.getCreatedAt()))")
     SceneHistoryDTO toDto(SceneHistory entity);

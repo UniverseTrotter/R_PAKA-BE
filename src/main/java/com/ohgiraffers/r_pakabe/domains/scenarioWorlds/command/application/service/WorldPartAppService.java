@@ -4,6 +4,7 @@ import com.ohgiraffers.r_pakabe.common.error.ApplicationException;
 import com.ohgiraffers.r_pakabe.common.error.ErrorCode;
 import com.ohgiraffers.r_pakabe.domains.scenarioWorlds.command.application.dto.RequestWorldDTO;
 import com.ohgiraffers.r_pakabe.domains.scenarioWorlds.command.application.dto.WorldPartDTO;
+import com.ohgiraffers.r_pakabe.domains.scenarioWorlds.command.application.dto.WorldPartMapper;
 import com.ohgiraffers.r_pakabe.domains.scenarioWorlds.command.domain.model.WorldPart;
 import com.ohgiraffers.r_pakabe.domains.scenarioWorlds.command.domain.service.WorldPartDomainService;
 import lombok.RequiredArgsConstructor;
@@ -19,16 +20,18 @@ import java.util.List;
 @Service
 public class WorldPartAppService {
     private final WorldPartDomainService worldPartDomainService;
+    private final WorldPartMapper mapper;
 
 
     public WorldPart uploadWorldPart(WorldPartDTO worldPartDTO) {
-        WorldPart worldPart = this.worldPartDomainService.getWorldPart(worldPartDTO.partId());
+        WorldPart worldPart = this.worldPartDomainService.getWorldPart(worldPartDTO.getPartId());
         if (worldPart == null) {
             worldPart = worldPartDomainService.createWorldPart(
                     WorldPart.builder()
-                            .partName(worldPartDTO.partName())
-                            .isPortalEnable(worldPartDTO.isPortalEnable())
-                            .towardWorldPartId(worldPartDTO.towardWorldPartId())
+                            .partName(worldPartDTO.getPartName())
+                            .partType(worldPartDTO.getPartType())
+                            .isPortalEnable(worldPartDTO.getIsPortalEnable())
+                            .towardWorldPartId(worldPartDTO.getTowardWorldPartId())
                             .build()
             );
             log.info("Create worldPart Because not found : {}", worldPart);
@@ -41,7 +44,7 @@ public class WorldPartAppService {
         List<WorldPart> worldParts = worldPartDomainService.getAllWorldParts();
         List<WorldPartDTO> worldPartDTOS = new ArrayList<>();
         for (WorldPart worldPart : worldParts) {
-            worldPartDTOS.add(WorldPartDTO.fromEntity(worldPart));
+            worldPartDTOS.add(mapper.toDTO(worldPart));
         }
         return worldPartDTOS;
     }
@@ -52,37 +55,29 @@ public class WorldPartAppService {
         if (worldPart == null) {
             throw new ApplicationException(ErrorCode.NO_SUCH_WORLD);
         }
-        return WorldPartDTO.fromEntity(worldPart);
+        return mapper.toDTO(worldPart);
     }
 
     @Transactional
     public WorldPartDTO createWorld(RequestWorldDTO.CreateWorldDTO createWorldDTO) {
-        WorldPart worldPart = WorldPart.builder()
-                .partName(createWorldDTO.WorldName())
-                .isPortalEnable(createWorldDTO.isPortalEnable())
-                .towardWorldPartId(createWorldDTO.towardWorldPartId())
-                .build();
-        worldPart = worldPartDomainService.createWorldPart(worldPart);
-        log.info("Created WorldPart : {}", worldPart);
-        return WorldPartDTO.fromEntity(worldPart);
+        WorldPartDTO createWorldPart = mapper.createDtoToDto(createWorldDTO);
+        WorldPart entity = worldPartDomainService.createWorldPart(mapper.toEntity(createWorldPart));
+        log.info("Created WorldPart : {}", entity);
+        return mapper.toDTO(entity);
     }
 
     @Transactional
-    public WorldPartDTO updateWorld(WorldPartDTO worldDTO) {
-        WorldPart worldPart = worldPartDomainService.getWorldPart(worldDTO.partId());
+    public WorldPartDTO updateWorld(RequestWorldDTO.UpdateWorldDTO updateWorldDTO) {
+        WorldPart worldPart = worldPartDomainService.getWorldPart(updateWorldDTO.partId());
         if (worldPart == null) {
             throw new ApplicationException(ErrorCode.NO_SUCH_WORLD);
         }
+        WorldPartDTO worldPartDTO = mapper.toDTO(worldPart);
+        mapper.updateWorldDto(worldPartDTO,updateWorldDTO);
 
-        worldPart = new WorldPart(
-                worldPart.getPartId(),
-                worldDTO.partName(),
-                worldDTO.isPortalEnable(),
-                worldDTO.towardWorldPartId()
-        );
-        worldPart = worldPartDomainService.updateWorldPart(worldPart);
+        worldPart = worldPartDomainService.updateWorldPart(mapper.toEntity(worldPartDTO));
         log.info("Updated WorldPart : {}", worldPart);
-        return WorldPartDTO.fromEntity(worldPart);
+        return mapper.toDTO(worldPart);
     }
 
     @Transactional

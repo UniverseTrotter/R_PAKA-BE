@@ -2,7 +2,6 @@ package com.ohgiraffers.r_pakabe.flow.logic.dto;
 
 import com.ohgiraffers.r_pakabe.domains.avatars.command.application.dto.UserAvatarDTO;
 import com.ohgiraffers.r_pakabe.domains.scenarioAvatars.command.application.dto.ScenarioAvatarDTO;
-import com.ohgiraffers.r_pakabe.domains.scenarioAvatars.command.application.dto.ScenarioAvatarMapper;
 import com.ohgiraffers.r_pakabe.domains.user.command.application.dto.UserResponseDTO;
 import com.ohgiraffers.r_pakabe.domains.userScenarioSettings.command.application.dto.UserScenarioSettingDTO;
 import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.dto.NpcDTO;
@@ -14,7 +13,7 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface PlayMapper {
-//    ScenarioAvatarMapper INSTANCE = Mappers.getMapper(ScenarioAvatarMapper.class);
+    PlayMapper INSTANCE = Mappers.getMapper(PlayMapper.class);
 
 
 

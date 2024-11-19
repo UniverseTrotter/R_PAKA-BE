@@ -73,7 +73,7 @@ public class WorldPartsController {
             @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
     })
     @PutMapping("/update")
-    public ResponseEntity<?> updateWorldPart(@RequestBody WorldPartDTO worldDTO) throws Exception{
+    public ResponseEntity<?> updateWorldPart(@RequestBody RequestWorldDTO.UpdateWorldDTO worldDTO) throws Exception{
         RecordNullChecker.hasNullFields(worldDTO);
         WorldPartDTO worldPartDTO = worldPartAppService.updateWorld(worldDTO);
         return ResponseEntity.ok(worldPartDTO);

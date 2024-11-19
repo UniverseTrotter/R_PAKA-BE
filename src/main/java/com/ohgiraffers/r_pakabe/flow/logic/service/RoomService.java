@@ -64,7 +64,7 @@ public class RoomService {
         }
 
         for (WorldPartDTO worldDto : scenarioDTO.worldParts()){
-            worldParts.add(worldDto.partName());
+            worldParts.add(worldDto.getPartName());
         }
 
         RunningStoryDTO runningDTO = RunningStoryDTO.builder()

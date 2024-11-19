@@ -5,6 +5,15 @@ public class RequestWorldDTO {
 
     public record CreateWorldDTO(
             String WorldName,
+            Integer partType,
+            Boolean isPortalEnable,
+            Integer towardWorldPartId
+    ) {}
+
+    public record UpdateWorldDTO(
+            Integer partId,
+            String WorldName,
+            Integer partType,
             Boolean isPortalEnable,
             Integer towardWorldPartId
     ) {}
