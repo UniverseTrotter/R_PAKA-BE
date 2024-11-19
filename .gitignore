@@ -42,8 +42,9 @@ out/
 ### docker files ###
 /docker/
 
-### dev.yml ###
+### dev environment ###
 /src/main/resources/application-dev.yml
+docker-compose.override.yml
 
 ### log ###
 *.log
