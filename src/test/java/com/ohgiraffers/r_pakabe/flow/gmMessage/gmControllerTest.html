@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SSE Connection Test</title>
+</head>
+<body>
+<h1>SSE Connection Manager</h1>
+<div>
+  <button id="connectBtn">Connect</button>
+  <button id="disconnectBtn" disabled>Disconnect</button>
+</div>
+<h2>Messages:</h2>
+<div id="messages"></div>
+
+<script>
+  let eventSource;
+
+  // 서버 URL
+  const roomId = 1; // 사용할 roomId 값
+  const connectUrl = `http://localhost:9876/gm/connect?roomId=${roomId}`;
+  const disconnectUrl = `http://localhost:9876/gm/disconnect?roomId=${roomId}`;
+
+  // Connect 버튼 클릭 이벤트
+  document.getElementById("connectBtn").addEventListener("click", () => {
+    if (eventSource) {
+      console.log("Already connected!");
+      return;
+    }
+
+    // SSE 연결 시작
+    eventSource = new EventSource(connectUrl);
+
+    // 메시지를 받을 때
+    eventSource.onmessage = (event) => {
+      console.log("Message received:", event.data);
+
+      // 화면에 메시지 추가
+      const messagesDiv = document.getElementById("messages");
+      const message = document.createElement("div");
+      message.textContent = event.data;
+      messagesDiv.appendChild(message);
+    };
+
+    // 에러 처리
+    eventSource.onerror = (error) => {
+      console.error("SSE Error:", error);
+      eventSource.close();
+      eventSource = null;
+      toggleButtons(false);
+    };
+
+    toggleButtons(true);
+    console.log("Connected to SSE!");
+  });
+
+  // Disconnect 버튼 클릭 이벤트
+  document.getElementById("disconnectBtn").addEventListener("click", () => {
+    if (!eventSource) {
+      console.log("No active connection to disconnect!");
+      return;
+    }
+
+    // SSE 연결 종료
+    eventSource.close();
+    eventSource = null;
+
+    // 서버에 연결 종료 요청
+    fetch(disconnectUrl, { method: "GET" })
+            .then((response) => {
+              if (response.ok) {
+                console.log("Disconnected from SSE!");
+              } else {
+                console.error("Failed to notify server about disconnection.");
+              }
+            })
+            .catch((error) => {
+              console.error("Error disconnecting:", error);
+            });
+
+    toggleButtons(false);
+  });
+
+  // 버튼 활성화/비활성화 토글 함수
+  function toggleButtons(isConnected) {
+    document.getElementById("connectBtn").disabled = isConnected;
+    document.getElementById("disconnectBtn").disabled = !isConnected;
+  }
+</script>
+</body>
+</html>
