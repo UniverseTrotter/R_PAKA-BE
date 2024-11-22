@@ -4,6 +4,7 @@ package com.ohgiraffers.r_pakabe.domains.scenarioAvatars.command.application.dto
 public record ScenarioAvatarDTO(
         Integer scenarioAvatarId,
         String avatarName,
+        String avatarDetail,
         Integer outfit,
         Boolean isPlayable,
         Integer health,

@@ -9,6 +9,7 @@ public class RequestAvatarDTO {
 
     public record CreateAvatarDTO(
             String avatarName,
+            String avatarDetail,
             Integer outfit,
             Boolean isPlayable,
             Integer health,

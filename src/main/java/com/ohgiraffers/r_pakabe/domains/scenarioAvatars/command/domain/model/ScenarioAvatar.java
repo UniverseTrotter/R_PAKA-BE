@@ -21,6 +21,9 @@ public class ScenarioAvatar {
     private String avatarName;
 
     @Column
+    private String avatarDetail;
+
+    @Column
     @ColumnDefault("-1")
     private Integer outfit;
 
