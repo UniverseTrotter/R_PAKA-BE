@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Sinks;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -33,13 +34,15 @@ public class RoomMessageService {
     public void emitToRoom(Integer roomId, String message) {
         Sinks.Many<String> sink = getSinkForRoom(roomId);
         log.info(message);
+        String utf8Message = new String(message.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
+
         if(sink.currentSubscriberCount() < 1){
             log.info("No Subscriber found for room id ({}), message ignored.", roomId);
             return;
         }
         Sinks.EmitResult result = null;
         try {
-            result = sink.tryEmitNext(message);
+            result = sink.tryEmitNext(utf8Message);
         }catch (Exception e){
             log.error("Error emitting message : {}", e.toString());
             return;

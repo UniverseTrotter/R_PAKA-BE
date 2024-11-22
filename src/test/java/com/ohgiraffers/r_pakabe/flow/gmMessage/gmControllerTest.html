@@ -21,6 +21,8 @@
   const roomId = 1; // 사용할 roomId 값
   const connectUrl = `http://localhost:9876/gm/connect?roomId=${roomId}`;
   const disconnectUrl = `http://localhost:9876/gm/disconnect?roomId=${roomId}`;
+  const decoder = new TextDecoder('utf-8');
+
 
   // Connect 버튼 클릭 이벤트
   document.getElementById("connectBtn").addEventListener("click", () => {
@@ -34,7 +36,9 @@
 
     // 메시지를 받을 때
     eventSource.onmessage = (event) => {
-      console.log("Message received:", event.data);
+      console.log("테스트")
+      const decodedData = decoder.decode(new TextEncoder().encode(event.data));
+      console.log(decodedData);
 
       // 화면에 메시지 추가
       const messagesDiv = document.getElementById("messages");

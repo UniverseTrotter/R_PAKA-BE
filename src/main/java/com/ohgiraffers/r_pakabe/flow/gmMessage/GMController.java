@@ -28,7 +28,7 @@ public class GMController {
             @ApiResponse(responseCode = "200", description = "성공적으로 처리 되었습니다."),
             @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
     })
-    @GetMapping(path = "/connect", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(path = "/connect", produces = "text/event-stream;charset=UTF-8")
     public Flux<String> streamEvents(@RequestParam Integer roomId) {
         log.info("sse 구독 시작 부분");
         Sinks.Many<String> sink = msgService.getSinkForRoom(roomId);
