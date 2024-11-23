@@ -19,5 +19,13 @@ public class RoomAiStartDTO {
     private String detail;
     private List<String> worldParts;
     private List<String> playerList;
-    private List<String> npcList;
+    private List<npcInfoDto> npcList;
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class npcInfoDto {
+        private String avatarName;
+        private String avatarDetail;
+    }
 }
