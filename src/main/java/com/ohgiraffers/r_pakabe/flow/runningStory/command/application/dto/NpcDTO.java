@@ -15,6 +15,7 @@ public class NpcDTO {
     //정보
     private Integer scenarioAvatarId;
     private String avatarName;
+    private String avatarDetail;
 
     //외형
     private Integer outfit;
