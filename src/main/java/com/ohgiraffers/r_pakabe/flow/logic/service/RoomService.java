@@ -80,9 +80,9 @@ public class RoomService {
                 .genre(genre)
                 .build();
 
+        aiService.startPlay(runningDTO);
         runningService.createRunningStory(runningDTO);
 
-        aiService.startPlay(runningDTO);
     }
 
     public PlayerDTO getPlayer(Long userCode, Long scenarioCode) {
