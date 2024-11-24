@@ -20,7 +20,7 @@ public class ScenarioAvatar {
     @Column
     private String avatarName;
 
-    @Column
+    @Column(length = 1000)
     private String avatarDetail;
 
     @Column
