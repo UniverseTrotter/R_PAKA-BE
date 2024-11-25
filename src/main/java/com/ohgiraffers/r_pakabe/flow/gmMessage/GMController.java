@@ -8,11 +8,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Sinks;
-
-import java.io.IOException;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -28,21 +26,26 @@ public class GMController {
             @ApiResponse(responseCode = "200", description = "성공적으로 처리 되었습니다."),
             @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
     })
-    @GetMapping(path = "/connect", produces = "text/event-stream;charset=UTF-8")
-    public Flux<String> streamEvents(@RequestParam Integer roomId) {
-        log.info("sse 구독 시작 부분");
-        Sinks.Many<String> sink = msgService.getSinkForRoom(roomId);
-        return sink.asFlux()
+    @GetMapping(path = "/connect", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<ServerSentEvent<RoomMessageService.messageWrapper>> streamEvents(@RequestParam Integer roomId) {
+        log.info("SSE 구독 시작: 방 {}", roomId);
+
+        return msgService.getSinkForRoom(roomId)
+                .asFlux()
                 .doOnCancel(() -> {
-                    log.info("Connection cancelled by client");
+                    log.info("Connection cancelled for room: {}", roomId);
                     msgService.removeRoomSink(roomId);
                 })
-                .onErrorResume(IOException.class, e -> {
-                    log.info("Client disconnected: {}", e.getMessage());
+                .doOnError(error ->
+                    log.error("Error in SSE stream for room {}: {}", roomId, error.getMessage())
+                )
+                .onErrorResume(e -> {
+                    log.info("Client disconnected from room {}: {}", roomId, e.getMessage());
+                    msgService.removeRoomSink(roomId);
                     return Flux.empty();
-                })
-                ;
+                });
     }
+
 
     @Operation(summary = "GM 과 연결 종료")
     @ApiResponses(value = {
