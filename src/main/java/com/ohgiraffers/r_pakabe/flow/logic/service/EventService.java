@@ -257,7 +257,7 @@ public class EventService {
             }
         }
         if (!deadPlayerList.isEmpty()) {
-            msgService.emitToRoom(battleResultDTO.roomNum(), "격렬한 전투로 인해 사망한 아군");
+            msgService.emitToRoom(battleResultDTO.roomNum(), "격렬한 전투로 인해 아군이 사망하였습니다.");
             deadPlayerList.forEach(name -> msgService.emitToRoom(battleResultDTO.roomNum(), name));
         }
 
@@ -287,7 +287,7 @@ public class EventService {
             }
         }
         if (!deadNpcList.isEmpty()) {
-            msgService.emitToRoom(battleResultDTO.roomNum(), "격렬한 전투로 인해 사망한 npc");
+            msgService.emitToRoom(battleResultDTO.roomNum(), "전투로 인해 사망한 npc");
             deadPlayerList.forEach(name -> msgService.emitToRoom(battleResultDTO.roomNum(), name));
         }
 
