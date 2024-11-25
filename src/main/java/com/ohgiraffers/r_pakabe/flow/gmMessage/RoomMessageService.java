@@ -17,7 +17,8 @@ public class RoomMessageService {
     private final Map<Integer, Collection<Sinks.Many<MessageWrapper>>> roomSinks = new ConcurrentHashMap<>();
 
     /**
-     * 특정 방(roomId)에 대한 Sink를 생성하거나 기존 Sink를 반환합니다.
+     * 특정 방(roomId)에 대한 Sink를 생성합니다.
+     *
      * @param roomId 방 식별자
      * @return Sinks.Many<String> 해당 방의 Sink
      */
@@ -35,7 +36,8 @@ public class RoomMessageService {
 
     /**
      * 특정 방에 메시지를 발행합니다.
-     * @param roomId 방 식별자
+     *
+     * @param roomId  방 식별자
      * @param message 발행할 메시지
      */
     public void emitToRoom(Integer roomId, String message) {
@@ -81,6 +83,7 @@ public class RoomMessageService {
 
     /**
      * 방의 Sink를 제거합니다.
+     *
      * @param roomId 방 식별자
      */
     public void removeRoom(Integer roomId) {

@@ -15,6 +15,7 @@ import com.ohgiraffers.r_pakabe.domains.userScenarioSettings.command.application
 import com.ohgiraffers.r_pakabe.domains.userScenarioSettings.command.application.dto.UserScenarioSettingDTO;
 import com.ohgiraffers.r_pakabe.domains.userScenarioSettings.command.application.service.UserScenarioSettingAppService;
 import com.ohgiraffers.r_pakabe.flow.aiComm.service.AiRequestService;
+import com.ohgiraffers.r_pakabe.flow.gmMessage.RoomMessageService;
 import com.ohgiraffers.r_pakabe.flow.logic.dto.PlayMapper;
 import com.ohgiraffers.r_pakabe.flow.logic.dto.RequestPlayDTO;
 import com.ohgiraffers.r_pakabe.flow.logic.dto.ResponsePlayDTO;
@@ -44,6 +45,8 @@ public class RoomService {
     private final UserScenarioSettingAppService userSettingService;
     private final ScenarioAvatarAppService scenarioAvatarService;
     private final PlayMapper mapper;
+
+    private final RoomMessageService msgService;
 
 
     public void startRoom(RequestPlayDTO.roomStartDTO roomStartDTO) {
@@ -82,7 +85,18 @@ public class RoomService {
 
         aiService.startPlay(runningDTO);
         runningService.createRunningStory(runningDTO);
+        emitStartMessage(roomStartDTO.roomNum(), scenarioDTO);
+    }
 
+    public void emitStartMessage(Integer roomNum, ScenarioDTO scenarioDTO) {
+        msgService.emitToRoom(roomNum, "환영합니다!");
+        msgService.emitToRoom(roomNum, "여러분은 " + scenarioDTO.scenarioTitle() + "의 세계에 도착하셨습니다!");
+        msgService.emitToRoom(roomNum, "이 세계에서 여러분은 다음의 목표를 이루어야 합니다.");
+        msgService.emitToRoom(roomNum, scenarioDTO.mainQuest());
+        if (!scenarioDTO.subQuest().isEmpty()){
+            msgService.emitToRoom(roomNum, "여유가 있다면 다음의 목표도 달성해보세요!");
+            scenarioDTO.subQuest().forEach(s -> msgService.emitToRoom(roomNum, s));
+        }
     }
 
     public PlayerDTO getPlayer(Long userCode, Long scenarioCode) {

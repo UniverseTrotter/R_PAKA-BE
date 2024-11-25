@@ -13,6 +13,7 @@ import com.ohgiraffers.r_pakabe.flow.aiComm.service.AiRequestService;
 import com.ohgiraffers.r_pakabe.flow.dialogArchive.command.application.dto.CreateDialogArchiveDTO;
 import com.ohgiraffers.r_pakabe.flow.dialogArchive.command.application.dto.RoomArchiveDTO;
 import com.ohgiraffers.r_pakabe.flow.dialogArchive.command.application.service.DialogArchiveAppService;
+import com.ohgiraffers.r_pakabe.flow.gmMessage.RoomMessageService;
 import com.ohgiraffers.r_pakabe.flow.logic.dto.AnalyzedEvent;
 import com.ohgiraffers.r_pakabe.flow.logic.dto.RequestPlayDTO;
 import com.ohgiraffers.r_pakabe.flow.logic.dto.ResponsePlayDTO;
@@ -22,6 +23,7 @@ import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.dto.Runnin
 import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.service.RunningStoryAppService;
 import com.ohgiraffers.r_pakabe.flow.sceneHistory.command.application.dto.RequestHistoryDTO;
 import com.ohgiraffers.r_pakabe.flow.sceneHistory.command.application.dto.ResponseHistoryDTO;
+import com.ohgiraffers.r_pakabe.flow.sceneHistory.command.application.dto.SceneHistoryDTO;
 import com.ohgiraffers.r_pakabe.flow.sceneHistory.command.application.service.SceneHistoryAppService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +44,8 @@ public class EventService {
     private final RunningStoryAppService runningService;
     private final DialogArchiveAppService dialogArchiveService;
 
+    private final RoomMessageService msgService;
+
 
     public Mono<ResponsePlayDTO.DialogOpeningDTO> startDialog(RequestPlayDTO.DialogStartDTO dialogStartDTO) {
         ResponseHistoryDTO.HistoryListDTO historyDTO = historyService.getSceneHistory(dialogStartDTO.roomNum());
@@ -52,6 +56,8 @@ public class EventService {
                 dialogStartDTO.npc(),
                 historyList
         );
+
+        msgService.emitToRoom(dialogStartDTO.roomNum(), dialogStartDTO.npc() + "에게 말을 건냅니다.");
         return aiService.startDialog(startDTO)
                 .map(response -> {
                     dialogArchiveService.save(
@@ -76,37 +82,53 @@ public class EventService {
     public ResponsePlayDTO.EventDTO sendDialog(RequestPlayDTO.DialogSendDTO dialogSendDTO) {
         //ai 로부터 받아옴
         DialogAnalyzedDTO analyzed = aiService.analyzeDialog(dialogSendDTO).block();
+        String msg = "";
+        String errorMsg = "에러가 발생하였습니다. 다시 전송하거나 관리자에게 문의해주세요.";
 
         if (analyzed == null || analyzed.getEvent() == null){
             log.error("돌아온 이벤트가 없음");
+            msgService.emitToRoom(dialogSendDTO.roomNum(), errorMsg);
             throw new ApplicationException(ErrorCode.CANNOT_HANDLE_EVENT);
         }
 
         ResponsePlayDTO.EventDTO eventDTO;
 
         switch (getAnalyzedEvent(analyzed.getEvent())) {
-            case DIALOG -> eventDTO = responseDialog(
-                    new RequestAnalyzeDTO(dialogSendDTO.roomNum(), dialogSendDTO.userChat())
-            );
-            case DICE -> eventDTO = new ResponsePlayDTO.EventDTO(
-                    analyzed.getEvent(),
-                    analyzed.getBonus(),
-                    ""
-            );
-            case BATTLE -> eventDTO = new ResponsePlayDTO.EventDTO(
-                    analyzed.getEvent(),
-                    "",
-                    ""
-            );
-            default -> {
+            case DIALOG:
+                msg = "대화 생성중";
+                msgService.emitToRoom(dialogSendDTO.roomNum(), msg);
+                eventDTO = responseDialog(
+                        new RequestAnalyzeDTO(dialogSendDTO.roomNum(), dialogSendDTO.userChat())
+                );
+                break;
+            case DICE:
+                msg = "다이스 롤! [" + analyzed.getBonus() + "] 보정치를 받고 주사위를 굴려주세요!";
+                msgService.emitToRoom(dialogSendDTO.roomNum(), msg);
+                eventDTO = new ResponsePlayDTO.EventDTO(
+                        analyzed.getEvent(),
+                        analyzed.getBonus(),
+                        ""
+                );
+                break;
+            case BATTLE:
+                msg = "전투를 준비하세요!";
+                msgService.emitToRoom(dialogSendDTO.roomNum(), msg);
+                eventDTO = new ResponsePlayDTO.EventDTO(
+                        analyzed.getEvent(),
+                        "",
+                        ""
+                );
+                break;
+            default:
                 log.error("이벤트가 Enum 에 있는 값이 아님");
+                msgService.emitToRoom(dialogSendDTO.roomNum(), errorMsg);
                 throw new ApplicationException(ErrorCode.CANNOT_HANDLE_EVENT);
-            }
         }
 
 
         if (eventDTO == null) {
             log.error("이벤트로 만들어낸 데이터가 문제있음");
+            msgService.emitToRoom(dialogSendDTO.roomNum(), errorMsg);
             throw new ApplicationException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
 
@@ -201,14 +223,17 @@ public class EventService {
         String battleResult = "";
         if (battleResultDTO.isBattleWon()) {
             battleResult = "전투결과, 플레이어 측이 승리하였다.";
+            msgService.emitToRoom(battleResultDTO.roomNum(), "축하합니다! 전투에서 승리하였습니다.");
         }else {
             battleResult = "전투결과, 플레이어 측이 패배하였다.";
+            msgService.emitToRoom(battleResultDTO.roomNum(), "패배하였습니다.");
         }
         dialogArchiveService.save(
                 new CreateDialogArchiveDTO(battleResultDTO.roomNum(), "system", battleResult)
         );
 
         // 플레이어 상태 업데이트 및 사망 판정
+        List<String> deadPlayerList = new ArrayList<>();
         for (RequestPlayDTO.UserStatusDTO status : userSatusList) {
             for (PlayerDTO player : playerList) {
                 if (Objects.equals(status.userCode(), player.getUserCode())) {
@@ -221,7 +246,7 @@ public class EventService {
                     if (status.healthPoint() < 1) {
                         status.status().add("죽음");
                         String nickName = player.getNickname();
-
+                        deadPlayerList.add(nickName);
                         // Archive 생성
                         dialogArchiveService.save(
                                 new CreateDialogArchiveDTO(battleResultDTO.roomNum(), "system", nickName + " 사망하였다.")
@@ -231,8 +256,13 @@ public class EventService {
                 }
             }
         }
+        if (!deadPlayerList.isEmpty()) {
+            msgService.emitToRoom(battleResultDTO.roomNum(), "격렬한 전투로 인해 아군이 사망하였습니다.");
+            deadPlayerList.forEach(name -> msgService.emitToRoom(battleResultDTO.roomNum(), name));
+        }
 
         // NPC 상태 업데이트 및 사망 판정
+        List<String> deadNpcList = new ArrayList<>();
         RequestPlayDTO.NpcStatusDTO npcStatusDTO = battleResultDTO.npcStatusDTO();
         if (npcStatusDTO != null) {
             for (NpcDTO npc : npcList) {
@@ -246,7 +276,7 @@ public class EventService {
                     if (npcStatusDTO.healthPoint() < 1) {
                         npc.getStatus().add("죽음");
                         String npcName = npc.getAvatarName();
-
+                        deadNpcList.add(npcName);
                         // Archive 생성
                         dialogArchiveService.save(
                                 new CreateDialogArchiveDTO(battleResultDTO.roomNum(), "system", npcName + " 사망하였다.")
@@ -255,6 +285,10 @@ public class EventService {
                     break; // 해당 NPC를 찾았으므로 루프 종료
                 }
             }
+        }
+        if (!deadNpcList.isEmpty()) {
+            msgService.emitToRoom(battleResultDTO.roomNum(), "전투로 인해 사망한 npc");
+            deadPlayerList.forEach(name -> msgService.emitToRoom(battleResultDTO.roomNum(), name));
         }
 
         // 업데이트된 플레이어 및 NPC 리스트 저장
@@ -285,8 +319,10 @@ public class EventService {
                 )
         );
 
-
         dialogArchiveService.delete(roomNum);
+
+        msgService.emitToRoom(roomNum,"진행상황 저장");
+        msgService.emitToRoom(roomNum,endDialogDTO.getHistory());
 
         return new ResponsePlayDTO.EndResultDTO(
                 endDialogDTO.getHistory(),
