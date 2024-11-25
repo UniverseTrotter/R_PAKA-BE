@@ -67,14 +67,15 @@ public class GMController {
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "GM이 TEST 메세지 발송")
+
+    @Operation(summary = "GM이 TEST 메세지 발송 버튼")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공적으로 처리 되었습니다."),
             @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
     })
     @GetMapping(path = "/test", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public ResponseEntity<?> msgTest(@RequestParam Integer roomId) {
-        msgService.emitToRoom(roomId,"Test Message : 테스트 멧세쥐 멧밭쥐 코끼리땃쥐 한국다람쥐");
+        msgService.emitToRoom(roomId, "Test Message : 테스트 멧세쥐 멧밭쥐 코끼리땃쥐 한국다람쥐");
         return ResponseEntity.ok().build();
     }
 
