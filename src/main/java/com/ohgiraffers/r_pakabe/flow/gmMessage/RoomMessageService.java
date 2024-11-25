@@ -1,32 +1,36 @@
 package com.ohgiraffers.r_pakabe.flow.gmMessage;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Sinks;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class RoomMessageService {
 
-    private final Map<Integer, Sinks.Many<ServerSentEvent<messageWrapper>>> roomSinks = new ConcurrentHashMap<>();
+    private final Map<Integer, Collection<Sinks.Many<MessageWrapper>>> roomSinks = new ConcurrentHashMap<>();
 
     /**
      * 특정 방(roomId)에 대한 Sink를 생성하거나 기존 Sink를 반환합니다.
      * @param roomId 방 식별자
      * @return Sinks.Many<String> 해당 방의 Sink
      */
-    public Sinks.Many<ServerSentEvent<messageWrapper>> getSinkForRoom(Integer roomId) {
-        return roomSinks.computeIfAbsent(roomId, k ->
-                Sinks.many().multicast().onBackpressureBuffer()
-        );
+    public Sinks.Many<MessageWrapper> createSinkForRoom(Integer roomId) {
+        Sinks.Many<MessageWrapper> sink = Sinks.many().multicast().onBackpressureBuffer();
+
+        roomSinks.computeIfAbsent(roomId, k -> new ConcurrentLinkedQueue<>())
+                .add(sink);
+
+        log.info("New connection created for room {}. Total connections: {}",
+                roomId, roomSinks.get(roomId).size());
+
+        return sink;
     }
 
     /**
@@ -35,34 +39,43 @@ public class RoomMessageService {
      * @param message 발행할 메시지
      */
     public void emitToRoom(Integer roomId, String message) {
-        Sinks.Many<ServerSentEvent<messageWrapper>> sink = getSinkForRoom(roomId);
-        ServerSentEvent<messageWrapper> event = ServerSentEvent.<messageWrapper>builder()
-                .id(String.valueOf(System.currentTimeMillis()))
-                .event("message")
-                .data(new messageWrapper(message))
-                .build();
+        Collection<Sinks.Many<MessageWrapper>> sinks = roomSinks.get(roomId);
+        if (sinks == null || sinks.isEmpty()) {
+            log.info("No connections in room {}", roomId);
+            return;
+        }
 
-        log.info("Emitting message to room ({}): {}", roomId, message);
+        MessageWrapper wrapper = new MessageWrapper(message);
+        List<Sinks.Many<MessageWrapper>> disconnectedSinks = new ArrayList<>();
 
-        Sinks.EmitResult result = sink.tryEmitNext(event);
-        if (result.isFailure()) {
-            log.error("메세지 전송 실패 roomId ({}): {}", roomId, result);
+        for (Sinks.Many<MessageWrapper> sink : sinks) {
+            Sinks.EmitResult result = sink.tryEmitNext(wrapper);
+
+            if (result.isFailure()) {
+                log.info("Failed to emit to a connection in room {}, marking as disconnected", roomId);
+                disconnectedSinks.add(sink);
+            }
+        }
+
+        if (!disconnectedSinks.isEmpty()) {
+            removeDisconnectedSinks(roomId, disconnectedSinks);
         }
     }
 
-    public void emitToRoomWithCustomEvent(Integer roomId, String eventName, String message) {
-        Sinks.Many<ServerSentEvent<messageWrapper>> sink = getSinkForRoom(roomId);
-        ServerSentEvent<messageWrapper> event = ServerSentEvent.<messageWrapper>builder()
-                .id(String.valueOf(System.currentTimeMillis()))
-                .event(eventName)
-                .data(new messageWrapper(message))
-                .build();
+    private void removeDisconnectedSinks(Integer roomId, List<Sinks.Many<MessageWrapper>> disconnectedSinks) {
+        Collection<Sinks.Many<MessageWrapper>> sinks = roomSinks.get(roomId);
+        if (sinks == null) return;
 
-        log.info("Emitting custom event {} to room {}: {}", eventName, roomId, message);
+        for (Sinks.Many<MessageWrapper> sink : disconnectedSinks) {
+            sinks.remove(sink);
+            sink.tryEmitComplete();
+        }
 
-        Sinks.EmitResult result = sink.tryEmitNext(event);
-        if (result.isFailure()) {
-            log.error("Failed to emit message to room {}: {}", roomId, result);
+        log.info("Removed {} disconnected sinks from room {}. Remaining connections: {}",
+                disconnectedSinks.size(), roomId, sinks.size());
+
+        if (sinks.isEmpty()) {
+            removeRoom(roomId);
         }
     }
 
@@ -70,15 +83,26 @@ public class RoomMessageService {
      * 방의 Sink를 제거합니다.
      * @param roomId 방 식별자
      */
-    public void removeRoomSink(Integer roomId) {
-        Sinks.Many<ServerSentEvent<messageWrapper>> sink = roomSinks.remove(roomId);
-        if (sink != null) {
-            sink.tryEmitComplete();
-            log.info("Removed and completed sink for room {}", roomId);
+    public void removeRoom(Integer roomId) {
+        Collection<Sinks.Many<MessageWrapper>> sinks = roomSinks.remove(roomId);
+        if (sinks != null) {
+            sinks.forEach(Sinks.Many::tryEmitComplete);
         }
+        log.info("Room deleted : {}", roomId);
     }
 
-    public record messageWrapper(
-            String message
-    ){}
+
+    public void removeSinkFromRoom(Integer roomId, Sinks.Many<MessageWrapper> sink) {
+        Collection<Sinks.Many<MessageWrapper>> sinks = roomSinks.get(roomId);
+        if (sinks != null) {
+            sinks.remove(sink);
+            sink.tryEmitComplete();
+
+            log.info("Removed sink from room {}. Remaining connections: {}", roomId, sinks.size());
+
+            if (sinks.isEmpty()) {
+                removeRoom(roomId);
+            }
+        }
+    }
 }

@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Sinks;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -27,23 +28,30 @@ public class GMController {
             @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
     })
     @GetMapping(path = "/connect", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<ServerSentEvent<RoomMessageService.messageWrapper>> streamEvents(@RequestParam Integer roomId) {
-        log.info("SSE 구독 시작: 방 {}", roomId);
+    public Flux<ServerSentEvent<MessageWrapper>> streamEvents(@RequestParam Integer roomId) {
+        log.info("SSE 구독 시작: 방 ({})", roomId);
 
-        return msgService.getSinkForRoom(roomId)
-                .asFlux()
+        Sinks.Many<MessageWrapper> sink = msgService.createSinkForRoom(roomId);
+
+        return sink.asFlux()
+                .map(message -> ServerSentEvent.<MessageWrapper>builder()
+                        .id(String.valueOf(System.currentTimeMillis()))
+                        .event("message")
+                        .data(message)
+                        .build())
                 .doOnCancel(() -> {
                     log.info("Connection cancelled for room: {}", roomId);
-                    msgService.removeRoomSink(roomId);
+                    msgService.removeSinkFromRoom(roomId, sink);
                 })
                 .doOnError(error ->
-                    log.error("Error in SSE stream for room {}: {}", roomId, error.getMessage())
+                        log.error("Error in SSE stream for room {}: {}", roomId, error.getMessage())
                 )
                 .onErrorResume(e -> {
-                    log.info("Client disconnected from room {}: {}", roomId, e.getMessage());
-                    msgService.removeRoomSink(roomId);
+                    log.info("Connection error in room {}: {}", roomId, e.getMessage());
+                    msgService.removeSinkFromRoom(roomId, sink);
                     return Flux.empty();
                 });
+
     }
 
 
@@ -55,7 +63,7 @@ public class GMController {
     @GetMapping(path = "/disconnect", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public ResponseEntity<?> end(@RequestParam Integer roomId) {
         log.info("방 종료");
-        msgService.removeRoomSink(roomId);
+        msgService.removeRoom(roomId);
         return ResponseEntity.ok().build();
     }
 
@@ -66,7 +74,7 @@ public class GMController {
     })
     @GetMapping(path = "/test", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public ResponseEntity<?> msgTest(@RequestParam Integer roomId) {
-        msgService.emitToRoom(roomId,"Test Message : 테스트 멧세쥐 멧밭쥐 코끼리땃쥐");
+        msgService.emitToRoom(roomId,"Test Message : 테스트 멧세쥐 멧밭쥐 코끼리땃쥐 한국다람쥐");
         return ResponseEntity.ok().build();
     }
 
