@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class DialogAnalyzedDTO {
     private String event;
     private String bonus;
+    private String gmMsg;
 }

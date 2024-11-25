@@ -82,7 +82,6 @@ public class EventService {
     public ResponsePlayDTO.EventDTO sendDialog(RequestPlayDTO.DialogSendDTO dialogSendDTO) {
         //ai 로부터 받아옴
         DialogAnalyzedDTO analyzed = aiService.analyzeDialog(dialogSendDTO).block();
-        String msg = "";
         String errorMsg = "에러가 발생하였습니다. 다시 전송하거나 관리자에게 문의해주세요.";
 
         if (analyzed == null || analyzed.getEvent() == null){
@@ -90,19 +89,20 @@ public class EventService {
             msgService.emitToRoom(dialogSendDTO.roomNum(), errorMsg);
             throw new ApplicationException(ErrorCode.CANNOT_HANDLE_EVENT);
         }
+        String msg = analyzed.getGmMsg();
 
         ResponsePlayDTO.EventDTO eventDTO;
 
         switch (getAnalyzedEvent(analyzed.getEvent())) {
             case DIALOG:
-                msg = "대화 생성중";
+//                msg = "대화 생성중";
                 msgService.emitToRoom(dialogSendDTO.roomNum(), msg);
                 eventDTO = responseDialog(
                         new RequestAnalyzeDTO(dialogSendDTO.roomNum(), dialogSendDTO.userChat())
                 );
                 break;
             case DICE:
-                msg = "다이스 롤! [" + analyzed.getBonus() + "] 보정치를 받고 주사위를 굴려주세요!";
+//                msg = "다이스 롤! [" + analyzed.getBonus() + "] 보정치를 받고 주사위를 굴려주세요!";
                 msgService.emitToRoom(dialogSendDTO.roomNum(), msg);
                 eventDTO = new ResponsePlayDTO.EventDTO(
                         analyzed.getEvent(),
@@ -111,7 +111,7 @@ public class EventService {
                 );
                 break;
             case BATTLE:
-                msg = "전투를 준비하세요!";
+//                msg = "전투를 준비하세요!";
                 msgService.emitToRoom(dialogSendDTO.roomNum(), msg);
                 eventDTO = new ResponsePlayDTO.EventDTO(
                         analyzed.getEvent(),
@@ -287,7 +287,7 @@ public class EventService {
             }
         }
         if (!deadNpcList.isEmpty()) {
-            msgService.emitToRoom(battleResultDTO.roomNum(), "전투로 인해 사망한 npc");
+            msgService.emitToRoom(battleResultDTO.roomNum(), "전투로 인해 npc가 사망하였습니다.");
             deadPlayerList.forEach(name -> msgService.emitToRoom(battleResultDTO.roomNum(), name));
         }
 
@@ -321,7 +321,7 @@ public class EventService {
 
         dialogArchiveService.delete(roomNum);
 
-        msgService.emitToRoom(roomNum,"진행상황 저장");
+        msgService.emitToRoom(roomNum,"지금까지 상황을 노트에 적었습니다.");
         msgService.emitToRoom(roomNum,endDialogDTO.getHistory());
 
         return new ResponsePlayDTO.EndResultDTO(

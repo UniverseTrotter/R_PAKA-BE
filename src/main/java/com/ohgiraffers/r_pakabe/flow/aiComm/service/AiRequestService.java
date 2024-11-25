@@ -55,7 +55,8 @@ public class AiRequestService {
                     log.info("Received Dialog Analyzed : {}", response);
                     return new DialogAnalyzedDTO(
                             response.getEvent(),
-                            response.getBonus()
+                            response.getBonus(),
+                            response.getGmMsg()
                     );
                 })
                 .onErrorMap(Exception::new);

@@ -85,18 +85,18 @@ public class RoomService {
 
         aiService.startPlay(runningDTO);
         runningService.createRunningStory(runningDTO);
-        emitStartMessage(roomStartDTO.roomNum(), scenarioDTO);
-    }
-
-    public void emitStartMessage(Integer roomNum, ScenarioDTO scenarioDTO) {
-        msgService.emitToRoom(roomNum, "환영합니다!");
-        msgService.emitToRoom(roomNum, "여러분은 " + scenarioDTO.scenarioTitle() + "의 세계에 도착하셨습니다!");
-        msgService.emitToRoom(roomNum, "이 세계에서 여러분은 다음의 목표를 이루어야 합니다.");
-        msgService.emitToRoom(roomNum, scenarioDTO.mainQuest());
-        if (!scenarioDTO.subQuest().isEmpty()){
-            msgService.emitToRoom(roomNum, "여유가 있다면 다음의 목표도 달성해보세요!");
-            scenarioDTO.subQuest().forEach(s -> msgService.emitToRoom(roomNum, s));
-        }
+//        emitStartMessage(roomStartDTO.roomNum(), scenarioDTO);
+//    }
+//
+//    public void emitStartMessage(Integer roomNum, ScenarioDTO scenarioDTO) {
+//        msgService.emitToRoom(roomNum, "환영합니다!");
+//        msgService.emitToRoom(roomNum, "여러분은 " + scenarioDTO.scenarioTitle() + "의 세계에 도착하셨습니다!");
+//        msgService.emitToRoom(roomNum, "이 세계에서 여러분은 다음의 목표를 이루어야 합니다.");
+//        msgService.emitToRoom(roomNum, scenarioDTO.mainQuest());
+//        if (!scenarioDTO.subQuest().isEmpty()){
+//            msgService.emitToRoom(roomNum, "여유가 있다면 다음의 목표도 달성해보세요!");
+//            scenarioDTO.subQuest().forEach(s -> msgService.emitToRoom(roomNum, s));
+//        }
     }
 
     public PlayerDTO getPlayer(Long userCode, Long scenarioCode) {
