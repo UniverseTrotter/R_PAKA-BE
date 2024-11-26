@@ -21,16 +21,23 @@ public interface RunningStoryMapper {
     RunningStoryDTO documentToDto (RunningStory entity);
 
 
+    @Mapping(target = "startAt", expression = "java(convertCreatedAtToLocalDateTime(entityDTO.getStartAt()))")
+    @Mapping(target = "endAt", expression = "java(convertCreatedAtToLocalDateTime(entityDTO.getEndAt()))")
     RunningStory entityDtoToDocument(RunningEntityDTO entityDTO);
 
+    // 시작 시간은 자동생성이라 업데이트 되면 안됨
+    @Mapping(source = "updateDto", target = "startAt", ignore = true)
     void updateEntityDto(@MappingTarget RunningEntityDTO entityDTO, RunningStoryDTO updateDto);
 
     @Mapping(target = "startAt", expression = "java(convertCreatedAtToString(entity.getStartAt()))")
     @Mapping(target = "endAt", expression = "java(convertCreatedAtToString(entity.getEndAt()))")
     RunningEntityDTO documentToEntityDto(RunningStory entity);
 
+    default LocalDateTime convertCreatedAtToLocalDateTime(String createdAt) {
+        return PolyTime.PolyTimeConverter.convertFromString(createdAt);
+    }
 
     default String convertCreatedAtToString(LocalDateTime entityTime) {
-        return entityTime == null ? null : PolyTime.PolyTimeConverter.convToStandardTime(entityTime); // PolyTime의 변환 메서드 호출
+        return PolyTime.PolyTimeConverter.convToStandardTime(entityTime); // PolyTime의 변환 메서드 호출
     }
 }
