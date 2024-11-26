@@ -11,6 +11,7 @@ import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiResponsePlayDTO.DialogResponse
 import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiResponsePlayDTO.DialogStartResponseDTO;
 import com.ohgiraffers.r_pakabe.flow.aiComm.dto.AiResponsePlayDTO.EndDialogDTO;
 import com.ohgiraffers.r_pakabe.flow.logic.dto.RequestPlayDTO;
+import com.ohgiraffers.r_pakabe.flow.logic.dto.ResponsePlayDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -50,6 +51,14 @@ public class AiConnectionService {
                 .body(Mono.just(startDTO), RoomAiStartDTO.class)
                 .retrieve()
                 .bodyToMono(String.class);
+    }
+
+    public Mono<ResponsePlayDTO.RoomOpeningDTO> createGreeting(RequestPlayDTO.RoomNumDTO roomNumDTO) {
+        return webClient.post()
+                .uri(baseUri + "/create_greeting/")
+                .body(Mono.just(roomNumDTO), RequestPlayDTO.RoomNumDTO.class)
+                .retrieve()
+                .bodyToMono(ResponsePlayDTO.RoomOpeningDTO.class);
     }
 
     public Mono<DialogStartResponseDTO> startDialog(DialogAiStartDTO requestBody) {
