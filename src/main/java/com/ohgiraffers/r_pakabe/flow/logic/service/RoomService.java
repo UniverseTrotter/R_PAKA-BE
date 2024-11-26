@@ -99,6 +99,10 @@ public class RoomService {
 //        }
     }
 
+    public ResponsePlayDTO.RoomOpeningDTO getOpeningMessage(RequestPlayDTO.RoomNumDTO roomNumDTO) {
+        return aiService.createGreeting(roomNumDTO).block();
+    }
+
     public PlayerDTO getPlayer(Long userCode, Long scenarioCode) {
         PlayerDTO playerDTO = new PlayerDTO();
         UserResponseDTO.UserDetailDTO detailDTO = userAppService.findUser(userCode);
@@ -152,5 +156,4 @@ public class RoomService {
         runningService.deleteRunningStory(RoomNum);
         aiService.endScenario(new RequestPlayDTO.RoomNumDTO(RoomNum)).block();
     }
-
 }

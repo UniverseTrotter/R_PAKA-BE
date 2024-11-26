@@ -1,10 +1,17 @@
 package com.ohgiraffers.r_pakabe.flow.logic.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
 public class ResponsePlayDTO {
 
     public record DialogOpeningDTO(
+            String OpeningChat
+    ){}
+
+    public record RoomOpeningDTO(
+            @JsonProperty("gm_msg")
             String OpeningChat
     ){}
 

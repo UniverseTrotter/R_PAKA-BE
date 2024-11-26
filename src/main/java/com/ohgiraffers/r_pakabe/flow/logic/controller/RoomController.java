@@ -29,8 +29,15 @@ public class RoomController {
     @PostMapping("/start")
     public ResponseEntity<?> start(@RequestBody RequestPlayDTO.roomStartDTO roomStartDTO) {
         roomService.startRoom(roomStartDTO);
-        return ResponseEntity.ok().build();
+        ResponsePlayDTO.RoomOpeningDTO openingMsg =
+                roomService.getOpeningMessage(new RequestPlayDTO.RoomNumDTO(roomStartDTO.roomNum()));
+        return ResponseEntity.ok(openingMsg);
     }
+
+//    @PostMapping("/opening")
+//    public ResponseEntity<?> open(@RequestBody RequestPlayDTO.RoomNumDTO roomNumDTO) {
+//        return ResponseEntity.ok(roomService.getOpeningMessage(roomNumDTO));
+//    }
 
 
     @Operation(summary = "진행중인 세션 리스트.", description = ".")

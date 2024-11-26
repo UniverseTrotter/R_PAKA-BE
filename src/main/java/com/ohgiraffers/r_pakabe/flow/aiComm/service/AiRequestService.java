@@ -40,6 +40,13 @@ public class AiRequestService {
         );
     }
 
+    public Mono<ResponsePlayDTO.RoomOpeningDTO> createGreeting(RequestPlayDTO.RoomNumDTO roomNumDTO) {
+        return connectionService.createGreeting(roomNumDTO)
+                .doOnNext(result -> log.info("Received Dialog create Greeting : {}", result))
+                .onErrorMap(Exception::new);
+    }
+
+
     public Mono<DialogStartResponseDTO> startDialog(DialogAiStartDTO startDialogDTO) {
         log.info("Start Dialog : {}", startDialogDTO);
 
@@ -89,6 +96,4 @@ public class AiRequestService {
                 .doOnNext(result-> log.info("Received End Scenario Response : {}", result))
                 .onErrorMap(Exception::new);
     }
-
-
 }
