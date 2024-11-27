@@ -2,6 +2,7 @@ package com.ohgiraffers.r_pakabe.flow.runningStory.command.application.service;
 
 import com.ohgiraffers.r_pakabe.common.error.ApplicationException;
 import com.ohgiraffers.r_pakabe.common.error.ErrorCode;
+import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.dto.PlayerDTO;
 import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.dto.RunningEntityDTO;
 import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.dto.RunningStoryDTO;
 import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.dto.RunningStoryMapper;
@@ -23,6 +24,14 @@ public class RunningStoryAppService {
     private final RunningStoryDomainService domainService;
     private final RunningStoryMapper mapper;
 
+    private RunningStory getIfExist(Integer roomNum){
+        RunningStory story = domainService.getRunningStory(roomNum);
+        if (story == null) {
+            throw new ApplicationException(ErrorCode.NO_SUCH_ROOM);
+        }
+        return story;
+    }
+
 
     @Transactional(readOnly = true)
     public List<RunningStoryDTO> getAllRunningStory() {
@@ -34,14 +43,24 @@ public class RunningStoryAppService {
         return dtos;
     }
 
-
     @Transactional(readOnly = true)
     public RunningStoryDTO getRunningStoryById(Integer roomNumber) {
-        RunningStory story = domainService.getRunningStory(roomNumber);
-        if (story == null) {
-            throw new ApplicationException(ErrorCode.NO_SUCH_ROOM);
-        }
+        RunningStory story = getIfExist(roomNumber);
         return mapper.documentToDto(story);
+    }
+
+    @Transactional(readOnly = true)
+    public PlayerDTO getPlayerDTO(Integer roomNumber, Long userCode) {
+        RunningStory story = getIfExist(roomNumber);
+        List<PlayerDTO> playerList = story.getPlayerList();
+        PlayerDTO playerDTO = new PlayerDTO();
+        for (PlayerDTO player : playerList) {
+            if (player.getUserCode().equals(userCode)) {
+                playerDTO = player;
+                break;
+            }
+        }
+        return playerDTO;
     }
 
     @Transactional
@@ -56,10 +75,7 @@ public class RunningStoryAppService {
 
     @Transactional
     public RunningStoryDTO updateRunningStory(RunningStoryDTO updateDto) {
-        RunningStory story = domainService.getRunningStory(updateDto.getRoomNum());
-        if (story == null) {
-            throw new ApplicationException(ErrorCode.NO_SUCH_ROOM);
-        }
+        RunningStory story = getIfExist(updateDto.getRoomNum());
         RunningEntityDTO entityDTO = mapper.documentToEntityDto(story);
         mapper.updateEntityDto(entityDTO, updateDto);
         story = domainService.updateRunningStory(mapper.entityDtoToDocument(entityDTO));
@@ -68,10 +84,7 @@ public class RunningStoryAppService {
 
     @Transactional
     public void deleteRunningStory(Integer roomNumber) {
-        RunningStory story = domainService.getRunningStory(roomNumber);
-        if (story == null) {
-            throw new ApplicationException(ErrorCode.NO_SUCH_ROOM);
-        }
+        getIfExist(roomNumber);
         domainService.deleteRunningStory(roomNumber);
     }
 

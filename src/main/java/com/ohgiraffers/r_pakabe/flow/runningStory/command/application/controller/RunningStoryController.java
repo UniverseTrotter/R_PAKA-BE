@@ -1,6 +1,7 @@
 package com.ohgiraffers.r_pakabe.flow.runningStory.command.application.controller;
 
 
+import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.dto.PlayerDTO;
 import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.dto.RunningStoryDTO;
 import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.service.RunningStoryAppService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -84,4 +85,18 @@ public class RunningStoryController {
         return ResponseEntity.ok().build();
     }
 
+
+
+
+    @Operation(summary = "진행중인 플레이어 정보", description = "진행중인 시나리오의 플레이어 정보를 불러옵니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공적으로 처리 되었습니다."),
+            @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
+    })
+    @PostMapping("/player/status")
+    public ResponseEntity<?> getPlayerStatus(@RequestParam Integer roomNum, Long userCode){
+        PlayerDTO dto = appService.getPlayerDTO(roomNum, userCode);
+        log.info(dto.toString());
+        return ResponseEntity.ok(dto);
+    }
 }

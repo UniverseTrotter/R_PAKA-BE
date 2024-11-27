@@ -16,6 +16,7 @@ import com.ohgiraffers.r_pakabe.flow.dialogArchive.command.application.service.D
 import com.ohgiraffers.r_pakabe.flow.gmMessage.RoomMessageService;
 import com.ohgiraffers.r_pakabe.flow.logic.dto.AnalyzedEvent;
 import com.ohgiraffers.r_pakabe.flow.logic.dto.RequestPlayDTO;
+import com.ohgiraffers.r_pakabe.flow.logic.dto.RequiredStat;
 import com.ohgiraffers.r_pakabe.flow.logic.dto.ResponsePlayDTO;
 import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.dto.NpcDTO;
 import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.dto.PlayerDTO;
@@ -27,6 +28,7 @@ import com.ohgiraffers.r_pakabe.flow.sceneHistory.command.application.dto.SceneH
 import com.ohgiraffers.r_pakabe.flow.sceneHistory.command.application.service.SceneHistoryAppService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -57,7 +59,7 @@ public class EventService {
                 historyList
         );
 
-        msgService.emitToRoom(dialogStartDTO.roomNum(), dialogStartDTO.npc() + "에게 말을 건냅니다.");
+        msgService.emitToRoom(dialogStartDTO.roomNum(), dialogStartDTO.npc() + "에게 말을 건넵니다.");
         return aiService.startDialog(startDTO)
                 .map(response -> {
                     dialogArchiveService.save(
@@ -170,22 +172,7 @@ public class EventService {
     }
 
     public ResponsePlayDTO.EventDTO diceRoll(RequestPlayDTO.DiceResultDTO resultDTO) {
-        int diceNum = resultDTO.diceFst() + resultDTO.diceSnd();
-        boolean isSuccess;
-        if (2 <= diceNum && diceNum <= 6){
-            isSuccess = false;
-        } else if (7 <= diceNum && diceNum <= 12) {
-            isSuccess = true;
-        }else {
-            throw new ApplicationException(ErrorCode.INVALID_DICE);
-        }
-
-        String diceResult = "";
-        if (isSuccess) {
-            diceResult = "성공";
-        }else {
-            diceResult = "실패";
-        }
+        String diceResult = getDiceResult(resultDTO);
 
         String userChat = dialogArchiveService.findLatestByRoomNum(resultDTO.roomNum()).getDialog();
 
@@ -207,6 +194,43 @@ public class EventService {
         );
     }
 
+    private String getDiceResult(RequestPlayDTO.DiceResultDTO resultDTO) {
+        int diceNum = resultDTO.diceFst() + resultDTO.diceSnd();
+        if (diceNum < 2 || diceNum > 12){
+            throw new ApplicationException(ErrorCode.INVALID_DICE);
+        }
+
+
+        //플레이어 정보 -> 해당하는 스텟 가져오기
+        PlayerDTO player = runningService.getPlayerDTO(resultDTO.roomNum(), resultDTO.userCode());
+        int status = switch (RequiredStat.valueOf(resultDTO.bonus().toUpperCase())) {
+            case STRENGTH -> player.getStrength();
+            case DEX -> player.getDex();
+            case HEALTH -> player.getHealth();
+        };
+        if(isDiceSuccess(status, diceNum)){
+            msgService.emitToRoom(resultDTO.roomNum(), "성공!");
+            return "성공";
+        }else {
+            msgService.emitToRoom(resultDTO.roomNum(), "실패!");
+            return"실패";
+        }
+    }
+
+    public boolean isDiceSuccess(int status, int diceNum){
+        /*유저 스텟으로 보정치 넣기
+             0~1 이면 주사위 값 -2
+             2~3이면 주사위 값 -1
+             4~5이면 주사위 값 +0
+             6~7이면 주사위 값 +1
+             8이상이면 주사위 값 +2
+         */
+        if (status >= 8) status = 8;
+        status = Math.floorDiv(status,2);
+        int additional = status - 2;    //보정치
+
+        return diceNum + additional >= 7;   //7이상이면 성공
+    }
 
 
     //캐릭터 상태 저장

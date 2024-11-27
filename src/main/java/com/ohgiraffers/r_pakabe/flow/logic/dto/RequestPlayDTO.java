@@ -25,7 +25,9 @@ public class RequestPlayDTO {
     public record DiceResultDTO(
             Integer roomNum,
             Integer diceFst,
-            Integer diceSnd
+            Integer diceSnd,
+            String bonus,
+            Long userCode
     ){}
     public record BattleResultDTO(
             Integer roomNum,

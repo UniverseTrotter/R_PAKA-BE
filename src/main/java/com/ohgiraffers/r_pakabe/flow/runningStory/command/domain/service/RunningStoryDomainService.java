@@ -1,5 +1,6 @@
 package com.ohgiraffers.r_pakabe.flow.runningStory.command.domain.service;
 
+import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.dto.PlayerDTO;
 import com.ohgiraffers.r_pakabe.flow.runningStory.command.domain.model.RunningStory;
 import com.ohgiraffers.r_pakabe.flow.runningStory.command.domain.repository.RunningStoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,27 +12,31 @@ import java.util.List;
 @Service
 public class RunningStoryDomainService {
 
-    private final RunningStoryRepository runningStoryRepository;
+    private final RunningStoryRepository repository;
 
     public List<RunningStory> findAll() {
-        return runningStoryRepository.findAll();
+        return repository.findAll();
     }
 
     public RunningStory getRunningStory(Integer roomNum) {
-        return runningStoryRepository.getRunningStoryByRoomNum(roomNum).orElse(null);
+        return repository.getRunningStoryByRoomNum(roomNum).orElse(null);
     }
 
     public RunningStory createRunningStory(RunningStory runningStory) {
-        return runningStoryRepository.save(runningStory);
+        return repository.save(runningStory);
     }
 
     public RunningStory updateRunningStory(RunningStory runningStory) {
-        return runningStoryRepository.save(runningStory);
+        return repository.save(runningStory);
     }
 
     public void deleteRunningStory(Integer roomNum) {
-        runningStoryRepository.deleteRunningStoryByRoomNum(roomNum);
+        repository.deleteRunningStoryByRoomNum(roomNum);
     }
 
+
+    public PlayerDTO findPlayerDTOByRoomNumAndUserCode(Integer roomNum, Long userCode) {
+        return repository.findPlayerDTOByRoomNumAndUserCode(roomNum, userCode).orElse(null);
+    }
 
 }
