@@ -56,7 +56,7 @@ public class UserScenarioSettingController {
             @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
     })
     @GetMapping("/get")
-    public ResponseEntity<?> getSettings(@RequestBody RequestSettingDTO.findOneDTO findOneDTO){
+    public ResponseEntity<?> getSettings(@ModelAttribute RequestSettingDTO.findOneDTO findOneDTO){
         UserScenarioSettingDTO setting = appService.findSetting(findOneDTO);
         return ResponseEntity.ok(setting);
     }

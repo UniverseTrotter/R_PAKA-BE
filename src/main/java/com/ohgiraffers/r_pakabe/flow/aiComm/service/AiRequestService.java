@@ -30,14 +30,14 @@ public class AiRequestService {
         startDTO.setRoomNum(runningDTO.getRoomNum());
 
         log.info("Start Play title : {} with RoomNum : {}", startDTO.getTitle(), startDTO.getRoomNum());
-        Mono<String> response = connectionService.startScenario(startDTO);
+        String response = connectionService.startScenario(startDTO).doOnError(
+                error -> {
+                    log.error(error.getMessage());
+                }
+        ).block();
 
-        // 구독 설정
-        response.subscribe(
-                result -> log.info("Received Response: {}", result),  // 데이터가 도착하면 처리
-                error -> log.error("Error: {}",error.getMessage()),   // 에러가 발생하면 처리
-                () -> log.info("Request Completed!")                // 완료되면 처리
-        );
+        log.info("Start Play response: {}", response);
+
     }
 
     public Mono<ResponsePlayDTO.RoomOpeningDTO> createGreeting(RequestPlayDTO.RoomNumDTO roomNumDTO) {
