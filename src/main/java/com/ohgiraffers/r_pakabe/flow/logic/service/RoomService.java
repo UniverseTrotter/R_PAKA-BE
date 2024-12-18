@@ -1,6 +1,7 @@
 package com.ohgiraffers.r_pakabe.flow.logic.service;
 
 
+import com.ohgiraffers.r_pakabe.domains.adventureLogs.command.application.service.AdventureLogAppService;
 import com.ohgiraffers.r_pakabe.domains.avatars.command.application.dto.UserAvatarDTO;
 import com.ohgiraffers.r_pakabe.domains.avatars.command.application.service.AvatarAppService;
 import com.ohgiraffers.r_pakabe.domains.genres.command.application.dto.GenreDTO;
@@ -45,6 +46,7 @@ public class RoomService {
     private final UserScenarioSettingAppService userSettingService;
     private final ScenarioAvatarAppService scenarioAvatarService;
     private final PlayMapper mapper;
+    private final AdventureLogAppService adventureLogService;
 
     private final RoomMessageService msgService;
 
@@ -154,6 +156,7 @@ public class RoomService {
 
     public void endRoom(Integer RoomNum) {
         runningService.deleteRunningStory(RoomNum);
+        adventureLogService.saveArchive();
         aiService.endScenario(new RequestPlayDTO.RoomNumDTO(RoomNum)).block();
     }
 }

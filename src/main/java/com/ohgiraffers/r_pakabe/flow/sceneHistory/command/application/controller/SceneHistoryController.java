@@ -18,8 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/history")
-@Tag(name = "플레이 히스토리", description = "진행기록 관련 api")
+@RequestMapping("/test/history")
 public class SceneHistoryController {
 
     private final SceneHistoryAppService appService;
