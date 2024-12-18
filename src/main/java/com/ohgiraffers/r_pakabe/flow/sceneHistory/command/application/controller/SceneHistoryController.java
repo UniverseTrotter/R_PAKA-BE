@@ -8,6 +8,7 @@ import com.ohgiraffers.r_pakabe.flow.sceneHistory.command.application.service.Sc
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,8 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/test/history")
+@RequestMapping("/history")
+@Tag(name = "플레이 히스토리", description = "진행기록 관련 api")
 public class SceneHistoryController {
 
     private final SceneHistoryAppService appService;
