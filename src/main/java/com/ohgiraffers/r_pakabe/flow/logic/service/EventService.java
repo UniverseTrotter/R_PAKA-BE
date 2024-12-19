@@ -328,12 +328,14 @@ public class EventService {
     public ResponsePlayDTO.EndResultDTO endDialog(Integer roomNum) {
         RoomArchiveDTO archiveDTO = dialogArchiveService.findRoomArchiveByRoomNum(roomNum);
 
+        //대화 로그 전부 넘기기
         EndDialogDTO endDialogDTO = aiService.endDialog(archiveDTO).block();
         if (endDialogDTO == null || endDialogDTO.getHistory() == null || endDialogDTO.getHistory().isEmpty()) {
             log.info("히스토리가 생성되지 않음");
             throw new ApplicationException(ErrorCode.CANNOT_HANDLE_EVENT);
         }
 
+        //받은 히스토리 저장
         historyService.createHistory(
                 new RequestHistoryDTO.createDTO(
                         roomNum,
