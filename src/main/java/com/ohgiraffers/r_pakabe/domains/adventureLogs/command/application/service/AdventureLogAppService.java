@@ -5,6 +5,7 @@ import com.ohgiraffers.r_pakabe.common.error.ErrorCode;
 import com.ohgiraffers.r_pakabe.domains.adventureLogs.command.application.dto.AdventureLogDTO;
 import com.ohgiraffers.r_pakabe.domains.adventureLogs.command.application.dto.AdventureLogMapper;
 import com.ohgiraffers.r_pakabe.domains.adventureLogs.command.application.dto.ResponseAdventureDTO;
+import com.ohgiraffers.r_pakabe.domains.adventureLogs.command.domain.model.AdventureLog;
 import com.ohgiraffers.r_pakabe.domains.adventureLogs.command.domain.service.AdventureDomainService;
 import com.ohgiraffers.r_pakabe.flow.dialogArchive.command.application.dto.RoomArchiveDTO;
 import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.dto.RunningStoryDTO;
@@ -43,10 +44,26 @@ public class AdventureLogAppService {
     }
 
 
-    public void saveArchive(RunningStoryDTO runningStoryDTO, ResponseHistoryDTO.HistoryListDTO historyListDTO, RoomArchiveDTO archiveDTO) {
-        List<HistoryDto> historyList = historyListDTO.historyList();
+    @Transactional
+    public void saveArchive(RunningStoryDTO runningStoryDTO, ResponseHistoryDTO.HistoryListDTO historyListDTO) {
+        //기본 틀 입력
+        AdventureLogDTO adventureLogDTO = mapper.ToLogDTO(runningStoryDTO);
+        //npc, player 이름 추출
+        List<String> npcList = new ArrayList<>();
+        List<String> playerList = new ArrayList<>();
+        runningStoryDTO.getPlayerList().forEach(player -> playerList.add(player.getNickname()));
+        runningStoryDTO.getNpcList().forEach(npc -> npcList.add(npc.getAvatarName()));
+        adventureLogDTO.setPlayerList(playerList);
+        adventureLogDTO.setNpcList(npcList);
 
+        //히스토리 입력
+        List<String> historyList = new ArrayList<>();
+        historyListDTO.historyList().forEach(historyDto ->
+                historyList.add(historyDto.history())
+        );
+        adventureLogDTO.setHistory(historyList);
 
+        domainService.save(mapper.toEntity(adventureLogDTO));
     }
 }
 

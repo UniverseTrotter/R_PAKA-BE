@@ -62,4 +62,19 @@ public class RoomController {
         roomService.endRoom(roomNumDTO.roomNum());
         return ResponseEntity.ok().build();
     }
+
+
+    @Operation(summary = "후처리.", description = "제대로 저장되지 않은 진행 데이터를 정리합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공적으로 처리 되었습니다."),
+            @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
+    })
+    @PostMapping("/trim")
+    public ResponseEntity<?> trim(@RequestBody RequestPlayDTO.RoomNumDTO roomNumDTO) {
+        roomService.trimRoomData(roomNumDTO.roomNum());
+        return ResponseEntity.ok().build();
+    }
+
+
+
 }

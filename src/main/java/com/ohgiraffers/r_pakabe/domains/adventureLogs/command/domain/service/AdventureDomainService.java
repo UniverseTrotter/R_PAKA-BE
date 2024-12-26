@@ -21,4 +21,7 @@ public class AdventureDomainService {
         return repository.findById(id).orElse(null);
     }
 
+    public AdventureLog save(AdventureLog entity) {
+        return repository.save(entity);
+    }
 }

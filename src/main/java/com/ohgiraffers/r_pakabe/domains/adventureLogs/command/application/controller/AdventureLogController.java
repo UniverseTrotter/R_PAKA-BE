@@ -24,13 +24,15 @@ public class AdventureLogController {
 
     private final AdventureLogAppService appService;
 
+
+
     @Operation(summary = "모험담 리스트", description = "모든 모험담의 리스트를 불러옵니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공적으로 처리 되었습니다."),
             @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
     })
     @GetMapping("/list")
-    public ResponseEntity<?> getAll(){
+    public ResponseEntity<?> getList(){
         ResponseAdventureDTO.LogList adventures = appService.getAllList();
         return ResponseEntity.ok(adventures);
     }

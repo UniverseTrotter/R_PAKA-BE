@@ -161,9 +161,17 @@ public class RoomService {
     public void endRoom(Integer roomNum) {
         RunningStoryDTO runningStoryDTO = runningService.getRunningStoryById(roomNum);
         ResponseHistoryDTO.HistoryListDTO historyListDTO = historyService.getSceneHistory(roomNum);
-        RoomArchiveDTO archiveDTO = dialogArchiveAppService.findRoomArchiveByRoomNum(roomNum);
-        adventureLogService.saveArchive(runningStoryDTO, historyListDTO, archiveDTO);
+        adventureLogService.saveArchive(runningStoryDTO, historyListDTO);
         runningService.deleteRunningStory(roomNum);
         aiService.endScenario(new RequestPlayDTO.RoomNumDTO(roomNum)).block();
     }
+
+    public void trimRoomData(Integer roomNum) {
+        RunningStoryDTO runningStoryDTO = runningService.getRunningStoryById(roomNum);
+        ResponseHistoryDTO.HistoryListDTO historyListDTO = historyService.getSceneHistory(roomNum);
+        adventureLogService.saveArchive(runningStoryDTO, historyListDTO);
+
+    }
+
+
 }

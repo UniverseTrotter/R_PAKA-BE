@@ -24,7 +24,7 @@ public class AdventureLog {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column
     private Integer roomNum;
