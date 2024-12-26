@@ -1,5 +1,6 @@
 package com.ohgiraffers.r_pakabe.domains.adventureLogs.command.domain.model;
 
+import com.ohgiraffers.r_pakabe.common.BaseNoUpdateTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -19,7 +20,7 @@ import java.util.List;
 @Getter
 @Entity
 @Table
-public class AdventureLog {
+public class AdventureLog extends BaseNoUpdateTimeEntity {
 
     @Id
     @Column
@@ -67,7 +68,5 @@ public class AdventureLog {
     private LocalDateTime endAt;
 
 
-    @CreatedDate
-    private LocalDateTime createdAt;
 
 }

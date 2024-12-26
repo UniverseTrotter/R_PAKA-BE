@@ -12,12 +12,14 @@ import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.dto.Runnin
 import com.ohgiraffers.r_pakabe.flow.sceneHistory.command.application.dto.HistoryDto;
 import com.ohgiraffers.r_pakabe.flow.sceneHistory.command.application.dto.ResponseHistoryDTO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class AdventureLogAppService {
@@ -43,18 +45,31 @@ public class AdventureLogAppService {
         return adventureLogDTO;
     }
 
+    @Transactional(readOnly = true)
+    public AdventureLogDTO findByRoomNum(Integer roomNum) {
+        AdventureLogDTO adventureLogDTO = mapper.toDTO(domainService.findByRoomNum(roomNum));
+        if (adventureLogDTO == null){
+            throw new ApplicationException(ErrorCode.NO_SUCH_SCENARIO_LOG);
+        }
+        return adventureLogDTO;
+    }
+
+
 
     @Transactional
     public void saveArchive(RunningStoryDTO runningStoryDTO, ResponseHistoryDTO.HistoryListDTO historyListDTO) {
-        //기본 틀 입력
-        AdventureLogDTO adventureLogDTO = mapper.ToLogDTO(runningStoryDTO);
-        //npc, player 이름 추출
-        List<String> npcList = new ArrayList<>();
-        List<String> playerList = new ArrayList<>();
-        runningStoryDTO.getPlayerList().forEach(player -> playerList.add(player.getNickname()));
-        runningStoryDTO.getNpcList().forEach(npc -> npcList.add(npc.getAvatarName()));
-        adventureLogDTO.setPlayerList(playerList);
-        adventureLogDTO.setNpcList(npcList);
+        AdventureLogDTO adventureLogDTO = new AdventureLogDTO();
+        if (runningStoryDTO != null){
+            //기본 틀 입력
+            adventureLogDTO = mapper.ToLogDTO(runningStoryDTO);
+            //npc, player 이름 추출
+            List<String> npcList = new ArrayList<>();
+            List<String> playerList = new ArrayList<>();
+            runningStoryDTO.getPlayerList().forEach(player -> playerList.add(player.getNickname()));
+            runningStoryDTO.getNpcList().forEach(npc -> npcList.add(npc.getAvatarName()));
+            adventureLogDTO.setPlayerList(playerList);
+            adventureLogDTO.setNpcList(npcList);
+        }
 
         //히스토리 입력
         List<String> historyList = new ArrayList<>();
@@ -62,6 +77,10 @@ public class AdventureLogAppService {
                 historyList.add(historyDto.history())
         );
         adventureLogDTO.setHistory(historyList);
+
+        //null 이었을 때를 위해 한번 더
+        adventureLogDTO.setRoomNum(historyListDTO.roomNum());
+        log.info("모험담 저장 : {}", adventureLogDTO);
 
         domainService.save(mapper.toEntity(adventureLogDTO));
     }

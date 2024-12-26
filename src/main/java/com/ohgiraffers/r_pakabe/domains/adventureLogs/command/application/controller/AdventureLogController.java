@@ -37,14 +37,25 @@ public class AdventureLogController {
         return ResponseEntity.ok(adventures);
     }
 
+    @Operation(summary = "id로 불러오기", description = "모험담의 상세내용을 불러옵니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공적으로 처리 되었습니다."),
+            @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
+    })
+    @GetMapping("/id")
+    public ResponseEntity<?> findById(Long id){
+        AdventureLogDTO adventureLog = appService.findById(id);
+        return ResponseEntity.ok(adventureLog);
+    }
+
     @Operation(summary = "특정 모험담 불러오기", description = "모험담의 상세내용을 불러옵니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공적으로 처리 되었습니다."),
             @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
     })
     @GetMapping("/get")
-    public ResponseEntity<?> findById(Long id){
-        AdventureLogDTO adventureLog = appService.findById(id);
+    public ResponseEntity<?> findByRoomNum(Integer roomNum){
+        AdventureLogDTO adventureLog = appService.findByRoomNum(roomNum);
         return ResponseEntity.ok(adventureLog);
     }
 }

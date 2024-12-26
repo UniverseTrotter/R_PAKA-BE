@@ -167,9 +167,9 @@ public class RoomService {
     }
 
     public void trimRoomData(Integer roomNum) {
-        RunningStoryDTO runningStoryDTO = runningService.getRunningStoryById(roomNum);
+//        RunningStoryDTO runningStoryDTO = runningService.getRunningStoryById(roomNum);
         ResponseHistoryDTO.HistoryListDTO historyListDTO = historyService.getSceneHistory(roomNum);
-        adventureLogService.saveArchive(runningStoryDTO, historyListDTO);
+        adventureLogService.saveArchive(null, historyListDTO);
 
     }
 

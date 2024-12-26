@@ -24,4 +24,8 @@ public class AdventureDomainService {
     public AdventureLog save(AdventureLog entity) {
         return repository.save(entity);
     }
+
+    public AdventureLog findByRoomNum(Integer roomNum) {
+        return repository.findByRoomNum(roomNum).orElse(null);
+    }
 }
