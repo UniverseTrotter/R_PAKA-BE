@@ -55,4 +55,12 @@ public class SceneHistoryAppService {
     public void deleteHistory(Integer roomNumber) {
         domainService.deleteByRoomNum(roomNumber);
     }
+
+    @Transactional(readOnly = true)
+    public ResponseHistoryDTO.RoomListDTO getRoomList() {
+        List<SceneHistory> entityList = domainService.findAll();
+        List<Integer> roomNumList = new ArrayList<>();
+        entityList.forEach(entity -> roomNumList.add(entity.getRoomNum()));
+        return new ResponseHistoryDTO.RoomListDTO(roomNumList);
+    }
 }

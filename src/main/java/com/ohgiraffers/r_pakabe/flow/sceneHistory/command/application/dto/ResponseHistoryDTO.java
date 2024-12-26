@@ -10,4 +10,8 @@ public class ResponseHistoryDTO {
             List<HistoryDto> historyList
     ) {
     }
+
+    public record RoomListDTO(
+            List<Integer> roomNumList
+    ){}
 }

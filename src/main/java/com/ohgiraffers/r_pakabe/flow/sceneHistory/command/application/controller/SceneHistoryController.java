@@ -24,14 +24,25 @@ public class SceneHistoryController {
     private final SceneHistoryAppService appService;
 
 
-    @Operation(summary = "모든 히스토리", description = "모든 시나리오의 리스트를 불러옵니다.")
+    @Operation(summary = "모든 히스토리", description = "모든 시나리오를 불러옵니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공적으로 처리 되었습니다."),
+            @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
+    })
+    @GetMapping("/all")
+    public ResponseEntity<?> getAll(){
+        ResponseHistoryDTO.HistoryListDTO dtoList = appService.getAllSceneHistory();
+        return ResponseEntity.ok(dtoList);
+    }
+
+    @Operation(summary = "모든 히스토리 리스트", description = "저장된 모든 방 번호를 불러옵니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공적으로 처리 되었습니다."),
             @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
     })
     @GetMapping("/list")
-    public ResponseEntity<?> getAll(){
-        ResponseHistoryDTO.HistoryListDTO dtoList = appService.getAllSceneHistory();
+    public ResponseEntity<?> getList(){
+        ResponseHistoryDTO.RoomListDTO dtoList = appService.getRoomList();
         return ResponseEntity.ok(dtoList);
     }
 
