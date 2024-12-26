@@ -1,5 +1,8 @@
 package com.ohgiraffers.r_pakabe.domains.adventureLogs.command.application.controller;
 
+import com.ohgiraffers.r_pakabe.domains.adventureLogs.command.application.dto.AdventureLogDTO;
+import com.ohgiraffers.r_pakabe.domains.adventureLogs.command.application.dto.ResponseAdventureDTO;
+import com.ohgiraffers.r_pakabe.domains.adventureLogs.command.application.service.AdventureLogAppService;
 import com.ohgiraffers.r_pakabe.flow.sceneHistory.command.application.service.SceneHistoryAppService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -16,10 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/history")
-@Tag(name = "모험담", description = "진행기록 관련 api")
+@Tag(name = "모험담", description = "모험 결과 관련 api")
 public class AdventureLogController {
 
-    private final SceneHistoryAppService appService;
+    private final AdventureLogAppService appService;
 
     @Operation(summary = "모험담 리스트", description = "모든 모험담의 리스트를 불러옵니다.")
     @ApiResponses(value = {
@@ -28,6 +31,18 @@ public class AdventureLogController {
     })
     @GetMapping("/list")
     public ResponseEntity<?> getAll(){
-        return ResponseEntity.ok(new Object());
+        ResponseAdventureDTO.LogList adventures = appService.getAllList();
+        return ResponseEntity.ok(adventures);
+    }
+
+    @Operation(summary = "특정 모험담 불러오기", description = "모험담의 상세내용을 불러옵니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공적으로 처리 되었습니다."),
+            @ApiResponse(responseCode = "500", description = "예상치 못한 예러")
+    })
+    @GetMapping("/get")
+    public ResponseEntity<?> findById(Long id){
+        AdventureLogDTO adventureLog = appService.findById(id);
+        return ResponseEntity.ok(adventureLog);
     }
 }

@@ -33,6 +33,7 @@ public enum ErrorCode {
     INVALID_DICE(HttpStatus.BAD_REQUEST, "PLAY-002", "올바르지 않은 주사위 수치 입니다."),
     NO_DIALOG(HttpStatus.BAD_REQUEST, "PLAY-003", "대화 기록이 없습니다."),
     EMPTY_RESPONSE(HttpStatus.BAD_REQUEST, "PLAY-004", "대답이 오지 않았습니다."),
+    NO_SUCH_SCENARIO_LOG(HttpStatus.BAD_REQUEST,"SCENARIO-004" , "해당 모험담이 없습니다."),
 
     ;
 

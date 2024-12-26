@@ -37,7 +37,6 @@ public class AdventureLog {
     @Column(columnDefinition = "text[]")
     private List<String> history;
 
-
     // 사용된 시나리오 정보
     @Column
     private String scenarioTitle;

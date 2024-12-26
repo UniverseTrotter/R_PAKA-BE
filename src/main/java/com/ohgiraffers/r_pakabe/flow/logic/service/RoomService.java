@@ -16,6 +16,8 @@ import com.ohgiraffers.r_pakabe.domains.userScenarioSettings.command.application
 import com.ohgiraffers.r_pakabe.domains.userScenarioSettings.command.application.dto.UserScenarioSettingDTO;
 import com.ohgiraffers.r_pakabe.domains.userScenarioSettings.command.application.service.UserScenarioSettingAppService;
 import com.ohgiraffers.r_pakabe.flow.aiComm.service.AiRequestService;
+import com.ohgiraffers.r_pakabe.flow.dialogArchive.command.application.dto.RoomArchiveDTO;
+import com.ohgiraffers.r_pakabe.flow.dialogArchive.command.application.service.DialogArchiveAppService;
 import com.ohgiraffers.r_pakabe.flow.gmMessage.RoomMessageService;
 import com.ohgiraffers.r_pakabe.flow.logic.dto.PlayMapper;
 import com.ohgiraffers.r_pakabe.flow.logic.dto.RequestPlayDTO;
@@ -24,6 +26,7 @@ import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.dto.NpcDTO
 import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.dto.PlayerDTO;
 import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.dto.RunningStoryDTO;
 import com.ohgiraffers.r_pakabe.flow.runningStory.command.application.service.RunningStoryAppService;
+import com.ohgiraffers.r_pakabe.flow.sceneHistory.command.application.dto.ResponseHistoryDTO;
 import com.ohgiraffers.r_pakabe.flow.sceneHistory.command.application.service.SceneHistoryAppService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,6 +52,7 @@ public class RoomService {
     private final AdventureLogAppService adventureLogService;
 
     private final RoomMessageService msgService;
+    private final DialogArchiveAppService dialogArchiveAppService;
 
 
     public void startRoom(RequestPlayDTO.roomStartDTO roomStartDTO) {
@@ -154,9 +158,12 @@ public class RoomService {
         return runningDTOList;
     }
 
-    public void endRoom(Integer RoomNum) {
-        runningService.deleteRunningStory(RoomNum);
-        adventureLogService.saveArchive();
-        aiService.endScenario(new RequestPlayDTO.RoomNumDTO(RoomNum)).block();
+    public void endRoom(Integer roomNum) {
+        RunningStoryDTO runningStoryDTO = runningService.getRunningStoryById(roomNum);
+        ResponseHistoryDTO.HistoryListDTO historyListDTO = historyService.getSceneHistory(roomNum);
+        RoomArchiveDTO archiveDTO = dialogArchiveAppService.findRoomArchiveByRoomNum(roomNum);
+        adventureLogService.saveArchive(runningStoryDTO, historyListDTO, archiveDTO);
+        runningService.deleteRunningStory(roomNum);
+        aiService.endScenario(new RequestPlayDTO.RoomNumDTO(roomNum)).block();
     }
 }
