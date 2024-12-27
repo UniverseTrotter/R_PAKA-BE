@@ -67,6 +67,13 @@ public class AdventureLog extends BaseNoUpdateTimeEntity {
     private LocalDateTime startAt;
     private LocalDateTime endAt;
 
+    private LocalDateTime createdAt;
 
+    @PrePersist
+    public void prePersist() {
+        if (this.createdAt == null) {
+            this.createdAt = LocalDateTime.now();
+        }
+    }
 
 }

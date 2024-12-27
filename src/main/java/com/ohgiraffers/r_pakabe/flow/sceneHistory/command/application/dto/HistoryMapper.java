@@ -23,6 +23,7 @@ public interface HistoryMapper {
 
     SceneHistory createdToToEntity(RequestHistoryDTO.createDTO createDTO);
 
+
     default String convertCreatedAtToString(LocalDateTime createdAt) {
         return createdAt == null ? null : PolyTime.PolyTimeConverter.convToStandardTime(createdAt); // PolyTime의 변환 메서드 호출
     }

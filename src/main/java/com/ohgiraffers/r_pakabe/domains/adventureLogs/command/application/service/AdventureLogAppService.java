@@ -1,5 +1,6 @@
 package com.ohgiraffers.r_pakabe.domains.adventureLogs.command.application.service;
 
+import com.ohgiraffers.r_pakabe.common.PolyTime;
 import com.ohgiraffers.r_pakabe.common.error.ApplicationException;
 import com.ohgiraffers.r_pakabe.common.error.ErrorCode;
 import com.ohgiraffers.r_pakabe.domains.adventureLogs.command.application.dto.AdventureLogDTO;
@@ -16,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,26 +40,34 @@ public class AdventureLogAppService {
 
     @Transactional(readOnly = true)
     public AdventureLogDTO findById(Long id) {
-        AdventureLogDTO adventureLogDTO = mapper.toDTO(domainService.findById(id));
-        if (adventureLogDTO == null){
+        AdventureLog adventureLog = domainService.findById(id);
+        if (adventureLog == null){
             throw new ApplicationException(ErrorCode.NO_SUCH_SCENARIO_LOG);
         }
-        return adventureLogDTO;
+        return mapper.toDTO(adventureLog);
     }
 
     @Transactional(readOnly = true)
-    public AdventureLogDTO findByRoomNum(Integer roomNum) {
-        AdventureLogDTO adventureLogDTO = mapper.toDTO(domainService.findByRoomNum(roomNum));
-        if (adventureLogDTO == null){
+    public AdventureLogDTO findByRoomNum(Integer roomNum) throws ApplicationException {
+        AdventureLog adventureLog = domainService.findByRoomNum(roomNum);
+        if (adventureLog == null){
             throw new ApplicationException(ErrorCode.NO_SUCH_SCENARIO_LOG);
         }
-        return adventureLogDTO;
+        return mapper.toDTO(adventureLog);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean isLogExist(Integer roomNum){
+        AdventureLog adventureLog = domainService.findByRoomNum(roomNum);
+        return adventureLog != null;
     }
 
 
 
     @Transactional
     public void saveArchive(RunningStoryDTO runningStoryDTO, ResponseHistoryDTO.HistoryListDTO historyListDTO) {
+
+
         AdventureLogDTO adventureLogDTO = new AdventureLogDTO();
         if (runningStoryDTO != null){
             //기본 틀 입력
@@ -69,6 +79,11 @@ public class AdventureLogAppService {
             runningStoryDTO.getNpcList().forEach(npc -> npcList.add(npc.getAvatarName()));
             adventureLogDTO.setPlayerList(playerList);
             adventureLogDTO.setNpcList(npcList);
+        }else {
+            adventureLogDTO.setRoomNum(historyListDTO.roomNum());
+            adventureLogDTO.setCreatedAt(
+                    historyListDTO.historyList().getFirst().createdAt()    //(최근 항목이 먼저)
+            );
         }
 
         //히스토리 입력
@@ -78,8 +93,6 @@ public class AdventureLogAppService {
         );
         adventureLogDTO.setHistory(historyList);
 
-        //null 이었을 때를 위해 한번 더
-        adventureLogDTO.setRoomNum(historyListDTO.roomNum());
         log.info("모험담 저장 : {}", adventureLogDTO);
 
         domainService.save(mapper.toEntity(adventureLogDTO));

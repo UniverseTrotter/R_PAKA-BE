@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface AdventureLogRepository extends JpaRepository<AdventureLog, Long> {
     Optional<AdventureLog> findByRoomNum(Integer roomNum);
+
+    boolean existsByRoomNum(Integer roomNum);
 }

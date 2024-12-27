@@ -29,8 +29,8 @@ public class AdventureLogDTO {
     private List<String> npcList;
     private List<String> genre;
 
-    private LocalDateTime startAt;
-    private LocalDateTime endAt;
+    private String startAt;
+    private String endAt;
 
-    private LocalDateTime createdAt;
+    private String createdAt;
 }

@@ -28,4 +28,8 @@ public class AdventureDomainService {
     public AdventureLog findByRoomNum(Integer roomNum) {
         return repository.findByRoomNum(roomNum).orElse(null);
     }
+
+    public boolean findExist(Integer roomNum) {
+        return repository.existsByRoomNum(roomNum);
+    }
 }

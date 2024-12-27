@@ -12,6 +12,7 @@ public class ResponseAdventureDTO {
     public record ShortenLog(
             String roomTitle,
             String scenarioTitle,
+            Integer roomNum,
             Long id,
             String createdAt
     ){}

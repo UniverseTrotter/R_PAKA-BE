@@ -33,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -164,6 +165,25 @@ public class RoomService {
         adventureLogService.saveArchive(runningStoryDTO, historyListDTO);
         runningService.deleteRunningStory(roomNum);
         aiService.endScenario(new RequestPlayDTO.RoomNumDTO(roomNum)).block();
+    }
+
+    public void trimRoomDataAll(){
+        List<Integer> roomNumList = historyService.getRoomList().roomNumList();
+        Integer[] uniqueRoomNumList = Arrays.stream(roomNumList.toArray())
+                .distinct()
+                .toArray(Integer[]::new);
+        log.info("history exist : {}", (Object) uniqueRoomNumList);
+
+        roomNumList.clear();
+        for (Integer roomNum : uniqueRoomNumList){
+            if(!adventureLogService.isLogExist(roomNum)){
+                roomNumList.add(roomNum);
+            }
+        }
+
+        log.info("unsaved history : {}", roomNumList);
+        roomNumList.forEach(this::trimRoomData);
+
     }
 
     public void trimRoomData(Integer roomNum) {

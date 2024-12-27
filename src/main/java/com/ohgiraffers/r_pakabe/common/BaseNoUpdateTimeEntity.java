@@ -17,6 +17,6 @@ public abstract class BaseNoUpdateTimeEntity {
 
     @Column(updatable = false)
     @CreatedDate
-    private LocalDateTime createdAt;
+    protected LocalDateTime createdAt;
 
 }
