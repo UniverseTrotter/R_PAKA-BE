@@ -44,9 +44,9 @@ TA: 성예린
 ---
 <h2>아키텍쳐 구상도</h2>
 
-![image](https://github.com/user-attachments/assets/eaf1bd8d-d8bb-49c8-8157-97fed3b33e5c)
+<img src="https://github.com/user-attachments/assets/eaf1bd8d-d8bb-49c8-8157-97fed3b33e5c">
 
 ---
-<h2>핵심 로직</h2>
-![image](https://github.com/user-attachments/assets/3414d25e-a5ec-468f-8c31-1898bf176049)
+<h2>핵심 진행 로직</h2>
+<img src="https://github.com/user-attachments/assets/3414d25e-a5ec-468f-8c31-1898bf176049">
 
